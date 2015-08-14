@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>TRAPpy by sinkap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">TRAPpy</h1>
+      <h2 class="project-tagline">Trace Analysis And Plotting in Python </h2>
+      <a href="https://github.com/sinkap/trappy" class="btn">View on GitHub</a>
+      <a href="https://github.com/sinkap/trappy/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sinkap/trappy/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="what-is-trappy" class="anchor" href="#what-is-trappy" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is TRAPpy?</h1>
+
+<p>TRAPpy is a framework written in python for analysing and plotting <a href="http://elinux.org/Ftrace">FTrace</a> data by converting it into standardised <a href="http://pandas.pydata.org">PANDAS</a> DataFrames. The goal is to allow developers easy and systematic access to FTrace data and leverage the flexibility of PANDAS for the analysis.</p>
+
+<h1>
+<a id="trace-events-and-run-objects" class="anchor" href="#trace-events-and-run-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Events and Run Objects</h1>
+
+<p>An event maps an FTrace event to a single DataFrame in the Run object. One can also create events based on custom trace_printks from within the kernel.  </p>
+
+<h2>
+<a id="creating-a-run-object" class="anchor" href="#creating-a-run-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Run object</h2>
+
+<pre><code>run = trappy.Run("path/to/trace/file")
+</code></pre>
+
+<h2>
+<a id="registering-an-event-with-trappy" class="anchor" href="#registering-an-event-with-trappy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Registering an Event with TRAPpy</h2>
+
+<p>Consider the following trace_printk from within the kernel.</p>
+
+<pre><code>trace_pritnk("my_csutom_event: key1=%s key2=%d", value_1, value_2);
+</code></pre>
+
+<p>Which produces the following trace output:</p>
+
+<pre><code>kworker/6:1-459   [006]  2806.211584: my_custom_event:     key1=some_string key2=10
+</code></pre>
+
+<p>This event can then be registered in TRAPpy as follows:</p>
+
+<pre><code>trappy.register_dynamic("event_name", "my_custom_event")
+</code></pre>
+
+<p>And will be available in the run object as follows:</p>
+
+<pre><code>run.event_name.data_frame
+</code></pre>
+
+<h1>
+<a id="plotting-the-trace" class="anchor" href="#plotting-the-trace" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plotting the trace</h1>
+
+<h1>
+<a id="trappy-plotter" class="anchor" href="#trappy-plotter" aria-hidden="true"><span class="octicon octicon-link"></span></a>TRAPpy: Plotter</h1>
+
+<p>TRAPpy's plotter provides an interface to create plots which can span multiple runs, events, columns. It also provides pivoting and filtering capabilities.
+Here is the general structure the plotter:</p>
+
+<p>Some examples of plots created by TRAPpy: </p>
+
+<h2>
+<a id="lineplot" class="anchor" href="#lineplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>LinePlot</h2>
+
+<h2>
+<a id="ilineplot" class="anchor" href="#ilineplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>ILinePlot</h2>
+
+<p>The interactive line plots use <a href="http://dygraphs.com">dygraphs</a>. </p>
+
+<h2>
+<a id="eventplot" class="anchor" href="#eventplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>EventPlot</h2>
+
+<p>The event plot can be used for the creation of a timeline for multiple event's that follow a start-stop semantic. TRAPpy provides a rudimentary kernelshark like plot of the trace as follows:</p>
+
+<pre><code>trappy.plotter.plot_trace("/path/to/trace/file")
+</code></pre>
+
+<p>For more detailed information on how to use plotter you can read the documentation notebook <a href="http://FILLL">here</a></p>
+
+<h1>
+<a id="trappy-stats" class="anchor" href="#trappy-stats" aria-hidden="true"><span class="octicon octicon-link"></span></a>TRAPpy: Stats</h1>
+
+<p>The statistic framework is an API designed to aggregate and operate on data. Stats provides a simple grammar which uses the event and underlying data.</p>
+
+<p><a href="http://github.com/ARM-software/bart">BART</a> is an opensource framework which uses the TRAPpy's stats module to provide behavioural assertions for the Linux scheduler and also some example usages for the Linux thermal framework.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sinkap/trappy">TRAPpy</a> is maintained by <a href="https://github.com/sinkap">sinkap</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
