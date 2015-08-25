@@ -113,7 +113,7 @@ try:
         PLOTTER_IPYTHON = False
     else:
         PLOTTER_IPYTHON = True
-        PLOTTER_IPYTHON_PROFILE_DIR = ip.config.ProfileDir["location"]
+        PLOTTER_IPYTHON_PROFILE_DIR = IPython.utils.path.locate_profile(ip.profile)
         PLOTTER_STATIC_DATA_DIR = os.path.join(
             PLOTTER_IPYTHON_PROFILE_DIR,
             "static", "plotter_data")
