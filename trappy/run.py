@@ -106,30 +106,22 @@ classes are parsed.
             trace_name = os.path.splitext(basepath)[0]
             trace_raw = trace_name + ".raw.txt"
             trace_txt = trace_name + ".txt"
-
-            if basepath.endswith(".dat"):
-                self.__run_trace_cmd_report(basepath)
-
-            elif basepath.endswith(".txt"):
-                trace_txt = basepath
-                if not os.path.isfile(trace_raw):
-                    trace_raw = None
+            trace_dat = trace_name + ".dat"
         else:
             trace_txt = os.path.join(basepath, "trace.txt")
             trace_raw = os.path.join(basepath, "trace.raw.txt")
             trace_dat = os.path.join(basepath, "trace.dat")
 
-            if not os.path.isfile(trace_txt):
-                self.__run_trace_cmd_report(trace_dat)
+        if not os.path.isfile(trace_txt):
+            self.__run_trace_cmd_report(trace_dat)
+        elif os.path.isfile(trace_dat) and \
+                os.path.getctime(trace_txt) < os.path.getctime(trace_dat):
+            # Regenerate the "txt" file since the "dat" in the specified folder
+            # has been updated since last generation of the text trace
+            self.__run_trace_cmd_report(trace_dat)
 
-            # The condition below handles the the following cases
-            # trace.dat and trace.txt are both present
-            # We can still generate the trace.raw.txt
-            if not os.path.isfile(trace_raw):
-                if os.path.isfile(trace_dat):
-                    self.__run_trace_cmd_report(trace_dat)
-                else:
-                    trace_raw = None
+        if not os.path.isfile(trace_raw):
+            trace_raw = None
 
         return trace_txt, trace_raw
 
