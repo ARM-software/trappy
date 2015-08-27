@@ -2,27 +2,108 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>TRAPpy by sinkap</title>
+    <title>TRAPpy: Trace Analysis and Plotting</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<style>
+
+.d3-tip {
+
+  line-height: 1;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 2px;
+  position: absolute !important;
+  z-index: 99999;
+
+}
+
+.d3-tip:after {
+
+  box-sizing: border-box;
+  pointer-events: none;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.6);
+  content: "\25BC";
+  position: absolute !important;
+  z-index: 99999;
+  text-align: center;
+
+}
+
+.d3-tip.n:after {
+
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+
+}
+
+.chart {
+
+  shape-rendering: crispEdges;
+
+}
+
+.mini text {
+
+  font: 9px sans-serif;
+
+}
+
+.main text {
+
+  font: 12px sans-serif;
+
+}
+
+.axis line, .axis path {
+
+  stroke: black;
+
+}
+
+.miniItem {
+
+  stroke-width: 8;
+
+}
+
+.brush .extent {
+
+  stroke: #000;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+
+}
+
+</style>
+
   </head>
   <body>
     <section class="page-header">
       <h1 class="project-name">TRAPpy</h1>
       <h2 class="project-tagline">Trace Analysis And Plotting in Python </h2>
-      <a href="https://github.com/sinkap/trappy" class="btn">View on GitHub</a>
-      <a href="https://github.com/sinkap/trappy/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/sinkap/trappy/tarball/master" class="btn">Download .tar.gz</a>
+      <a href="https://github.com/ARM-software/trappy" class="btn">View on GitHub</a>
+      <a href="https://github.com/ARM-software/trappy/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ARM-software/trappy/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
       <h1>
 <a id="what-is-trappy" class="anchor" href="#what-is-trappy" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is TRAPpy?</h1>
 
-<p>TRAPpy is a framework written in python for analysing and plotting <a href="http://elinux.org/Ftrace">FTrace</a> data by converting it into standardised <a href="http://pandas.pydata.org">PANDAS</a> DataFrames. The goal is to allow developers easy and systematic access to FTrace data and leverage the flexibility of PANDAS for the analysis.</p>
+<p>TRAPpy is a framework written in python for analysing and plotting <a href="http://elinux.org/Ftrace">FTrace</a> data by converting it into standardised <a href="http://pandas.pydata.org">PANDAS</a> DataFrames (tabular times series data representation). The goal is to allow developers easy and systematic access to FTrace data and leverage the flexibility of PANDAS for the analysis.</p>
 
 <h1>
 <a id="trace-events-and-run-objects" class="anchor" href="#trace-events-and-run-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Events and Run Objects</h1>
@@ -59,9 +140,6 @@
 </code></pre>
 
 <h1>
-<a id="plotting-the-trace" class="anchor" href="#plotting-the-trace" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plotting the trace</h1>
-
-<h1>
 <a id="trappy-plotter" class="anchor" href="#trappy-plotter" aria-hidden="true"><span class="octicon octicon-link"></span></a>TRAPpy: Plotter</h1>
 
 <p>TRAPpy's plotter provides an interface to create plots which can span multiple runs, events, columns. It also provides pivoting and filtering capabilities.
@@ -70,12 +148,41 @@ Here is the general structure the plotter:</p>
 <p>Some examples of plots created by TRAPpy: </p>
 
 <h2>
-<a id="lineplot" class="anchor" href="#lineplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>LinePlot</h2>
+<a id="ilineplot" class="anchor" href="#ilineplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interactive LinePlots</h2>
 
-<h2>
-<a id="ilineplot" class="anchor" href="#ilineplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>ILinePlot</h2>
+<table style="width: 1000px; border-style: hidden;">
+<tr>
+<td style="border-style: hidden;"><div class="ilineplot" id="fig_b30e3f8d121e44c6bc0a7d7ae3abccf8" style="width: 950px; height: 400px;">
+            <script>
+            var ilp_req = require.config( {
 
+                paths: {
+                    "dygraph-sync": 'http://dygraphs.com/extras/synchronizer',
+                    "dygraph": 'http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined',
+                    "ILinePlot": 'https://rawgit.com/sinkap/648927dfd6985d4540a9/raw/69d6f1f9031ae3624c15707315ce04be1a9d1ac3/ILinePlot',
+                },
+
+                shim: {
+                    "dygraph-sync": ["dygraph"],
+                    "ILinePlot": {
+
+                        "deps": ["dygraph-sync", "dygraph" ],
+                        "exports":  "ILinePlot"
+                    }
+                }
+            });
+                ilp_req(["require", "ILinePlot"], function() {
+                ILinePlot.generate('fig_b30e3f8d121e44c6bc0a7d7ae3abccf8', 'https://rawgit.com/anonymous/50ba1e05ed30e0ef76af/raw/4084e60f4bf2a1d153b112b697776c0af99515ad/fig_b30e3f8d121e44c6bc0a7d7ae3abccf8.json');
+            });
+            </script>
+        </div></td>
+</tr>
+<tr>
+<td style="border-style: hidden;"><div style="text-align:right; width: 900px; height: auto;"; id="fig_b30e3f8d121e44c6bc0a7d7ae3abccf8_legend"></div></td>
+</tr>
+</table>
 <p>The interactive line plots use <a href="http://dygraphs.com">dygraphs</a>. </p>
+<p>Click and Drag to Zoom. Double Click to reset </p>
 
 <h2>
 <a id="eventplot" class="anchor" href="#eventplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>EventPlot</h2>
@@ -85,6 +192,34 @@ Here is the general structure the plotter:</p>
 <pre><code>trappy.plotter.plot_trace("/path/to/trace/file")
 </code></pre>
 
+<div id="fig_a46cd913e54f421bad216204833f491f" class="eventplot">
+        <script>
+            var req = require.config( {
+
+                paths: {
+
+                    "EventPlot": 'https://rawgit.com/sinkap/7f89de3e558856b81f10/raw/46144f8f8c5da670c54f826f0c634762107afc66/EventPlot',
+                    "d3-tip": 'http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3',
+                    "d3-plotter": 'http://d3js.org/d3.v3.min'
+                },
+                shim: {
+                    "d3-plotter" : {
+                        "exports" : "d3"
+                    },
+                    "d3-tip": ["d3-plotter"],
+                    "EventPlot": {
+
+                        "deps": ["d3-tip", "d3-plotter" ],
+                        "exports":  "EventPlot"
+                    }
+                }
+            });
+            req(["require", "EventPlot"], function() {
+               EventPlot.generate('fig_a46cd913e54f421bad216204833f491f', 'https://rawgit.com/sinkap/d0f52a45be7deda0335c/raw/8af8d0c2c72e978f58a4b6c7e394c10a60e3994e/fig_a46cd913e54f421bad216204833f491f.json');
+            });
+        </script>
+</div>
+<p>Scroll on the Plot area to Zoom. Click and Drag to Pan Zoom</p>
 <p>For more detailed information on how to use plotter you can read the documentation notebook <a href="http://FILLL">here</a></p>
 
 <h1>
