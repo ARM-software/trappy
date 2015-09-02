@@ -157,16 +157,14 @@ Here is the general structure the plotter:</p>
             var ilp_req = require.config( {
 
                 paths: {
-                    "dygraph-sync": 'http://dygraphs.com/extras/synchronizer',
                     "dygraph": 'https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined',
                     "ILinePlot": 'https://rawgit.com/sinkap/648927dfd6985d4540a9/raw/69d6f1f9031ae3624c15707315ce04be1a9d1ac3/ILinePlot',
                 },
 
                 shim: {
-                    "dygraph-sync": ["dygraph"],
                     "ILinePlot": {
 
-                        "deps": ["dygraph-sync", "dygraph" ],
+                        "deps": ["dygraph" ],
                         "exports":  "ILinePlot"
                     }
                 }
