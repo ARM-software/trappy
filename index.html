@@ -158,7 +158,7 @@ Here is the general structure the plotter:</p>
 
                 paths: {
                     "dygraph": 'https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined',
-                    "ILinePlot": 'https://rawgit.com/sinkap/648927dfd6985d4540a9/raw/69d6f1f9031ae3624c15707315ce04be1a9d1ac3/ILinePlot',
+                    "ILinePlot": 'https://cdn.rawgit.com/sinkap/648927dfd6985d4540a9/raw/69d6f1f9031ae3624c15707315ce04be1a9d1ac3/ILinePlot',
                 },
 
                 shim: {
@@ -170,7 +170,7 @@ Here is the general structure the plotter:</p>
                 }
             });
                 ilp_req(["require", "ILinePlot"], function() {
-                ILinePlot.generate('fig_b30e3f8d121e44c6bc0a7d7ae3abccf8', 'https://rawgit.com/anonymous/50ba1e05ed30e0ef76af/raw/4084e60f4bf2a1d153b112b697776c0af99515ad/fig_b30e3f8d121e44c6bc0a7d7ae3abccf8.json');
+                ILinePlot.generate('fig_b30e3f8d121e44c6bc0a7d7ae3abccf8', 'https://cdn.rawgit.com/anonymous/50ba1e05ed30e0ef76af/raw/4084e60f4bf2a1d153b112b697776c0af99515ad/fig_b30e3f8d121e44c6bc0a7d7ae3abccf8.json');
             });
             </script>
         </div></td>
@@ -189,16 +189,15 @@ Here is the general structure the plotter:</p>
 
 <pre><code>trappy.plotter.plot_trace("/path/to/trace/file")
 </code></pre>
-
-<div id="fig_a46cd913e54f421bad216204833f491f" class="eventplot">
+<div id="fig_7a8a959d469a4339a72e8609b122eb36" class="eventplot">
         <script>
             var req = require.config( {
 
                 paths: {
 
-                    "EventPlot": 'https://cdn.rawgit.com/sinkap/7f89de3e558856b81f10/raw/46144f8f8c5da670c54f826f0c634762107afc66/EventPlot.js',
-                    "d3-tip": 'https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.6.7/d3-tip.min.js',
-                    "d3-plotter": 'https://d3js.org/d3.v3.min'
+                    "EventPlot": 'https://cdn.rawgit.com/sinkap/7f89de3e558856b81f10/raw/46144f8f8c5da670c54f826f0c634762107afc66/EventPlot',
+                    "d3-tip": 'https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.6.3/d3-tip.min',
+                    "d3-plotter": 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3'
                 },
                 shim: {
                     "d3-plotter" : {
@@ -213,12 +212,13 @@ Here is the general structure the plotter:</p>
                 }
             });
             req(["require", "EventPlot"], function() {
-               EventPlot.generate('fig_a46cd913e54f421bad216204833f491f', 'https://rawgit.com/sinkap/d0f52a45be7deda0335c/raw/8af8d0c2c72e978f58a4b6c7e394c10a60e3994e/fig_a46cd913e54f421bad216204833f491f.json');
+               EventPlot.generate('fig_7a8a959d469a4339a72e8609b122eb36', 'https://cdn.rawgit.com/sinkap/c06678d909e71d3444ea/raw/8af8d0c2c72e978f58a4b6c7e394c10a60e3994e/fig_7a8a959d469a4339a72e8609b122eb36.json');
             });
         </script>
+        </div>
 </div>
 <p>Scroll on the Plot area to Zoom. Click and Drag to Pan Zoom</p>
-<p>For more detailed information on how to use plotter you can read the documentation notebook <a href="http://FILLL">here</a></p>
+<p>For more detailed information on how to use plotter you can read the documentation notebook <a href="https://cdn.rawgit.com/sinkap/160b4a3c4287d12c3bbe/raw/c10aa7c5c5d9e995296ae90d8ff8f0ea89b9bdc7/IPlotter.html">here</a></p>
 
 <h1>
 <a id="trappy-stats" class="anchor" href="#trappy-stats" aria-hidden="true"><span class="octicon octicon-link"></span></a>TRAPpy: Stats</h1>
