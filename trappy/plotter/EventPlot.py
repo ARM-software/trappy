@@ -37,7 +37,6 @@ from IPython.display import display, HTML
 # pylint: disable=R0201
 # pylint: disable=R0921
 # Initialize Resources
-IPythonConf.iplot_install("EventPlot")
 
 
 class EventPlot(AbstractDataPlotter):
@@ -120,6 +119,13 @@ class EventPlot(AbstractDataPlotter):
 
     def view(self):
         """Views the Graph Object"""
+
+        # Defer installation of IPython components
+        # to the .view call to avoid any errors at
+        # when importing the module. This facilitates
+        # the importing of the module from outside
+        # an IPython notebook
+        IPythonConf.iplot_install("EventPlot")
         display(HTML(self.html()))
 
     def savefig(self, path):
