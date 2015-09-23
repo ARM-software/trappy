@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.wa.sysfs_extractor module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy.wa package" href="trappy.wa.html" />
+    <link rel="next" title="trappy.base module" href="trappy.base.html" />
+    <link rel="prev" title="trappy.wa.results module" href="trappy.wa.results.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.base.html" title="trappy.base module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.results.html" title="trappy.wa.results module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.wa.html" accesskey="U">trappy.wa package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.wa.sysfs_extractor">
+<span id="trappy-wa-sysfs-extractor-module"></span><h1>trappy.wa.sysfs_extractor module<a class="headerlink" href="#module-trappy.wa.sysfs_extractor" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="trappy.wa.sysfs_extractor.SysfsExtractor">
+<em class="property">class </em><code class="descclassname">trappy.wa.sysfs_extractor.</code><code class="descname">SysfsExtractor</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/sysfs_extractor.html#SysfsExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.sysfs_extractor.SysfsExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="docutils">
+<dt>Operate on the parameters of a dump of Workload Automation&#8217;s</dt>
+<dd>sysfs extractor instrumentation.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) &#8211; The path to the workload in a output directory created by
+WA.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="trappy.wa.sysfs_extractor.SysfsExtractor.get_parameters">
+<code class="descname">get_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/sysfs_extractor.html#SysfsExtractor.get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.sysfs_extractor.SysfsExtractor.get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the parameters from a sysfs extractor dump</p>
+<p>WorkloadAutomation (WA) can dump sysfs values using its
+sysfs_extractor instrumentation.  Parse the tree and return the
+thermal parameters as a dict of key and values where the keys are
+the names of the files and values its corresponding values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.wa.sysfs_extractor.SysfsExtractor.pretty_print_in_ipython">
+<code class="descname">pretty_print_in_ipython</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/sysfs_extractor.html#SysfsExtractor.pretty_print_in_ipython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.sysfs_extractor.SysfsExtractor.pretty_print_in_ipython" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print parameters extracted from sysfs from a WA run in a pretty HTML table.</p>
+<p>This won&#8217;t work if the code is not running in an ipython notebook.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.wa.results.html"
+                        title="previous chapter">trappy.wa.results module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.base.html"
+                        title="next chapter">trappy.base module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.wa.sysfs_extractor.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.base.html" title="trappy.base module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.results.html" title="trappy.wa.results module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.wa.html" >trappy.wa package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

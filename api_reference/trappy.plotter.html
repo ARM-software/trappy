@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.plotter package &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy package" href="trappy.html" />
+    <link rel="next" title="trappy.plotter.AbstractDataPlotter module" href="trappy.plotter.AbstractDataPlotter.html" />
+    <link rel="prev" title="trappy package" href="trappy.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.plotter.AbstractDataPlotter.html" title="trappy.plotter.AbstractDataPlotter module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.html" title="trappy package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" accesskey="U">trappy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="trappy-plotter-package">
+<h1>trappy.plotter package<a class="headerlink" href="#trappy-plotter-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.AbstractDataPlotter.html">trappy.plotter.AbstractDataPlotter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.AttrConf.html">trappy.plotter.AttrConf module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.ColorMap.html">trappy.plotter.ColorMap module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.Constraint.html">trappy.plotter.Constraint module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.EventPlot.html">trappy.plotter.EventPlot module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.ILinePlot.html">trappy.plotter.ILinePlot module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.ILinePlotGen.html">trappy.plotter.ILinePlotGen module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.IPythonConf.html">trappy.plotter.IPythonConf module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.LinePlot.html">trappy.plotter.LinePlot module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.PlotLayout.html">trappy.plotter.PlotLayout module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trappy.plotter.Utils.html">trappy.plotter.Utils module</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-trappy.plotter">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-trappy.plotter" title="Permalink to this headline">¶</a></h2>
+<p>Init Module for the Plotter Code</p>
+<dl class="function">
+<dt id="trappy.plotter.plot_trace">
+<code class="descclassname">trappy.plotter.</code><code class="descname">plot_trace</code><span class="sig-paren">(</span><em>trace_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/plotter.html#plot_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.plotter.plot_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a kernelshark like plot of the trace file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trace_dir</strong> (<em>str</em>) &#8211; The location of the trace file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.plotter.register_forwarding_arg">
+<code class="descclassname">trappy.plotter.</code><code class="descname">register_forwarding_arg</code><span class="sig-paren">(</span><em>arg_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/plotter.html#register_forwarding_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.plotter.register_forwarding_arg" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Allows the user to register args to</dt>
+<dd>be forwarded to matplotlib</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>arg_name</strong> (<em>str</em>) &#8211; The arg to register</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.plotter.unregister_forwarding_arg">
+<code class="descclassname">trappy.plotter.</code><code class="descname">unregister_forwarding_arg</code><span class="sig-paren">(</span><em>arg_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/plotter.html#unregister_forwarding_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.plotter.unregister_forwarding_arg" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Unregisters arg_name from being passed to</dt>
+<dd>plotter matplotlib calls</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>arg_name</strong> (<em>str</em>) &#8211; The arg to register</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">trappy.plotter package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-trappy.plotter">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.html"
+                        title="previous chapter">trappy package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.plotter.AbstractDataPlotter.html"
+                        title="next chapter">trappy.plotter.AbstractDataPlotter module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.plotter.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.plotter.AbstractDataPlotter.html" title="trappy.plotter.AbstractDataPlotter module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.html" title="trappy package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

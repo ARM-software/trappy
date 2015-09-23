@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.sched module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy package" href="trappy.html" />
+    <link rel="next" title="trappy.thermal module" href="trappy.thermal.html" />
+    <link rel="prev" title="trappy.run module" href="trappy.run.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.thermal.html" title="trappy.thermal module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.run.html" title="trappy.run module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" accesskey="U">trappy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.sched">
+<span id="trappy-sched-module"></span><h1>trappy.sched module<a class="headerlink" href="#module-trappy.sched" title="Permalink to this headline">¶</a></h1>
+<p>Definitions of scheduler events registered by the Run class</p>
+<dl class="class">
+<dt id="trappy.sched.SchedContribScaleFactor">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedContribScaleFactor</code><a class="headerlink" href="#trappy.sched.SchedContribScaleFactor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Event to register tracing of contrib factor</p>
+<dl class="attribute">
+<dt id="trappy.sched.SchedContribScaleFactor.name">
+<code class="descname">name</code><em class="property"> = 'sched_contrib_scale_factor'</em><a class="headerlink" href="#trappy.sched.SchedContribScaleFactor.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedContribScaleFactor.parse_raw">
+<code class="descname">parse_raw</code><em class="property"> = False</em><a class="headerlink" href="#trappy.sched.SchedContribScaleFactor.parse_raw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedContribScaleFactor.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'sched_contrib_scale_f:'</em><a class="headerlink" href="#trappy.sched.SchedContribScaleFactor.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.sched.SchedCpuCapacity">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedCpuCapacity</code><a class="headerlink" href="#trappy.sched.SchedCpuCapacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Event to register tracing of CPU capacities</p>
+<dl class="attribute">
+<dt id="trappy.sched.SchedCpuCapacity.name">
+<code class="descname">name</code><em class="property"> = 'sched_cpu_capacity'</em><a class="headerlink" href="#trappy.sched.SchedCpuCapacity.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedCpuCapacity.parse_raw">
+<code class="descname">parse_raw</code><em class="property"> = False</em><a class="headerlink" href="#trappy.sched.SchedCpuCapacity.parse_raw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedCpuCapacity.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'sched_cpu_capacity:'</em><a class="headerlink" href="#trappy.sched.SchedCpuCapacity.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.sched.SchedCpuFrequency">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedCpuFrequency</code><a class="reference internal" href="_modules/trappy/sched.html#SchedCpuFrequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.sched.SchedCpuFrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Corresponds to Linux kernel trace event power/cpu_frequency</p>
+<dl class="method">
+<dt id="trappy.sched.SchedCpuFrequency.finalize_object">
+<code class="descname">finalize_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/sched.html#SchedCpuFrequency.finalize_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.sched.SchedCpuFrequency.finalize_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>This renaming is necessary because our cpu related pivot is &#8216;cpu&#8217;
+and not &#8216;cpu_id&#8217;. Otherwise you cannot &#8216;mix and match&#8217; with other
+classes</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedCpuFrequency.name">
+<code class="descname">name</code><em class="property"> = 'sched_cpu_frequency'</em><a class="headerlink" href="#trappy.sched.SchedCpuFrequency.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the <code class="xref py py-mod docutils literal"><span class="pre">pandas.DataFrame</span></code> member that will be created in a
+<a class="reference internal" href="trappy.run.html#trappy.run.Run" title="trappy.run.Run"><code class="xref py py-mod docutils literal"><span class="pre">trappy.run.Run</span></code></a> object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedCpuFrequency.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'cpu_frequency:'</em><a class="headerlink" href="#trappy.sched.SchedCpuFrequency.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique word that will be matched in a trace line</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.sched.SchedLoadAvgCpu">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedLoadAvgCpu</code><a class="headerlink" href="#trappy.sched.SchedLoadAvgCpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Load and Utilization Signals for CPUs</p>
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgCpu.name">
+<code class="descname">name</code><em class="property"> = 'sched_load_avg_cpu'</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgCpu.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgCpu.parse_raw">
+<code class="descname">parse_raw</code><em class="property"> = False</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgCpu.parse_raw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgCpu.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'sched_load_avg_cpu:'</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgCpu.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.sched.SchedLoadAvgSchedGroup">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedLoadAvgSchedGroup</code><a class="reference internal" href="_modules/trappy/sched.html#SchedLoadAvgSchedGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.sched.SchedLoadAvgSchedGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Corresponds to Linux kernel trace event sched_load_avg_sched_group</p>
+<dl class="method">
+<dt id="trappy.sched.SchedLoadAvgSchedGroup.finalize_object">
+<code class="descname">finalize_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/sched.html#SchedLoadAvgSchedGroup.finalize_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.sched.SchedLoadAvgSchedGroup.finalize_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>This condition is necessary to force column &#8216;cpus&#8217; to be printed
+as 8 digits w/ leading 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgSchedGroup.name">
+<code class="descname">name</code><em class="property"> = 'sched_load_avg_sched_group'</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgSchedGroup.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the <code class="xref py py-mod docutils literal"><span class="pre">pandas.DataFrame</span></code> member that will be created in a
+<a class="reference internal" href="trappy.run.html#trappy.run.Run" title="trappy.run.Run"><code class="xref py py-mod docutils literal"><span class="pre">trappy.run.Run</span></code></a> object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgSchedGroup.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'sched_load_avg_sg:'</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgSchedGroup.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique word that will be matched in a trace line</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.sched.SchedLoadAvgTask">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedLoadAvgTask</code><a class="reference internal" href="_modules/trappy/sched.html#SchedLoadAvgTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.sched.SchedLoadAvgTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Corresponds to Linux kernel trace event sched_load_avg_task</p>
+<dl class="method">
+<dt id="trappy.sched.SchedLoadAvgTask.get_pids">
+<code class="descname">get_pids</code><span class="sig-paren">(</span><em>key=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/sched.html#SchedLoadAvgTask.get_pids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.sched.SchedLoadAvgTask.get_pids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of (comm, pid) that contain
+&#8216;key&#8217; in their &#8216;comm&#8217;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgTask.name">
+<code class="descname">name</code><em class="property"> = 'sched_load_avg_task'</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgTask.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the <code class="xref py py-mod docutils literal"><span class="pre">pandas.DataFrame</span></code> member that will be created in a
+<a class="reference internal" href="trappy.run.html#trappy.run.Run" title="trappy.run.Run"><code class="xref py py-mod docutils literal"><span class="pre">trappy.run.Run</span></code></a> object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedLoadAvgTask.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'sched_load_avg_task:'</em><a class="headerlink" href="#trappy.sched.SchedLoadAvgTask.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique word that will be matched in a trace line</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.sched.SchedSwitch">
+<em class="property">class </em><code class="descclassname">trappy.sched.</code><code class="descname">SchedSwitch</code><a class="headerlink" href="#trappy.sched.SchedSwitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-class docutils literal"><span class="pre">trappy.base.Base</span></code></a></p>
+<p>Register SchedSwitch Event</p>
+<dl class="attribute">
+<dt id="trappy.sched.SchedSwitch.name">
+<code class="descname">name</code><em class="property"> = 'sched_switch'</em><a class="headerlink" href="#trappy.sched.SchedSwitch.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedSwitch.parse_raw">
+<code class="descname">parse_raw</code><em class="property"> = True</em><a class="headerlink" href="#trappy.sched.SchedSwitch.parse_raw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.sched.SchedSwitch.unique_word">
+<code class="descname">unique_word</code><em class="property"> = 'sched_switch'</em><a class="headerlink" href="#trappy.sched.SchedSwitch.unique_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.run.html"
+                        title="previous chapter">trappy.run module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.thermal.html"
+                        title="next chapter">trappy.thermal module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.sched.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.thermal.html" title="trappy.thermal module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.run.html" title="trappy.run module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

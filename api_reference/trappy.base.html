@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.base module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy package" href="trappy.html" />
+    <link rel="next" title="trappy.compare_runs module" href="trappy.compare_runs.html" />
+    <link rel="prev" title="trappy.wa.sysfs_extractor module" href="trappy.wa.sysfs_extractor.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.compare_runs.html" title="trappy.compare_runs module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.sysfs_extractor.html" title="trappy.wa.sysfs_extractor module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" accesskey="U">trappy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.base">
+<span id="trappy-base-module"></span><h1>trappy.base module<a class="headerlink" href="#module-trappy.base" title="Permalink to this headline">¶</a></h1>
+<p>Base class to parse trace.dat dumps</p>
+<dl class="class">
+<dt id="trappy.base.Base">
+<em class="property">class </em><code class="descclassname">trappy.base.</code><code class="descname">Base</code><span class="sig-paren">(</span><em>unique_word</em>, <em>parse_raw=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#Base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.Base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class to parse trace.dat dumps.</p>
+<p>Don&#8217;t use directly, create a subclass that defines the unique_word
+you want to match in the output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>unique_word</strong> (<em>str</em>) &#8211; Unique Word to identify the event in the trace</li>
+<li><strong>parse_raw</strong> &#8211; If <code class="code docutils literal"><span class="pre">True</span></code>, raw trace data (-R option) to
+trace-cmd will be used</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This class acts as a base class for all TRAPpy events</p>
+<dl class="method">
+<dt id="trappy.base.Base.append_data">
+<code class="descname">append_data</code><span class="sig-paren">(</span><em>time</em>, <em>comm</em>, <em>pid</em>, <em>cpu</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#Base.append_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.Base.append_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append data parsed from a line to the corresponding arrays</p>
+<p>The <code class="xref py py-mod docutils literal"><span class="pre">DataFrame</span></code> will be created from this when the whole trace
+has been parsed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> (<em>float</em>) &#8211; The time for the line that was printed in the trace</li>
+<li><strong>comm</strong> (<em>str</em>) &#8211; The command name or the execname from which the trace
+line originated</li>
+<li><strong>pid</strong> (<em>int</em>) &#8211; The PID of the process from which the trace
+line originated</li>
+<li><strong>data</strong> (<em>str</em>) &#8211; The data for matching line in the trace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.base.Base.create_dataframe">
+<code class="descname">create_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#Base.create_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.Base.create_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the final <code class="xref py py-mod docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.base.Base.finalize_object">
+<code class="descname">finalize_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#Base.finalize_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.Base.finalize_object" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="trappy.base.Base.normalize_time">
+<code class="descname">normalize_time</code><span class="sig-paren">(</span><em>basetime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#Base.normalize_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.Base.normalize_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Substract basetime from the Time of the data frame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>basetime</strong> (<em>float</em>) &#8211; The offset which needs to be subtracted from
+the time index</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.base.Base.write_csv">
+<code class="descname">write_csv</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#Base.write_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.Base.write_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the csv info into a CSV file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) &#8211; The name of the CSV file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.base.trace_parser_explode_array">
+<code class="descclassname">trappy.base.</code><code class="descname">trace_parser_explode_array</code><span class="sig-paren">(</span><em>string</em>, <em>array_lengths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/base.html#trace_parser_explode_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.base.trace_parser_explode_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explode an array in the trace into individual elements for easy parsing</p>
+<p>Basically, turn <code class="code docutils literal"><span class="pre">load={1</span> <span class="pre">1</span> <span class="pre">2</span> <span class="pre">2}</span></code> into <code class="code docutils literal"><span class="pre">load0=1</span> <span class="pre">load1=1</span> <span class="pre">load2=2</span>
+<span class="pre">load3=2</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>string</strong> (<em>str</em>) &#8211; Input string from the trace</li>
+<li><strong>array_lengths</strong> (<em>dict</em>) &#8211; A dictionary of array names and their
+expected length.  If we get array that&#8217;s shorter than the expected
+length, additional keys have to be introduced with value 0 to
+compensate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">trace_parser_explode_array</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s">&quot;load={1 2}&quot;</span><span class="p">,</span>
+                           <span class="n">array_lengths</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;load&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+<span class="s">&quot;load0=1 load1=2 load2=0 load3=0&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.wa.sysfs_extractor.html"
+                        title="previous chapter">trappy.wa.sysfs_extractor module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.compare_runs.html"
+                        title="next chapter">trappy.compare_runs module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.base.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.compare_runs.html" title="trappy.compare_runs module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.sysfs_extractor.html" title="trappy.wa.sysfs_extractor module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.stats.Correlator &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.stats.Correlator</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;The module responsible for correlation</span>
+<span class="sd">and related functionality</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter.PlotLayout</span> <span class="kn">import</span> <span class="n">PlotLayout</span>
+<span class="kn">from</span> <span class="nn">trappy.stats</span> <span class="kn">import</span> <span class="n">StatConf</span>
+<span class="kn">from</span> <span class="nn">trappy.stats.Indexer</span> <span class="kn">import</span> <span class="n">get_unified_indexer</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="Correlator"><a class="viewcode-back" href="../../../trappy.stats.Correlator.html#trappy.stats.Correlator.Correlator">[docs]</a><span class="k">class</span> <span class="nc">Correlator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class that allows to align and correlate two</span>
+<span class="sd">    runs</span>
+<span class="sd">    :param first: First Aggregator</span>
+<span class="sd">    :type first: :mod:`trappy.stats.Aggregator`</span>
+
+<span class="sd">    :param second: Second Aggregator</span>
+<span class="sd">    :type second: :mod:`trappy.stats.Aggregator`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_first_agg</span> <span class="o">=</span> <span class="n">first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_second_agg</span> <span class="o">=</span> <span class="n">second</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indexer</span> <span class="o">=</span> <span class="n">get_unified_indexer</span><span class="p">([</span><span class="n">first</span><span class="o">.</span><span class="n">indexer</span><span class="p">,</span> <span class="n">second</span><span class="o">.</span><span class="n">indexer</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_corrfunc</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;corrfunc&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_agg_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corr_graphs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_align_top_level</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">StatConf</span><span class="o">.</span><span class="n">DELTA_DEFAULT</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Internal method to resample the series</span>
+<span class="sd">        to a uniformly spaced index</span>
+
+<span class="sd">        :param series: Series io be resampled</span>
+<span class="sd">        :type series: :mod:`pandas.Series`</span>
+
+<span class="sd">        :param delta: spacing between indices</span>
+<span class="sd">        :type delta: float</span>
+
+<span class="sd">        :return: resampled :mod:`pandas.Series`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">new_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexer</span><span class="o">.</span><span class="n">get_uniform</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">new_index</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;pad&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Correlator.correlate"><a class="viewcode-back" href="../../../trappy.stats.Correlator.html#trappy.stats.Correlator.Correlator.correlate">[docs]</a>    <span class="k">def</span> <span class="nf">correlate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">resample</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This function returns the correlation between two</span>
+<span class="sd">           runs</span>
+
+<span class="sd">        :param level: The level at which the correlation is</span>
+<span class="sd">            required</span>
+<span class="sd">        :type level: str</span>
+
+<span class="sd">        :param resample: Resample data</span>
+<span class="sd">        :type resample: bool</span>
+
+<span class="sd">        :return: A normalized correlation value is returned</span>
+<span class="sd">            for each group in the level</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_agg</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_agg_kwargs</span><span class="p">)</span>
+        <span class="n">result_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_second_agg</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_agg_kwargs</span><span class="p">)</span>
+
+
+        <span class="n">corr_output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">result_group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result_1</span><span class="p">):</span>
+            <span class="n">series_x</span> <span class="o">=</span> <span class="n">result_group</span>
+            <span class="n">series_y</span> <span class="o">=</span> <span class="n">result_2</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">resample</span><span class="p">:</span>
+                <span class="n">series_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span><span class="p">(</span><span class="n">series_x</span><span class="p">)</span>
+                <span class="n">series_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span><span class="p">(</span><span class="n">series_y</span><span class="p">)</span>
+
+            <span class="n">series_x</span><span class="p">,</span> <span class="n">series_y</span> <span class="o">=</span> <span class="n">shift_series</span><span class="p">(</span><span class="n">series_x</span><span class="p">,</span> <span class="n">series_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift</span><span class="p">)</span>
+            <span class="n">corr_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_correlate</span><span class="p">(</span><span class="n">series_x</span><span class="p">,</span> <span class="n">series_y</span><span class="p">))</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">series_x</span><span class="p">[</span><span class="n">series_x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">series_y</span><span class="p">[</span><span class="n">series_y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]))</span>
+
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">corr</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">corr_output</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">corr</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">corr</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">corr_output</span><span class="p">,</span> <span class="n">total</span>
+
+</div>
+<div class="viewcode-block" id="Correlator.plot"><a class="viewcode-back" href="../../../trappy.stats.Correlator.html#trappy.stats.Correlator.Correlator.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">per_line</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Temporary function to plot data. Expected to be</span>
+<span class="sd">        implemented in plotter</span>
+
+<span class="sd">        :param level: Topological Level (level in :mod:`trappy.stats.Topology`)</span>
+<span class="sd">        :type level: str</span>
+
+<span class="sd">        :param per_line: Number of plots per line</span>
+<span class="sd">        :type per_line: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">num_plots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_agg</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">level_span</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">result_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_agg</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_agg_kwargs</span><span class="p">)</span>
+        <span class="n">result_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_second_agg</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_agg_kwargs</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">PlotLayout</span><span class="p">(</span><span class="n">per_line</span><span class="p">,</span> <span class="n">num_plots</span><span class="p">)</span>
+
+        <span class="n">plot_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">result_group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result_1</span><span class="p">):</span>
+            <span class="n">s_x</span> <span class="o">=</span> <span class="n">result_group</span>
+            <span class="n">s_y</span> <span class="o">=</span> <span class="n">result_2</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span>
+
+            <span class="n">s_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span><span class="p">(</span><span class="n">s_x</span><span class="p">)</span>
+            <span class="n">s_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span><span class="p">(</span><span class="n">s_y</span><span class="p">)</span>
+
+            <span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span> <span class="o">=</span> <span class="n">shift_series</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shift</span><span class="p">)</span>
+
+            <span class="n">ymax</span> <span class="o">=</span> <span class="mf">1.25</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">s_x</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">s_y</span><span class="o">.</span><span class="n">values</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">ymin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">s_x</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">s_y</span><span class="o">.</span><span class="n">values</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">]</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+            <span class="n">axis</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">get_axis</span><span class="p">(</span><span class="n">plot_index</span><span class="p">)</span>
+
+            <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">s_x</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s_y</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">s_y</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+            <span class="n">plot_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">plot_index</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_correlate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_corrfunc</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_corrfunc</span>
+            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">s_x</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">s_y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_align_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Temporary function to plot data. Expected to be</span>
+<span class="sd">        implemented in plotter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_agg</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">)</span>
+        <span class="n">result_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_second_agg</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">)</span>
+
+        <span class="n">s_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span><span class="p">(</span><span class="n">result_1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">s_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample</span><span class="p">(</span><span class="n">result_2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+        <span class="n">front_x</span><span class="p">,</span> <span class="n">front_y</span><span class="p">,</span> <span class="n">front_shift</span> <span class="o">=</span> <span class="n">align</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&quot;front&quot;</span><span class="p">)</span>
+        <span class="n">front_corr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_correlate</span><span class="p">(</span><span class="n">front_x</span><span class="p">,</span> <span class="n">front_y</span><span class="p">)</span>
+
+        <span class="n">back_x</span><span class="p">,</span> <span class="n">back_y</span><span class="p">,</span> <span class="n">back_shift</span> <span class="o">=</span> <span class="n">align</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&quot;back&quot;</span><span class="p">)</span>
+        <span class="n">back_corr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_correlate</span><span class="p">(</span><span class="n">back_x</span><span class="p">,</span> <span class="n">back_y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">back_corr</span><span class="p">):</span>
+            <span class="n">back_corr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">front_corr</span><span class="p">):</span>
+            <span class="n">front_corr</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">front_corr</span> <span class="o">&gt;=</span> <span class="n">back_corr</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">front_shift</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">back_shift</span>
+
+
+</div>
+<div class="viewcode-block" id="align"><a class="viewcode-back" href="../../../trappy.stats.Correlator.html#trappy.stats.Correlator.align">[docs]</a><span class="k">def</span> <span class="nf">align</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&quot;front&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to align the input series</span>
+
+<span class="sd">    :param s_x: First Series</span>
+<span class="sd">    :type s_x: :mod:`pandas.Series`</span>
+
+<span class="sd">    :param s_y: Second Series</span>
+<span class="sd">    :type s_y: :mod:`pandas.Series`</span>
+
+<span class="sd">    :param mode: Align Front/Back</span>
+<span class="sd">    :type mode: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">p_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">s_x</span><span class="p">)</span>
+    <span class="n">p_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">s_y</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_x</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;front&quot;</span><span class="p">:</span>
+        <span class="n">p_x</span> <span class="o">=</span> <span class="n">p_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">p_y</span> <span class="o">=</span> <span class="n">p_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;back&quot;</span><span class="p">:</span>
+        <span class="n">p_x</span> <span class="o">=</span> <span class="n">p_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">p_y</span> <span class="o">=</span> <span class="n">p_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">p_x</span> <span class="o">-</span> <span class="n">p_y</span>
+
+    <span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span> <span class="o">=</span> <span class="n">shift_series</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">shift</span>
+</div>
+<div class="viewcode-block" id="shift_series"><a class="viewcode-back" href="../../../trappy.stats.Correlator.html#trappy.stats.Correlator.shift_series">[docs]</a><span class="k">def</span> <span class="nf">shift_series</span><span class="p">(</span><span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Shift series to align</span>
+<span class="sd">    :param s_x: First Series</span>
+<span class="sd">    :type s_x: :mod:`pandas.Series`</span>
+
+<span class="sd">    :param s_y: Second Series</span>
+<span class="sd">    :type s_y: :mod:`pandas.Series`</span>
+
+<span class="sd">    :param shift: The number of index</span>
+<span class="sd">        positions to be shifted</span>
+<span class="sd">    :type shift: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">shift</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s_y</span> <span class="o">=</span> <span class="n">s_y</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s_x</span> <span class="o">=</span> <span class="n">s_x</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">shift</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">s_x</span><span class="p">,</span> <span class="n">s_y</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

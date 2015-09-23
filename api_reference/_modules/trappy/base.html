@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.base &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.base</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;Base class to parse trace.dat dumps&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="trace_parser_explode_array"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.trace_parser_explode_array">[docs]</a><span class="k">def</span> <span class="nf">trace_parser_explode_array</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">array_lengths</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Explode an array in the trace into individual elements for easy parsing</span>
+
+<span class="sd">    Basically, turn :code:`load={1 1 2 2}` into :code:`load0=1 load1=1 load2=2</span>
+<span class="sd">    load3=2`.</span>
+
+<span class="sd">    :param string: Input string from the trace</span>
+<span class="sd">    :type string: str</span>
+
+<span class="sd">    :param array_lengths: A dictionary of array names and their</span>
+<span class="sd">        expected length.  If we get array that&#39;s shorter than the expected</span>
+<span class="sd">        length, additional keys have to be introduced with value 0 to</span>
+<span class="sd">        compensate.</span>
+<span class="sd">    :type array_lengths: dict</span>
+
+<span class="sd">    For example:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        trace_parser_explode_array(string=&quot;load={1 2}&quot;,</span>
+<span class="sd">                                   array_lengths={&quot;load&quot;: 4})</span>
+<span class="sd">        &quot;load0=1 load1=2 load2=0 load3=0&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&quot;[^ ]+={[^}]+}&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">to_explode</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+        <span class="n">col_basename</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">r&quot;([^=]+)=&quot;</span><span class="p">,</span> <span class="n">to_explode</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vals_str</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&quot;{(.+)}&quot;</span><span class="p">,</span> <span class="n">to_explode</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vals_array</span> <span class="o">=</span> <span class="n">vals_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span>
+
+        <span class="n">exploded_str</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vals_array</span><span class="p">):</span>
+            <span class="n">exploded_str</span> <span class="o">+=</span> <span class="s">&quot;{}{}={} &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_basename</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="n">vals_added</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals_array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vals_added</span> <span class="o">&lt;</span> <span class="n">array_lengths</span><span class="p">[</span><span class="n">col_basename</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vals_added</span><span class="p">,</span> <span class="n">array_lengths</span><span class="p">[</span><span class="n">col_basename</span><span class="p">]):</span>
+                <span class="n">exploded_str</span> <span class="o">+=</span> <span class="s">&quot;{}{}=0 &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_basename</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+
+        <span class="n">exploded_str</span> <span class="o">=</span> <span class="n">exploded_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">begin_idx</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">end_idx</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+
+        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[:</span><span class="n">begin_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">exploded_str</span> <span class="o">+</span> <span class="n">string</span><span class="p">[</span><span class="n">end_idx</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">string</span>
+</div>
+<div class="viewcode-block" id="Base"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.Base">[docs]</a><span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class to parse trace.dat dumps.</span>
+
+<span class="sd">    Don&#39;t use directly, create a subclass that defines the unique_word</span>
+<span class="sd">    you want to match in the output</span>
+
+<span class="sd">    :param unique_word: Unique Word to identify the event in the trace</span>
+<span class="sd">    :type unique_word: str</span>
+
+<span class="sd">    :param parse_raw: If :code:`True`, raw trace data (-R option) to</span>
+<span class="sd">        trace-cmd will be used</span>
+
+<span class="sd">    This class acts as a base class for all TRAPpy events</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unique_word</span><span class="p">,</span> <span class="n">parse_raw</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span> <span class="o">=</span> <span class="n">unique_word</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pid_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpu_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_raw</span> <span class="o">=</span> <span class="n">parse_raw</span>
+
+<div class="viewcode-block" id="Base.finalize_object"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.Base.finalize_object">[docs]</a>    <span class="k">def</span> <span class="nf">finalize_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+    <span class="k">def</span> <span class="nf">__get_trace_array_lengths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the lengths of all arrays in the trace</span>
+
+<span class="sd">        Returns a dict with the name of each array found in the trace</span>
+<span class="sd">        as keys and their corresponding length as value</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+        <span class="n">pat_array</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&quot;([A-Za-z0-9_]+)={([^}]+)}&quot;</span><span class="p">)</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_array</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pat_array</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="p">(</span><span class="n">array_name</span><span class="p">,</span> <span class="n">array_elements</span><span class="p">)</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+
+                <span class="n">array_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">array_elements</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">array_len</span> <span class="o">&gt;</span> <span class="n">ret</span><span class="p">[</span><span class="n">array_name</span><span class="p">]:</span>
+                    <span class="n">ret</span><span class="p">[</span><span class="n">array_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">array_len</span>
+
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">():]</span>
+
+            <span class="c"># Stop scanning if the trace doesn&#39;t have arrays</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">ret</span>
+
+<div class="viewcode-block" id="Base.append_data"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.Base.append_data">[docs]</a>    <span class="k">def</span> <span class="nf">append_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">cpu</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Append data parsed from a line to the corresponding arrays</span>
+
+<span class="sd">        The :mod:`DataFrame` will be created from this when the whole trace</span>
+<span class="sd">        has been parsed.</span>
+
+<span class="sd">        :param time: The time for the line that was printed in the trace</span>
+<span class="sd">        :type time: float</span>
+
+<span class="sd">        :param comm: The command name or the execname from which the trace</span>
+<span class="sd">            line originated</span>
+<span class="sd">        :type comm: str</span>
+
+<span class="sd">        :param pid: The PID of the process from which the trace</span>
+<span class="sd">            line originated</span>
+<span class="sd">        :type pid: int</span>
+
+<span class="sd">        :param data: The data for matching line in the trace</span>
+<span class="sd">        :type data: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pid_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpu_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cpu</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Base.create_dataframe"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.Base.create_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">create_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the final :mod:`pandas.DataFrame`&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_array</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">trace_arr_lengths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_trace_array_lengths</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">trace_arr_lengths</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_array</span><span class="p">):</span>
+                <span class="n">expl_val</span> <span class="o">=</span> <span class="n">trace_parser_explode_array</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">trace_arr_lengths</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">expl_val</span>
+
+        <span class="n">parsed_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">cpu</span><span class="p">,</span> <span class="n">data_str</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pid_array</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">cpu_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_array</span><span class="p">):</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;__comm&quot;</span><span class="p">:</span> <span class="n">comm</span><span class="p">,</span> <span class="s">&quot;__pid&quot;</span><span class="p">:</span> <span class="n">pid</span><span class="p">,</span> <span class="s">&quot;__cpu&quot;</span><span class="p">:</span> <span class="n">cpu</span><span class="p">}</span>
+            <span class="n">prev_key</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">data_str</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s">&quot;=&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">field</span><span class="p">:</span>
+                    <span class="c"># Concatenation is supported only for &quot;string&quot; values</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">prev_key</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="n">prev_key</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">field</span>
+                    <span class="k">continue</span>
+                <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="n">prev_key</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">parsed_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span>
+
+        <span class="n">time_idx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_array</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">parsed_data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">time_idx</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pid_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpu_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_array</span> <span class="o">=</span> <span class="p">[]</span>
+</div>
+<div class="viewcode-block" id="Base.write_csv"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.Base.write_csv">[docs]</a>    <span class="k">def</span> <span class="nf">write_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the csv info into a CSV file</span>
+
+<span class="sd">        :param fname: The name of the CSV file</span>
+<span class="sd">        :type fname: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Base.normalize_time"><a class="viewcode-back" href="../../trappy.base.html#trappy.base.Base.normalize_time">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basetime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Substract basetime from the Time of the data frame</span>
+
+<span class="sd">        :param basetime: The offset which needs to be subtracted from</span>
+<span class="sd">            the time index</span>
+<span class="sd">        :type basetime: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">basetime</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;Time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;Time&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">basetime</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">&quot;Time&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
