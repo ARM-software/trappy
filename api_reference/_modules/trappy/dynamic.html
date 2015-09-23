@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.dynamic &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.dynamic</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;The idea is to create a wrapper class that</span>
+<span class="sd">returns a Type of a Class dynamically created based</span>
+<span class="sd">on the input parameters. Similar to a factory design</span>
+<span class="sd">pattern</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">trappy.base</span> <span class="kn">import</span> <span class="n">Base</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">trappy.run</span> <span class="kn">import</span> <span class="n">Run</span>
+
+
+<div class="viewcode-block" id="default_init"><a class="viewcode-back" href="../../trappy.dynamic.html#trappy.dynamic.default_init">[docs]</a><span class="k">def</span> <span class="nf">default_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Default Constructor for the</span>
+<span class="sd">    Dynamic MetaClass. This is used for</span>
+<span class="sd">    the dynamic object creation in</span>
+<span class="sd">    :mod:`trappy.dynamic.DynamicTypeFactory`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">super</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+        <span class="n">unique_word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span><span class="p">,</span>
+        <span class="n">parse_raw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parse_raw</span>
+    <span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="DynamicTypeFactory"><a class="viewcode-back" href="../../trappy.dynamic.html#trappy.dynamic.DynamicTypeFactory">[docs]</a><span class="k">class</span> <span class="nc">DynamicTypeFactory</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Override the type class to create</span>
+<span class="sd">    a dynamic type on the fly. This Factory</span>
+<span class="sd">    class is used internally by</span>
+<span class="sd">    :mod:`trappy.dynamic.register_dynamic`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override the new method&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override the constructor&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DynamicTypeFactory</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_get_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Internal Method to Change camelcase to</span>
+<span class="sd">    underscores. CamelCase -&gt; camel_case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;(?!^)([A-Z]+)&#39;</span><span class="p">,</span> <span class="s">r&#39;_\1&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="register_dynamic"><a class="viewcode-back" href="../../trappy.dynamic.html#trappy.dynamic.register_dynamic">[docs]</a><span class="k">def</span> <span class="nf">register_dynamic</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">unique_word</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">,</span>
+                     <span class="n">parse_raw</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a Dynamic Type and register</span>
+<span class="sd">    it with the TRAPpy Framework</span>
+
+<span class="sd">    :param class_name: The name of the class to be registered</span>
+<span class="sd">        (Should be in CamelCase)</span>
+<span class="sd">    :type class_name: str</span>
+
+<span class="sd">    :param unique_word: The unique_word to be matched in the</span>
+<span class="sd">        trace</span>
+<span class="sd">    :type unique_word: str</span>
+
+<span class="sd">    :param scope: Registry Scope (Can be used to constrain</span>
+<span class="sd">        the parsing of events and group them together)</span>
+<span class="sd">    :type scope: str</span>
+
+<span class="sd">    :param parse_raw: If, true, raw trace output (-R flag)</span>
+<span class="sd">        will be used</span>
+<span class="sd">    :type parse_raw: bool</span>
+
+<span class="sd">    For example if a new unique word :code:`my_unique_word` has</span>
+<span class="sd">    to be registered with TRAPpy:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        import trappy</span>
+<span class="sd">        custom_class = trappy.register_dynamic(&quot;MyEvent&quot;, &quot;my_unique_word&quot;)</span>
+<span class="sd">        run = trappy.Run(&quot;/path/to/trace_file&quot;)</span>
+
+<span class="sd">        # New data member created in the run object</span>
+<span class="sd">        run.my_event</span>
+
+<span class="sd">    .. note:: The name of the member is :code:`my_event` from **MyEvent**</span>
+
+
+<span class="sd">    :return: A class object of type :mod:`trappy.base.Base`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dyn_class</span> <span class="o">=</span> <span class="n">DynamicTypeFactory</span><span class="p">(</span>
+        <span class="n">class_name</span><span class="p">,</span> <span class="p">(</span><span class="n">Base</span><span class="p">,),</span> <span class="p">{</span>
+            <span class="s">&quot;__init__&quot;</span><span class="p">:</span> <span class="n">default_init</span><span class="p">,</span>
+            <span class="s">&quot;unique_word&quot;</span><span class="p">:</span> <span class="n">unique_word</span><span class="p">,</span>
+            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">_get_name</span><span class="p">(</span><span class="n">class_name</span><span class="p">),</span>
+            <span class="s">&quot;parse_raw&quot;</span> <span class="p">:</span> <span class="n">parse_raw</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">dyn_class</span><span class="p">,</span> <span class="n">scope</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dyn_class</span>
+
+</div>
+<div class="viewcode-block" id="register_class"><a class="viewcode-back" href="../../trappy.dynamic.html#trappy.dynamic.register_class">[docs]</a><span class="k">def</span> <span class="nf">register_class</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Register a new class implementation</span>
+<span class="sd">    Should be used when the class has</span>
+<span class="sd">    complex helper methods and does not</span>
+<span class="sd">    expect to use the default constructor</span>
+
+<span class="sd">    :param cls: The class to be registered for</span>
+<span class="sd">        enabling the parsing of an event in trace</span>
+<span class="sd">    :type cls: :mod:`trappy.base.Base`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Check the argspec of the class</span>
+    <span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

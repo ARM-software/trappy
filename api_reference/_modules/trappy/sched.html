@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.sched &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.sched</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;Definitions of scheduler events registered by the Run class&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">trappy.base</span> <span class="kn">import</span> <span class="n">Base</span>
+<span class="kn">from</span> <span class="nn">trappy.dynamic</span> <span class="kn">import</span> <span class="n">register_dynamic</span>
+<span class="kn">from</span> <span class="nn">trappy.run</span> <span class="kn">import</span> <span class="n">Run</span>
+
+<div class="viewcode-block" id="SchedLoadAvgSchedGroup"><a class="viewcode-back" href="../../trappy.sched.html#trappy.sched.SchedLoadAvgSchedGroup">[docs]</a><span class="k">class</span> <span class="nc">SchedLoadAvgSchedGroup</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Corresponds to Linux kernel trace event sched_load_avg_sched_group&quot;&quot;&quot;</span>
+
+    <span class="n">unique_word</span> <span class="o">=</span> <span class="s">&quot;sched_load_avg_sg:&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The unique word that will be matched in a trace line&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;sched_load_avg_sched_group&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The name of the :mod:`pandas.DataFrame` member that will be created in a</span>
+<span class="sd">    :mod:`trappy.run.Run` object&quot;&quot;&quot;</span>
+
+    <span class="n">_cpu_mask_column</span> <span class="o">=</span> <span class="s">&quot;cpus&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SchedLoadAvgSchedGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">unique_word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SchedLoadAvgSchedGroup.finalize_object"><a class="viewcode-back" href="../../trappy.sched.html#trappy.sched.SchedLoadAvgSchedGroup.finalize_object">[docs]</a>    <span class="k">def</span> <span class="nf">finalize_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This condition is necessary to force column &#39;cpus&#39; to be printed</span>
+<span class="sd">        as 8 digits w/ leading 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpu_mask_column</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cpu_mask_column</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s">&#39;{:0&gt;8}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cpu_mask_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfr</span>
+</div></div>
+<span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">SchedLoadAvgSchedGroup</span><span class="p">,</span> <span class="s">&quot;sched&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SchedLoadAvgTask"><a class="viewcode-back" href="../../trappy.sched.html#trappy.sched.SchedLoadAvgTask">[docs]</a><span class="k">class</span> <span class="nc">SchedLoadAvgTask</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Corresponds to Linux kernel trace event sched_load_avg_task&quot;&quot;&quot;</span>
+
+    <span class="n">unique_word</span> <span class="o">=</span> <span class="s">&quot;sched_load_avg_task:&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The unique word that will be matched in a trace line&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;sched_load_avg_task&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The name of the :mod:`pandas.DataFrame` member that will be created in a</span>
+<span class="sd">    :mod:`trappy.run.Run` object&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SchedLoadAvgTask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">unique_word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SchedLoadAvgTask.get_pids"><a class="viewcode-back" href="../../trappy.sched.html#trappy.sched.SchedLoadAvgTask.get_pids">[docs]</a>    <span class="k">def</span> <span class="nf">get_pids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of (comm, pid) that contain</span>
+<span class="sd">        &#39;key&#39; in their &#39;comm&#39;.&quot;&quot;&quot;</span>
+        <span class="n">dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;comm&#39;</span><span class="p">,</span> <span class="s">&#39;pid&#39;</span><span class="p">])</span>
+        <span class="n">dfr</span> <span class="o">=</span> <span class="n">dfr</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span> <span class="p">[</span><span class="s">&#39;comm&#39;</span><span class="p">,</span> <span class="s">&#39;pid&#39;</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">dfr</span><span class="p">[</span><span class="n">dfr</span><span class="p">[</span><span class="s">&#39;comm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</div></div>
+<span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">SchedLoadAvgTask</span><span class="p">,</span> <span class="s">&quot;sched&quot;</span><span class="p">)</span>
+
+<span class="c"># pylint doesn&#39;t like globals that are not ALL_CAPS</span>
+<span class="c"># pylint: disable=invalid-name</span>
+<span class="n">SchedLoadAvgCpu</span> <span class="o">=</span> <span class="n">register_dynamic</span><span class="p">(</span><span class="s">&quot;SchedLoadAvgCpu&quot;</span><span class="p">,</span>
+                                   <span class="s">&quot;sched_load_avg_cpu:&quot;</span><span class="p">,</span>
+                                   <span class="s">&quot;sched&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Load and Utilization Signals for CPUs&quot;&quot;&quot;</span>
+
+<span class="n">SchedContribScaleFactor</span> <span class="o">=</span> <span class="n">register_dynamic</span><span class="p">(</span><span class="s">&quot;SchedContribScaleFactor&quot;</span><span class="p">,</span>
+                                           <span class="s">&quot;sched_contrib_scale_f:&quot;</span><span class="p">,</span>
+                                           <span class="s">&quot;sched&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Event to register tracing of contrib factor&quot;&quot;&quot;</span>
+
+<span class="n">SchedCpuCapacity</span> <span class="o">=</span> <span class="n">register_dynamic</span><span class="p">(</span><span class="s">&quot;SchedCpuCapacity&quot;</span><span class="p">,</span>
+                                    <span class="s">&quot;sched_cpu_capacity:&quot;</span><span class="p">,</span>
+                                    <span class="s">&quot;sched&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Event to register tracing of CPU capacities&quot;&quot;&quot;</span>
+
+<span class="n">SchedSwitch</span> <span class="o">=</span> <span class="n">register_dynamic</span><span class="p">(</span><span class="s">&quot;SchedSwitch&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;sched_switch&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;sched&quot;</span><span class="p">,</span>
+                               <span class="n">parse_raw</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Register SchedSwitch Event&quot;&quot;&quot;</span>
+<span class="c"># pylint: enable=invalid-name</span>
+
+<div class="viewcode-block" id="SchedCpuFrequency"><a class="viewcode-back" href="../../trappy.sched.html#trappy.sched.SchedCpuFrequency">[docs]</a><span class="k">class</span> <span class="nc">SchedCpuFrequency</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Corresponds to Linux kernel trace event power/cpu_frequency&quot;&quot;&quot;</span>
+
+    <span class="n">unique_word</span> <span class="o">=</span> <span class="s">&quot;cpu_frequency:&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The unique word that will be matched in a trace line&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;sched_cpu_frequency&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The name of the :mod:`pandas.DataFrame` member that will be created in a</span>
+<span class="sd">    :mod:`trappy.run.Run` object&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SchedCpuFrequency</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">unique_word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SchedCpuFrequency.finalize_object"><a class="viewcode-back" href="../../trappy.sched.html#trappy.sched.SchedCpuFrequency.finalize_object">[docs]</a>    <span class="k">def</span> <span class="nf">finalize_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This renaming is necessary because our cpu related pivot is &#39;cpu&#39;</span>
+<span class="sd">        and not &#39;cpu_id&#39;. Otherwise you cannot &#39;mix and match&#39; with other</span>
+<span class="sd">        classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;cpu_id&#39;</span><span class="p">:</span><span class="s">&#39;cpu&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</div></div>
+<span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">SchedCpuFrequency</span><span class="p">,</span> <span class="s">&quot;sched&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

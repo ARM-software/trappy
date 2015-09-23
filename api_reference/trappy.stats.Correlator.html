@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.stats.Correlator module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy.stats package" href="trappy.stats.html" />
+    <link rel="next" title="trappy.stats.Indexer module" href="trappy.stats.Indexer.html" />
+    <link rel="prev" title="trappy.stats.Aggregator module" href="trappy.stats.Aggregator.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.Indexer.html" title="trappy.stats.Indexer module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.Aggregator.html" title="trappy.stats.Aggregator module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.stats.html" accesskey="U">trappy.stats package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.stats.Correlator">
+<span id="trappy-stats-correlator-module"></span><h1>trappy.stats.Correlator module<a class="headerlink" href="#module-trappy.stats.Correlator" title="Permalink to this headline">¶</a></h1>
+<p>The module responsible for correlation
+and related functionality</p>
+<dl class="class">
+<dt id="trappy.stats.Correlator.Correlator">
+<em class="property">class </em><code class="descclassname">trappy.stats.Correlator.</code><code class="descname">Correlator</code><span class="sig-paren">(</span><em>first</em>, <em>second</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Correlator.html#Correlator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Correlator.Correlator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class that allows to align and correlate two
+runs
+:param first: First Aggregator
+:type first: <a class="reference internal" href="trappy.stats.Aggregator.html#module-trappy.stats.Aggregator" title="trappy.stats.Aggregator"><code class="xref py py-mod docutils literal"><span class="pre">trappy.stats.Aggregator</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>second</strong> (<a class="reference internal" href="trappy.stats.Aggregator.html#module-trappy.stats.Aggregator" title="trappy.stats.Aggregator"><code class="xref py py-mod docutils literal"><span class="pre">trappy.stats.Aggregator</span></code></a>) &#8211; Second Aggregator</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="trappy.stats.Correlator.Correlator.correlate">
+<code class="descname">correlate</code><span class="sig-paren">(</span><em>level</em>, <em>resample=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Correlator.html#Correlator.correlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Correlator.Correlator.correlate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>This function returns the correlation between two</dt>
+<dd>runs</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>level</strong> (<em>str</em>) &#8211; The level at which the correlation is
+required</li>
+<li><strong>resample</strong> (<em>bool</em>) &#8211; Resample data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A normalized correlation value is returned
+for each group in the level</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.stats.Correlator.Correlator.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>level</em>, <em>per_line=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Correlator.html#Correlator.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Correlator.Correlator.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporary function to plot data. Expected to be
+implemented in plotter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>level</strong> (<em>str</em>) &#8211; Topological Level (level in <a class="reference internal" href="trappy.stats.Topology.html#module-trappy.stats.Topology" title="trappy.stats.Topology"><code class="xref py py-mod docutils literal"><span class="pre">trappy.stats.Topology</span></code></a>)</li>
+<li><strong>per_line</strong> (<em>int</em>) &#8211; Number of plots per line</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.stats.Correlator.align">
+<code class="descclassname">trappy.stats.Correlator.</code><code class="descname">align</code><span class="sig-paren">(</span><em>s_x</em>, <em>s_y</em>, <em>mode='front'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Correlator.html#align"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Correlator.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to align the input series</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>s_x</strong> (<code class="xref py py-mod docutils literal"><span class="pre">pandas.Series</span></code>) &#8211; First Series</li>
+<li><strong>s_y</strong> (<code class="xref py py-mod docutils literal"><span class="pre">pandas.Series</span></code>) &#8211; Second Series</li>
+<li><strong>mode</strong> (<em>str</em>) &#8211; Align Front/Back</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.stats.Correlator.shift_series">
+<code class="descclassname">trappy.stats.Correlator.</code><code class="descname">shift_series</code><span class="sig-paren">(</span><em>s_x</em>, <em>s_y</em>, <em>shift</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Correlator.html#shift_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Correlator.shift_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift series to align
+:param s_x: First Series
+:type s_x: <code class="xref py py-mod docutils literal"><span class="pre">pandas.Series</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>s_y</strong> (<code class="xref py py-mod docutils literal"><span class="pre">pandas.Series</span></code>) &#8211; Second Series</li>
+<li><strong>shift</strong> (<em>int</em>) &#8211; The number of index
+positions to be shifted</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.stats.Aggregator.html"
+                        title="previous chapter">trappy.stats.Aggregator module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.stats.Indexer.html"
+                        title="next chapter">trappy.stats.Indexer module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.stats.Correlator.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.Indexer.html" title="trappy.stats.Indexer module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.Aggregator.html" title="trappy.stats.Aggregator module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.stats.html" >trappy.stats package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

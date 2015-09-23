@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.plot_utils &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.plot_utils</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;Small functions to help with plots&quot;&quot;&quot;</span>
+
+<span class="c"># pylint disable=star-args</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">trappy.wa</span> <span class="kn">import</span> <span class="n">SysfsExtractor</span>
+
+<span class="n">GOLDEN_RATIO</span> <span class="o">=</span> <span class="mf">1.618034</span>
+
+<div class="viewcode-block" id="normalize_title"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.normalize_title">[docs]</a><span class="k">def</span> <span class="nf">normalize_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">opt_title</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a string with that contains the title and opt_title if it&#39;s</span>
+<span class="sd">not the empty string</span>
+
+<span class="sd">    See test_normalize_title() for usage</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">opt_title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">opt_title</span> <span class="o">+</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="n">title</span>
+
+    <span class="k">return</span> <span class="n">title</span>
+</div>
+<div class="viewcode-block" id="set_lim"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.set_lim">[docs]</a><span class="k">def</span> <span class="nf">set_lim</span><span class="p">(</span><span class="n">lim</span><span class="p">,</span> <span class="n">get_lim_f</span><span class="p">,</span> <span class="n">set_lim_f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set x or y limitis of the plot</span>
+
+<span class="sd">    lim can be a tuple containing the limits or the string &quot;default&quot;</span>
+<span class="sd">    or &quot;range&quot;.  &quot;default&quot; does nothing and uses matplotlib default.</span>
+<span class="sd">    &quot;range&quot; extends the current margin by 10%.  This is useful since</span>
+<span class="sd">    the default xlim and ylim of the plots sometimes make it harder to</span>
+<span class="sd">    see data that is just in the margin.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">lim</span> <span class="o">==</span> <span class="s">&quot;default&quot;</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">lim</span> <span class="o">==</span> <span class="s">&quot;range&quot;</span><span class="p">:</span>
+        <span class="n">cur_lim</span> <span class="o">=</span> <span class="n">get_lim_f</span><span class="p">()</span>
+        <span class="n">lim</span> <span class="o">=</span> <span class="p">(</span><span class="n">cur_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">cur_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cur_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+               <span class="n">cur_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">cur_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cur_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="n">set_lim_f</span><span class="p">(</span><span class="n">lim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="set_xlim"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.set_xlim">[docs]</a><span class="k">def</span> <span class="nf">set_xlim</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the xlim of the plot</span>
+
+<span class="sd">    See set_lim() for the details</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">set_lim</span><span class="p">(</span><span class="n">xlim</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="set_ylim"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.set_ylim">[docs]</a><span class="k">def</span> <span class="nf">set_ylim</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ylim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the ylim of the plot</span>
+
+<span class="sd">    See set_lim() for the details</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">set_lim</span><span class="p">(</span><span class="n">ylim</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="pre_plot_setup"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.pre_plot_setup">[docs]</a><span class="k">def</span> <span class="nf">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;initialize a figure</span>
+
+<span class="sd">    width and height are the height and width of each row of plots.</span>
+<span class="sd">    For 1x1 plots, that&#39;s the height and width of the plot.  This</span>
+<span class="sd">    function should be called before any calls to plot()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mi">6</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="n">GOLDEN_RATIO</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">GOLDEN_RATIO</span>
+
+    <span class="n">height</span> <span class="o">*=</span> <span class="n">nrows</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+
+    <span class="c"># Needed for multirow blots to not overlap with each other</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">h_pad</span><span class="o">=</span><span class="mf">3.5</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">axis</span>
+</div>
+<div class="viewcode-block" id="post_plot_setup"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.post_plot_setup">[docs]</a><span class="k">def</span> <span class="nf">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="s">&quot;default&quot;</span><span class="p">,</span>
+                    <span class="n">ylim</span><span class="o">=</span><span class="s">&quot;range&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set xlabel, ylabel title, xlim and ylim of the plot</span>
+
+<span class="sd">    This has to be called after calls to .plot().  The default ylim is</span>
+<span class="sd">    to extend it by 10% because matplotlib default makes it hard</span>
+<span class="sd">    values that are close to the margins</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="n">set_ylim</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ylim</span><span class="p">)</span>
+    <span class="n">set_xlim</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="number_freq_plots"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.number_freq_plots">[docs]</a><span class="k">def</span> <span class="nf">number_freq_plots</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">map_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the number of plots needed for allfreq plots and frequency</span>
+<span class="sd">    histogram plots</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_cpu_plots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">map_label</span><span class="p">)</span>
+
+    <span class="n">has_devfreq_data</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">devfreq_in_power</span><span class="o">.</span><span class="n">data_frame</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">has_devfreq_data</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+
+    <span class="n">num_freq_plots</span> <span class="o">=</span> <span class="n">num_cpu_plots</span>
+    <span class="k">if</span> <span class="n">has_devfreq_data</span><span class="p">:</span>
+        <span class="n">num_freq_plots</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">num_freq_plots</span>
+</div>
+<div class="viewcode-block" id="plot_temperature"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_temperature">[docs]</a><span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="s">&quot;range&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot temperatures</span>
+
+<span class="sd">    runs is an array of Run() instances.  Extract the control_temp</span>
+<span class="sd">    from the governor data and plot the temperatures reported by the</span>
+<span class="sd">    thermal framework.  The governor doesn&#39;t track temperature when</span>
+<span class="sd">    it&#39;s off, so the thermal framework trace is more reliable.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="n">current_temp</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">thermal_governor</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;current_temperature&quot;</span><span class="p">]</span>
+        <span class="n">delta_temp</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">thermal_governor</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;delta_temperature&quot;</span><span class="p">]</span>
+        <span class="n">control_series</span> <span class="o">=</span> <span class="p">(</span><span class="n">current_temp</span> <span class="o">+</span> <span class="n">delta_temp</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">run</span><span class="o">.</span><span class="n">thermal</span><span class="o">.</span><span class="n">plot_temperature</span><span class="p">(</span><span class="n">control_temperature</span><span class="o">=</span><span class="n">control_series</span><span class="p">,</span>
+                                         <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">run</span><span class="o">.</span><span class="n">thermal_governor</span><span class="o">.</span><span class="n">plot_temperature</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">&quot;best&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_hist"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_hist">[docs]</a><span class="k">def</span> <span class="nf">plot_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a histogram&quot;&quot;&quot;</span>
+
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">title</span> <span class="o">+=</span> <span class="s">&quot; (mean = {:.2f}{}, std = {:.2f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+    <span class="n">xlabel</span> <span class="o">+=</span> <span class="s">&quot; ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">&quot;count&quot;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
+                    <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_load"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_load">[docs]</a><span class="k">def</span> <span class="nf">plot_load</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">map_label</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a multiplot of all the loads&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">plot_load</span><span class="p">(</span><span class="n">map_label</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">plot_normalized_load</span><span class="p">(</span><span class="n">map_label</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="plot_allfreqs"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_allfreqs">[docs]</a><span class="k">def</span> <span class="nf">plot_allfreqs</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">map_label</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a multicolumn plots of the allfreqs plots of each run&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">nrows</span> <span class="o">=</span> <span class="n">number_freq_plots</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">map_label</span><span class="p">)</span>
+
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">,</span>
+                          <span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">plot_allfreqs</span><span class="p">(</span><span class="n">map_label</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_controller"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_controller">[docs]</a><span class="k">def</span> <span class="nf">plot_controller</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a multicolumn plot of the pid controller of each run&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">pid_controller</span><span class="o">.</span><span class="n">plot_controller</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_weighted_input_power"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_weighted_input_power">[docs]</a><span class="k">def</span> <span class="nf">plot_weighted_input_power</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">actor_order</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a multicolumn plot of the weighted input power of each run&quot;&quot;&quot;</span>
+
+    <span class="n">actor_weights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="n">run_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">trace_path</span><span class="p">)</span>
+        <span class="n">sysfs</span> <span class="o">=</span> <span class="n">SysfsExtractor</span><span class="p">(</span><span class="n">run_path</span><span class="p">)</span>
+
+        <span class="n">thermal_params</span> <span class="o">=</span> <span class="n">sysfs</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">()</span>
+
+        <span class="n">sorted_weights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">thermal_params</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">r&quot;cdev\d+_weight&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+                <span class="n">sorted_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thermal_params</span><span class="p">[</span><span class="n">param</span><span class="p">])</span>
+
+        <span class="n">actor_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">actor_order</span><span class="p">,</span> <span class="n">sorted_weights</span><span class="p">))</span>
+
+    <span class="c"># Do nothing if we don&#39;t have actor weights for any run</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">actor_weights</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">weights</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">actor_weights</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">thermal_governor</span><span class="o">.</span><span class="n">plot_weighted_input_power</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                       <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_input_power"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_input_power">[docs]</a><span class="k">def</span> <span class="nf">plot_input_power</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">actor_order</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a multicolumn plot of the input power of each run&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">thermal_governor</span><span class="o">.</span><span class="n">plot_input_power</span><span class="p">(</span><span class="n">actor_order</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                              <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="n">plot_weighted_input_power</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">actor_order</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_output_power"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_output_power">[docs]</a><span class="k">def</span> <span class="nf">plot_output_power</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">actor_order</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a multicolumn plot of the output power of each run&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">thermal_governor</span><span class="o">.</span><span class="n">plot_output_power</span><span class="p">(</span><span class="n">actor_order</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                               <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_freq_hists"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_freq_hists">[docs]</a><span class="k">def</span> <span class="nf">plot_freq_hists</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">map_label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot frequency histograms of multiple runs&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+    <span class="n">nrows</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">number_freq_plots</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">map_label</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">plot_freq_hists</span><span class="p">(</span><span class="n">map_label</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="plot_temperature_hist"><a class="viewcode-back" href="../../trappy.plot_utils.html#trappy.plot_utils.plot_temperature_hist">[docs]</a><span class="k">def</span> <span class="nf">plot_temperature_hist</span><span class="p">(</span><span class="n">runs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot temperature histograms for all the runs&quot;&quot;&quot;</span>
+    <span class="n">num_runs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">thermal</span><span class="o">.</span><span class="n">data_frame</span><span class="p">):</span>
+            <span class="n">num_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">num_runs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_runs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">runs</span><span class="p">):</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">thermal</span><span class="o">.</span><span class="n">plot_temperature_hist</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.thermal &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.thermal</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;Process the output of the power allocator trace in the current</span>
+<span class="sd">directory&#39;s trace.dat&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">from</span> <span class="nn">trappy.base</span> <span class="kn">import</span> <span class="n">Base</span>
+<span class="kn">from</span> <span class="nn">trappy.run</span> <span class="kn">import</span> <span class="n">Run</span>
+<span class="kn">from</span> <span class="nn">trappy.plot_utils</span> <span class="kn">import</span> <span class="n">normalize_title</span><span class="p">,</span> <span class="n">pre_plot_setup</span><span class="p">,</span> <span class="n">post_plot_setup</span><span class="p">,</span> <span class="n">plot_hist</span>
+
+<div class="viewcode-block" id="Thermal"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.Thermal">[docs]</a><span class="k">class</span> <span class="nc">Thermal</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Process the thermal framework data in a FTrace dump&quot;&quot;&quot;</span>
+
+    <span class="n">unique_word</span> <span class="o">=</span> <span class="s">&quot;thermal_temperature:&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The unique word that will be matched in a trace line&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;thermal&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The name of the :mod:`pandas.DataFrame` member that will be created in a</span>
+<span class="sd">    :mod:`trappy.run.Run` object&quot;&quot;&quot;</span>
+
+    <span class="n">pivot</span> <span class="o">=</span> <span class="s">&quot;id&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The Pivot along which the data is orthogonal&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Thermal</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">unique_word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Thermal.plot_temperature"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.Thermal.plot_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_temperature</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="s">&quot;range&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot the temperature.</span>
+
+<span class="sd">        :param ax: Axis instance</span>
+<span class="sd">        :type ax: :mod:`matplotlib.Axis`</span>
+
+<span class="sd">        :param legend_label: Label for the legend</span>
+<span class="sd">        :type legend_label: str</span>
+
+<span class="sd">        :param title: The title of the plot</span>
+<span class="sd">        :type title: str</span>
+
+<span class="sd">        :param control_temperature: If control_temp is a</span>
+<span class="sd">            :mod:`pd.Series` representing the (possible)</span>
+<span class="sd">            variation of :code:`control_temp` during the</span>
+<span class="sd">            run, draw it using a dashed yellow line.</span>
+<span class="sd">            Otherwise, only the temperature is plotted.</span>
+<span class="sd">        :type control_temperature: :mod:`pandas.Series`</span>
+
+<span class="sd">        :param width: The width of the plot</span>
+<span class="sd">        :type width: int</span>
+
+<span class="sd">        :param height: The height of the plot</span>
+<span class="sd">        :type int: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Empty DataFrame&quot;</span><span class="p">)</span>
+
+        <span class="n">setup_plot</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+            <span class="n">setup_plot</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="n">temp_label</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">legend_label</span><span class="p">)</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;temp&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">temp_label</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">control_temperature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ct_label</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Control&quot;</span><span class="p">,</span> <span class="n">legend_label</span><span class="p">)</span>
+            <span class="n">control_temperature</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">&quot;--&quot;</span><span class="p">,</span>
+                           <span class="n">label</span><span class="o">=</span><span class="n">ct_label</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">setup_plot</span><span class="p">:</span>
+            <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Thermal.plot_temperature_hist"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.Thermal.plot_temperature_hist">[docs]</a>    <span class="k">def</span> <span class="nf">plot_temperature_hist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot a temperature histogram</span>
+
+<span class="sd">        :param ax: Axis instance</span>
+<span class="sd">        :type ax: :mod:`matplotlib.Axis`</span>
+
+<span class="sd">        :param title: The title of the plot</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">temps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;temp&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">temps</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+        <span class="n">plot_hist</span><span class="p">(</span><span class="n">temps</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="s">&quot;default&quot;</span><span class="p">)</span>
+</div></div>
+<span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">Thermal</span><span class="p">,</span> <span class="s">&quot;thermal&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ThermalGovernor"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.ThermalGovernor">[docs]</a><span class="k">class</span> <span class="nc">ThermalGovernor</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Process the power allocator data in a ftrace dump&quot;&quot;&quot;</span>
+
+    <span class="n">unique_word</span> <span class="o">=</span> <span class="s">&quot;thermal_power_allocator:&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The unique word that will be matched in a trace line&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;thermal_governor&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The name of the :mod:`pandas.DataFrame` member that will be created in a</span>
+<span class="sd">    :mod:`trappy.run.Run` object&quot;&quot;&quot;</span>
+
+    <span class="n">pivot</span> <span class="o">=</span> <span class="s">&quot;thermal_zone_id&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The Pivot along which the data is orthogonal&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ThermalGovernor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">unique_word</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_word</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ThermalGovernor.plot_temperature"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.ThermalGovernor.plot_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="s">&quot;range&quot;</span><span class="p">,</span>
+                         <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot the temperature&quot;&quot;&quot;</span>
+        <span class="n">dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span>
+        <span class="n">curr_temp</span> <span class="o">=</span> <span class="n">dfr</span><span class="p">[</span><span class="s">&quot;current_temperature&quot;</span><span class="p">]</span>
+        <span class="n">control_temp_series</span> <span class="o">=</span> <span class="p">(</span><span class="n">curr_temp</span> <span class="o">+</span> <span class="n">dfr</span><span class="p">[</span><span class="s">&quot;delta_temperature&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">1000</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="n">setup_plot</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+            <span class="n">setup_plot</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="n">temp_label</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">legend_label</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">curr_temp</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">temp_label</span><span class="p">)</span>
+        <span class="n">control_temp_series</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">&quot;--&quot;</span><span class="p">,</span>
+                                 <span class="n">label</span><span class="o">=</span><span class="s">&quot;control temperature&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">setup_plot</span><span class="p">:</span>
+            <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="ThermalGovernor.plot_input_power"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.ThermalGovernor.plot_input_power">[docs]</a>    <span class="k">def</span> <span class="nf">plot_input_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor_order</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot input power</span>
+
+<span class="sd">        :param ax: Axis instance</span>
+<span class="sd">        :type ax: :mod:`matplotlib.Axis`</span>
+
+<span class="sd">        :param title: The title of the plot</span>
+<span class="sd">        :type title: str</span>
+
+<span class="sd">        :param width: The width of the plot</span>
+<span class="sd">        :type width: int</span>
+
+<span class="sd">        :param height: The height of the plot</span>
+<span class="sd">        :type int: int</span>
+
+<span class="sd">        :param actor_order: An array showing the order in which the actors</span>
+<span class="sd">           were registered.  The array values are the labels that</span>
+<span class="sd">           will be used in the input and output power plots.</span>
+
+<span class="sd">           For Example:</span>
+<span class="sd">           ::</span>
+
+<span class="sd">                [&quot;GPU&quot;, &quot;A15&quot;, &quot;A7&quot;]</span>
+
+<span class="sd">        :type actor_order: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span>
+        <span class="n">in_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dfr</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&quot;req_power[0-9]+&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)]</span>
+
+        <span class="n">plot_dfr</span> <span class="o">=</span> <span class="n">dfr</span><span class="p">[</span><span class="n">in_cols</span><span class="p">]</span>
+        <span class="c"># Rename the columns from &quot;req_power0&quot; to &quot;A15&quot; or whatever is</span>
+        <span class="c"># in actor_order.  Note that we can do it just with an</span>
+        <span class="c"># assignment because the columns are already sorted (i.e.:</span>
+        <span class="c"># req_power0, req_power1...)</span>
+        <span class="n">plot_dfr</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">actor_order</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Input Power&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="n">plot_dfr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ThermalGovernor.plot_weighted_input_power"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.ThermalGovernor.plot_weighted_input_power">[docs]</a>    <span class="k">def</span> <span class="nf">plot_weighted_input_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor_weights</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                  <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot weighted input power</span>
+
+<span class="sd">        :param actor_weights: An array of tuples.  First element of the</span>
+<span class="sd">            tuple is the name of the actor, the second is the weight.  The</span>
+<span class="sd">            array is in the same order as the :code:`req_power` appear in the</span>
+<span class="sd">            trace.</span>
+<span class="sd">        :type actor_weights: list</span>
+
+<span class="sd">        :param ax: Axis instance</span>
+<span class="sd">        :type ax: :mod:`matplotlib.Axis`</span>
+
+<span class="sd">        :param title: The title of the plot</span>
+<span class="sd">        :type title: str</span>
+
+<span class="sd">        :param width: The width of the plot</span>
+<span class="sd">        :type width: int</span>
+
+<span class="sd">        :param height: The height of the plot</span>
+<span class="sd">        :type int: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span>
+        <span class="n">in_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dfr</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">r&quot;req_power\d+&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)]</span>
+
+        <span class="n">plot_dfr_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">in_col</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">in_cols</span><span class="p">,</span> <span class="n">actor_weights</span><span class="p">):</span>
+            <span class="n">plot_dfr_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfr</span><span class="p">[</span><span class="n">in_col</span><span class="p">]</span> <span class="o">*</span> <span class="n">weight</span> <span class="o">/</span> <span class="mi">1024</span>
+
+        <span class="n">plot_dfr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">plot_dfr_dict</span><span class="p">)</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Weighted Input Power&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="n">plot_dfr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ThermalGovernor.plot_output_power"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.ThermalGovernor.plot_output_power">[docs]</a>    <span class="k">def</span> <span class="nf">plot_output_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor_order</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                          <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot output power</span>
+
+<span class="sd">        :param ax: Axis instance</span>
+<span class="sd">        :type ax: :mod:`matplotlib.Axis`</span>
+
+<span class="sd">        :param title: The title of the plot</span>
+<span class="sd">        :type title: str</span>
+
+<span class="sd">        :param width: The width of the plot</span>
+<span class="sd">        :type width: int</span>
+
+<span class="sd">        :param height: The height of the plot</span>
+<span class="sd">        :type int: int</span>
+
+<span class="sd">        :param actor_order: An array showing the order in which the actors</span>
+<span class="sd">            were registered.  The array values are the labels that</span>
+<span class="sd">            will be used in the input and output power plots.</span>
+
+<span class="sd">            For Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                [&quot;GPU&quot;, &quot;A15&quot;, &quot;A7&quot;]</span>
+
+<span class="sd">        :type actor_order: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">out_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span>
+                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&quot;granted_power[0-9]+&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)]</span>
+
+        <span class="c"># See the note in plot_input_power()</span>
+        <span class="n">plot_dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="n">out_cols</span><span class="p">]</span>
+        <span class="n">plot_dfr</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">actor_order</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Output Power&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="n">plot_dfr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ThermalGovernor.plot_inout_power"><a class="viewcode-back" href="../../trappy.thermal.html#trappy.thermal.ThermalGovernor.plot_inout_power">[docs]</a>    <span class="k">def</span> <span class="nf">plot_inout_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make multiple plots showing input and output power for each actor</span>
+
+<span class="sd">        :param title: The title of the plot</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_frame</span>
+
+        <span class="n">actors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dfr</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&quot;P(.*)_in&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">col</span> <span class="o">!=</span> <span class="s">&quot;Ptot_in&quot;</span><span class="p">:</span>
+                <span class="n">actors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;P&quot;</span> <span class="o">+</span> <span class="n">actor</span> <span class="o">+</span> <span class="s">&quot;_in&quot;</span><span class="p">,</span> <span class="s">&quot;P&quot;</span> <span class="o">+</span> <span class="n">actor</span> <span class="o">+</span> <span class="s">&quot;_out&quot;</span><span class="p">]</span>
+            <span class="n">this_title</span> <span class="o">=</span> <span class="n">normalize_title</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+            <span class="n">dfr</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">this_title</span><span class="p">)</span>
+</div></div>
+<span class="n">Run</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="n">ThermalGovernor</span><span class="p">,</span> <span class="s">&quot;thermal&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

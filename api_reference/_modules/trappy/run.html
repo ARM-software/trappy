@@ -1,0 +1,591 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.run &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.run</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+
+<span class="c"># pylint can&#39;t see any of the dynamically allocated classes of Run</span>
+<span class="c"># pylint: disable=no-member</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">trappy.plot_utils</span>
+
+<span class="k">def</span> <span class="nf">_plot_freq_hists</span><span class="p">(</span><span class="n">allfreqs</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function for plot_freq_hists</span>
+
+<span class="sd">    allfreqs is the output of a Cpu*Power().get_all_freqs() (for</span>
+<span class="sd">    example, CpuInPower.get_all_freqs()).  what is a string: &quot;in&quot; or</span>
+<span class="sd">    &quot;out&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">actor</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">allfreqs</span><span class="p">):</span>
+        <span class="n">this_title</span> <span class="o">=</span> <span class="s">&quot;freq {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
+        <span class="n">this_title</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">normalize_title</span><span class="p">(</span><span class="n">this_title</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">allfreqs</span><span class="p">[</span><span class="n">actor</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+        <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_hist</span><span class="p">(</span><span class="n">allfreqs</span><span class="p">[</span><span class="n">actor</span><span class="p">],</span> <span class="n">ax</span><span class="p">,</span> <span class="n">this_title</span><span class="p">,</span> <span class="s">&quot;KHz&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span>
+                             <span class="s">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="s">&quot;default&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Run"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run">[docs]</a><span class="k">class</span> <span class="nc">Run</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A wrapper class that initializes all the classes of a given run</span>
+
+<span class="sd">    - The run class can receive the following optional parameters.</span>
+
+<span class="sd">    :param path: Path contains the path to the trace file.  If no path is given, it</span>
+<span class="sd">        uses the current directory by default.  If path is a file, and ends in</span>
+<span class="sd">        .dat, it&#39;s run through &quot;trace-cmd report&quot;.  If it doesn&#39;t end in</span>
+<span class="sd">        &quot;.dat&quot;, then it must be the output of a trace-cmd report run.  If path</span>
+<span class="sd">        is a directory that contains a trace.txt, that is assumed to be the</span>
+<span class="sd">        output of &quot;trace-cmd report&quot;.  If path is a directory that doesn&#39;t</span>
+<span class="sd">        have a trace.txt but has a trace.dat, it runs trace-cmd report on the</span>
+<span class="sd">        trace.dat, saves it in trace.txt and then uses that.</span>
+
+<span class="sd">    :param name: is a string describing the trace.</span>
+
+<span class="sd">    :param normalize_time: is used to make all traces start from time 0 (the</span>
+<span class="sd">        default).  If normalize_time is False, the trace times are the same as</span>
+<span class="sd">        in the trace file.</span>
+
+<span class="sd">    :param scope: can be used to limit the parsing done on the trace.  The default</span>
+<span class="sd">        scope parses all the traces known to trappy.  If scope is thermal, only</span>
+<span class="sd">        the thermal classes are parsed.  If scope is sched, only the sched</span>
+<span class="sd">        classes are parsed.</span>
+
+<span class="sd">    :type path: str</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :type normalize_time: bool</span>
+<span class="sd">    :type scope: str</span>
+
+<span class="sd">    This is a simple example:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        import trappy</span>
+<span class="sd">        trappy.Run(&quot;trace_dir&quot;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">thermal_classes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">sched_classes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">dynamic_classes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">normalize_time</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_path_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_classes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="s">&quot;thermal&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thermal_classes</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="s">&quot;sched&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sched_classes</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thermal_classes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">+</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">sched_classes</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace_classes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">trace_class</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">class_name</span><span class="p">]()</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">trace_class</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace_class</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parse_trace_file</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parse_trace_file</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__finalize_objects</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">normalize_time</span><span class="p">:</span>
+            <span class="n">basetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_basetime</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normalize_time</span><span class="p">(</span><span class="n">basetime</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__process_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the path and return the path to the trace text file&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">basepath</span><span class="p">):</span>
+            <span class="n">trace_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">basepath</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trace_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">basepath</span><span class="p">,</span> <span class="s">&quot;trace&quot;</span><span class="p">)</span>
+
+        <span class="n">trace_txt</span> <span class="o">=</span> <span class="n">trace_name</span> <span class="o">+</span> <span class="s">&quot;.txt&quot;</span>
+        <span class="n">trace_raw</span> <span class="o">=</span> <span class="n">trace_name</span> <span class="o">+</span> <span class="s">&quot;.raw.txt&quot;</span>
+        <span class="n">trace_dat</span> <span class="o">=</span> <span class="n">trace_name</span> <span class="o">+</span> <span class="s">&quot;.dat&quot;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">trace_dat</span><span class="p">):</span>
+            <span class="c"># Both TXT and RAW traces must always be generated</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">trace_txt</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">trace_raw</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__run_trace_cmd_report</span><span class="p">(</span><span class="n">trace_dat</span><span class="p">)</span>
+            <span class="c"># TXT (and RAW) traces must match the most recent binary trace</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">trace_txt</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">trace_dat</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__run_trace_cmd_report</span><span class="p">(</span><span class="n">trace_dat</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">trace_raw</span><span class="p">):</span>
+            <span class="n">trace_raw</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">return</span> <span class="n">trace_txt</span><span class="p">,</span> <span class="n">trace_raw</span>
+
+    <span class="k">def</span> <span class="nf">__run_trace_cmd_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run &quot;trace-cmd report fname &gt; fname.txt&quot;</span>
+<span class="sd">           and &quot;trace-cmd report -R fname &gt; fname.raw.txt&quot;</span>
+
+<span class="sd">        The resulting traces are stored in files with extension &quot;.txt&quot;</span>
+<span class="sd">        and &quot;.raw.txt&quot; respectively.  If fname is &quot;my_trace.dat&quot;, the</span>
+<span class="sd">        trace is stored in &quot;my_trace.txt&quot; and &quot;my_trace.raw.txt&quot;.  The</span>
+<span class="sd">        contents of the destination files are overwritten if they</span>
+<span class="sd">        exist.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;trace-cmd&quot;</span><span class="p">,</span> <span class="s">&quot;report&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&quot;No such file or directory: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
+
+        <span class="n">raw_trace_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.raw.txt&quot;</span>
+        <span class="n">trace_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.txt&quot;</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">)</span> <span class="k">as</span> <span class="n">devnull</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">devnull</span><span class="p">)</span>
+
+            <span class="c"># Add the -R flag to the trace-cmd</span>
+            <span class="c"># for raw parsing</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;-R&quot;</span><span class="p">)</span>
+            <span class="n">raw_out</span> <span class="o">=</span> <span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">devnull</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">trace_output</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">raw_trace_output</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">raw_out</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Run.get_basetime"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.get_basetime">[docs]</a>    <span class="k">def</span> <span class="nf">get_basetime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the smallest time value of all classes,</span>
+<span class="sd">        returns 0 if the data frames of all classes are empty&quot;&quot;&quot;</span>
+        <span class="n">basetimes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">trace_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_classes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">basetimes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace_class</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">basetimes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">basetimes</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Run.get_duration"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.get_duration">[docs]</a>    <span class="k">def</span> <span class="nf">get_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the largest time value of all classes,</span>
+<span class="sd">        returns 0 if the data frames of all classes are empty&quot;&quot;&quot;</span>
+        <span class="n">durations</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">trace_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_classes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">durations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace_class</span><span class="o">.</span><span class="n">data_frame</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">durations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">durations</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_basetime</span><span class="p">()</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Run.register_class"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.register_class">[docs]</a>    <span class="k">def</span> <span class="nf">register_class</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">cobject</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register the class as an Event. This function</span>
+<span class="sd">        can be used to register a class which is associated</span>
+<span class="sd">        with an FTrace unique word.</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            :mod:`trappy.dynamic.register_dynamic` :mod:`trappy.dynamic.register_class`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Add the class to the classes dictionary</span>
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="s">&quot;all&quot;</span><span class="p">:</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">dynamic_classes</span><span class="p">[</span><span class="n">cobject</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cobject</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">scope</span> <span class="o">+</span> <span class="s">&quot;_classes&quot;</span><span class="p">)[</span><span class="n">cobject</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cobject</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="n">cobject</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">cobject</span>
+</div>
+<div class="viewcode-block" id="Run.get_filters"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.get_filters">[docs]</a>    <span class="k">def</span> <span class="nf">get_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns an array with the available filters.</span>
+
+<span class="sd">        :param key: If specified, returns a subset of the available filters</span>
+<span class="sd">            that contain &#39;key&#39; in their name (e.g., :code:`key=&quot;sched&quot;` returns</span>
+<span class="sd">            only the :code:`&quot;sched&quot;` related filters).&quot;&quot;&quot;</span>
+        <span class="n">filters</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
+                <span class="n">filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">filters</span>
+</div>
+<div class="viewcode-block" id="Run.normalize_time"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.normalize_time">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basetime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Normalize the time of all the trace classes</span>
+
+<span class="sd">        :param basetime: The offset which needs to be subtracted from</span>
+<span class="sd">            the time index</span>
+<span class="sd">        :type basetime: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">trace_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_classes</span><span class="p">:</span>
+            <span class="n">trace_class</span><span class="o">.</span><span class="n">normalize_time</span><span class="p">(</span><span class="n">basetime</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__contains_unique_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The line contains any unique word that we are matching&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">unique_word</span><span class="p">,</span> <span class="n">trace_name</span> <span class="ow">in</span> <span class="n">unique_words</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">unique_word</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">trace_name</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+
+    <span class="k">def</span> <span class="nf">__populate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace_fh</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Populates trace metadata&quot;&quot;&quot;</span>
+
+        <span class="c"># Meta Data as expected to be found in the parsed trace header</span>
+        <span class="n">metadata_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;version&quot;</span><span class="p">,</span> <span class="s">&quot;cpus&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">metadata_keys</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;_&quot;</span> <span class="o">+</span> <span class="n">key</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">metadata_keys</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">trace_fh</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+            <span class="c">#The trace has been exhausted</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="n">metadata_pattern</span> <span class="o">=</span> <span class="s">r&quot;^\b(&quot;</span> <span class="o">+</span> <span class="s">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadata_keys</span><span class="p">)</span> <span class="o">+</span> \
+                               <span class="s">r&quot;)\b\s*=\s*([0-9]+)&quot;</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">metadata_pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;_&quot;</span> <span class="o">+</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+                <span class="n">metadata_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+            <span class="c"># Reached a valid trace line, abort metadata population</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">__populate_data_from_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">):</span>
+                <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">__populate_data_from_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Append to trace data from a txt trace line&quot;&quot;&quot;</span>
+
+        <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__contains_unique_word</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">attr</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">special_fields_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&quot;^\s+([^\[]+)-(\d+)\s+\[(\d+)\]\s+([0-9]+\.[0-9]+):&quot;</span><span class="p">,</span>
+                                                 <span class="n">line</span><span class="p">)</span>
+        <span class="n">comm</span> <span class="o">=</span> <span class="n">special_fields_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">special_fields_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">cpu</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">special_fields_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">special_fields_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data_start_idx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&quot;[A-Za-z0-9_]+=&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">data_str</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">data_start_idx</span><span class="p">:]</span>
+
+        <span class="c"># Remove empty arrays from the trace</span>
+        <span class="n">data_str</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r&quot;[A-Za-z0-9_]+=\{\} &quot;</span><span class="p">,</span> <span class="s">r&quot;&quot;</span><span class="p">,</span> <span class="n">data_str</span><span class="p">)</span>
+
+        <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span><span class="o">.</span><span class="n">append_data</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">cpu</span><span class="p">,</span>
+                                                <span class="n">data_str</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__parse_trace_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;parse the trace and create a pandas DataFrame&quot;&quot;&quot;</span>
+
+        <span class="c"># Memoize the unique words to speed up parsing the trace file</span>
+        <span class="n">unique_words</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">trace_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_definitions</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
+            <span class="n">parse_raw</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace_name</span><span class="p">)</span><span class="o">.</span><span class="n">parse_raw</span>
+
+            <span class="k">if</span> <span class="n">parse_raw</span> <span class="o">!=</span> <span class="n">raw</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">unique_word</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace_name</span><span class="p">)</span><span class="o">.</span><span class="n">unique_word</span>
+            <span class="n">unique_words</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">unique_word</span><span class="p">,</span> <span class="n">trace_name</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_words</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">raw</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_path_raw</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">trace_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_path_raw</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trace_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_path</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">trace_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__populate_metadata</span><span class="p">(</span><span class="n">fin</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__populate_data_from_line</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">unique_words</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__finalize_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">trace_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_classes</span><span class="p">:</span>
+            <span class="n">trace_class</span><span class="o">.</span><span class="n">create_dataframe</span><span class="p">()</span>
+            <span class="n">trace_class</span><span class="o">.</span><span class="n">finalize_object</span><span class="p">()</span>
+
+    <span class="c"># TODO: Move thermal specific functionality</span>
+
+<div class="viewcode-block" id="Run.get_all_freqs_data"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.get_all_freqs_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_freqs_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_label</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;get an array of tuple of names and DataFrames suitable for the</span>
+<span class="sd">        allfreqs plot&quot;&quot;&quot;</span>
+
+        <span class="n">cpu_in_freqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpu_in_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">(</span><span class="n">map_label</span><span class="p">)</span>
+        <span class="n">cpu_out_freqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpu_out_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">(</span><span class="n">map_label</span><span class="p">)</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">map_label</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">in_label</span> <span class="o">=</span> <span class="n">label</span> <span class="o">+</span> <span class="s">&quot;_freq_in&quot;</span>
+            <span class="n">out_label</span> <span class="o">=</span> <span class="n">label</span> <span class="o">+</span> <span class="s">&quot;_freq_out&quot;</span>
+
+            <span class="n">cpu_inout_freq_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">in_label</span><span class="p">:</span> <span class="n">cpu_in_freqs</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+                                   <span class="n">out_label</span><span class="p">:</span> <span class="n">cpu_out_freqs</span><span class="p">[</span><span class="n">label</span><span class="p">]}</span>
+            <span class="n">dfr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cpu_inout_freq_dict</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;pad&quot;</span><span class="p">)</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">label</span><span class="p">,</span> <span class="n">dfr</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">gpu_freq_in_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_in_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">()</span>
+            <span class="n">gpu_freq_out_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_out_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">gpu_freq_in_data</span> <span class="o">=</span> <span class="n">gpu_freq_out_data</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">gpu_freq_in_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">inout_freq_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;gpu_freq_in&quot;</span><span class="p">:</span> <span class="n">gpu_freq_in_data</span><span class="p">[</span><span class="s">&quot;freq&quot;</span><span class="p">],</span>
+                               <span class="s">&quot;gpu_freq_out&quot;</span><span class="p">:</span> <span class="n">gpu_freq_out_data</span><span class="p">[</span><span class="s">&quot;freq&quot;</span><span class="p">]</span>
+                           <span class="p">}</span>
+            <span class="n">dfr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">inout_freq_dict</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;pad&quot;</span><span class="p">)</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s">&quot;GPU&quot;</span><span class="p">,</span> <span class="n">dfr</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">ret</span>
+</div>
+<div class="viewcode-block" id="Run.plot_freq_hists"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.plot_freq_hists">[docs]</a>    <span class="k">def</span> <span class="nf">plot_freq_hists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_label</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot histograms for each actor input and output frequency</span>
+
+<span class="sd">        ax is an array of axis, one for the input power and one for</span>
+<span class="sd">        the output power</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">in_base_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">devfreq_out_all_freqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_out_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">()</span>
+            <span class="n">devfreq_in_all_freqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_in_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">devfreq_out_all_freqs</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">devfreq_in_all_freqs</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="n">out_allfreqs</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpu_out_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">(</span><span class="n">map_label</span><span class="p">),</span>
+                        <span class="n">devfreq_out_all_freqs</span><span class="p">,</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">in_base_idx</span><span class="p">])</span>
+        <span class="n">in_allfreqs</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpu_in_power</span><span class="o">.</span><span class="n">get_all_freqs</span><span class="p">(</span><span class="n">map_label</span><span class="p">),</span>
+                       <span class="n">devfreq_in_all_freqs</span><span class="p">,</span> <span class="n">ax</span><span class="p">[</span><span class="n">in_base_idx</span><span class="p">:])</span>
+
+        <span class="k">for</span> <span class="n">cpu_allfreqs</span><span class="p">,</span> <span class="n">devfreq_freqs</span><span class="p">,</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="n">out_allfreqs</span><span class="p">,</span> <span class="n">in_allfreqs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">devfreq_freqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">devfreq_freqs</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;GPU&quot;</span>
+                <span class="n">allfreqs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">cpu_allfreqs</span><span class="p">,</span> <span class="n">devfreq_freqs</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">allfreqs</span> <span class="o">=</span> <span class="n">cpu_allfreqs</span>
+
+            <span class="n">allfreqs</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;pad&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">_plot_freq_hists</span><span class="p">(</span><span class="n">allfreqs</span><span class="p">,</span> <span class="s">&quot;out&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Run.plot_load"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.plot_load">[docs]</a>    <span class="k">def</span> <span class="nf">plot_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping_label</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;plot the load of all the clusters, similar to how compare runs did it</span>
+
+<span class="sd">        the mapping_label has to be a dict whose keys are the cluster</span>
+<span class="sd">        numbers as found in the trace and values are the names that</span>
+<span class="sd">        will appear in the legend.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">load_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpu_in_power</span><span class="o">.</span><span class="n">get_load_data</span><span class="p">(</span><span class="n">mapping_label</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">gpu_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&quot;GPU&quot;</span><span class="p">:</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_in_power</span><span class="o">.</span><span class="n">data_frame</span><span class="p">[</span><span class="s">&quot;load&quot;</span><span class="p">]})</span>
+            <span class="n">load_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">load_data</span><span class="p">,</span> <span class="n">gpu_data</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">load_data</span> <span class="o">=</span> <span class="n">load_data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;pad&quot;</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Utilization&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+
+        <span class="n">load_data</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Run.plot_normalized_load"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.plot_normalized_load">[docs]</a>    <span class="k">def</span> <span class="nf">plot_normalized_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping_label</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                             <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;plot the normalized load of all the clusters, similar to how compare runs did it</span>
+
+<span class="sd">        the mapping_label has to be a dict whose keys are the cluster</span>
+<span class="sd">        numbers as found in the trace and values are the names that</span>
+<span class="sd">        will appear in the legend.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">load_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpu_in_power</span><span class="o">.</span><span class="n">get_normalized_load_data</span><span class="p">(</span><span class="n">mapping_label</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&quot;load&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_in_power</span><span class="o">.</span><span class="n">data_frame</span><span class="p">:</span>
+            <span class="n">gpu_dfr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devfreq_in_power</span><span class="o">.</span><span class="n">data_frame</span>
+            <span class="n">gpu_max_freq</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">gpu_dfr</span><span class="p">[</span><span class="s">&quot;freq&quot;</span><span class="p">])</span>
+            <span class="n">gpu_load</span> <span class="o">=</span> <span class="n">gpu_dfr</span><span class="p">[</span><span class="s">&quot;load&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">gpu_dfr</span><span class="p">[</span><span class="s">&quot;freq&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">gpu_max_freq</span>
+
+            <span class="n">gpu_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&quot;GPU&quot;</span><span class="p">:</span> <span class="n">gpu_load</span><span class="p">})</span>
+            <span class="n">load_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">load_data</span><span class="p">,</span> <span class="n">gpu_data</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">load_data</span> <span class="o">=</span> <span class="n">load_data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;pad&quot;</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;Normalized Utilization&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+
+        <span class="n">load_data</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">post_plot_setup</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Run.plot_allfreqs"><a class="viewcode-back" href="../../trappy.run.html#trappy.run.Run.plot_allfreqs">[docs]</a>    <span class="k">def</span> <span class="nf">plot_allfreqs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_label</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do allfreqs plots similar to those of CompareRuns</span>
+
+<span class="sd">        if ax is not none, it must be an array of the same size as</span>
+<span class="sd">        map_label.  Each plot will be done in each of the axis in</span>
+<span class="sd">        ax</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_freqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_freqs_data</span><span class="p">(</span><span class="n">map_label</span><span class="p">)</span>
+
+        <span class="n">setup_plot</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_freqs</span><span class="p">)</span>
+            <span class="n">setup_plot</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">for</span> <span class="n">this_ax</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">dfr</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">all_freqs</span><span class="p">):</span>
+            <span class="n">this_title</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">normalize_title</span><span class="p">(</span><span class="s">&quot;allfreqs &quot;</span> <span class="o">+</span> <span class="n">label</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">setup_plot</span><span class="p">:</span>
+                <span class="n">this_ax</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">pre_plot_setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                                                        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+
+            <span class="n">dfr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">this_ax</span><span class="p">)</span>
+            <span class="n">trappy</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">post_plot_setup</span><span class="p">(</span><span class="n">this_ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">this_title</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

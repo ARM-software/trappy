@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.plotter.ILinePlot &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="trappy.plotter" href="../plotter.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../plotter.html" accesskey="U">trappy.plotter</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for trappy.plotter.ILinePlot</h1><div class="highlight"><pre>
+<span class="c">#    Copyright 2015-2015 ARM Limited</span>
+<span class="c">#</span>
+<span class="c"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c"># you may not use this file except in compliance with the License.</span>
+<span class="c"># You may obtain a copy of the License at</span>
+<span class="c">#</span>
+<span class="c">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c">#</span>
+<span class="c"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c"># See the License for the specific language governing permissions and</span>
+<span class="c"># limitations under the License.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;This module contains the class for plotting and</span>
+<span class="sd">customizing Line/Linear Plots with :mod:`trappy.run.Run`</span>
+<span class="sd">This plot only works when run from an IPython notebook</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter</span> <span class="kn">import</span> <span class="n">AttrConf</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter</span> <span class="kn">import</span> <span class="n">Utils</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter.Constraint</span> <span class="kn">import</span> <span class="n">ConstraintManager</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter.ILinePlotGen</span> <span class="kn">import</span> <span class="n">ILinePlotGen</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter.AbstractDataPlotter</span> <span class="kn">import</span> <span class="n">AbstractDataPlotter</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter.ColorMap</span> <span class="kn">import</span> <span class="n">ColorMap</span>
+<span class="kn">from</span> <span class="nn">trappy.plotter</span> <span class="kn">import</span> <span class="n">IPythonConf</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">IPythonConf</span><span class="o">.</span><span class="n">check_ipython</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&quot;Ipython Environment not Found&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ILinePlot"><a class="viewcode-back" href="../../../trappy.plotter.ILinePlot.html#trappy.plotter.ILinePlot.ILinePlot">[docs]</a><span class="k">class</span> <span class="nc">ILinePlot</span><span class="p">(</span><span class="n">AbstractDataPlotter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class uses :mod:`trappy.plotter.Constraint.Constraint` to</span>
+<span class="sd">    represent different permutations of input parameters. These</span>
+<span class="sd">    constraints are generated by creating an instance of</span>
+<span class="sd">    :mod:`trappy.plotter.Constraint.ConstraintManager`.</span>
+
+<span class="sd">    :param run: The input data</span>
+<span class="sd">    :type run: :mod:`trappy.run.Run` or :mod:`pandas.DataFrame`, list or single</span>
+
+<span class="sd">    :param column: specifies the name of the column to</span>
+<span class="sd">           be plotted.</span>
+<span class="sd">    :type column: (str, list(str))</span>
+
+<span class="sd">    :param templates: TRAPpy events</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">                This is not required if a :mod:`pandas.DataFrame` is</span>
+<span class="sd">                used</span>
+
+<span class="sd">    :type templates: :mod:`trappy.base.Base`</span>
+
+<span class="sd">    :param filters: Filter the column to be plotted as per the</span>
+<span class="sd">        specified criteria. For Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            filters =</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;pid&quot;: [ 3338 ],</span>
+<span class="sd">                        &quot;cpu&quot;: [0, 2, 4],</span>
+<span class="sd">                    }</span>
+<span class="sd">    :type filters: dict</span>
+
+<span class="sd">    :param per_line: Used to control the number of graphs</span>
+<span class="sd">        in each graph subplot row</span>
+<span class="sd">    :type per_line: int</span>
+
+<span class="sd">    :param concat: Draw all the pivots on a single graph</span>
+<span class="sd">    :type concat: bool</span>
+
+<span class="sd">    :param permute: Draw one plot for each of the runs specified</span>
+<span class="sd">    :type permute: bool</span>
+
+<span class="sd">    :param fill: Fill the area under the plots</span>
+<span class="sd">    :type fill: bool</span>
+
+<span class="sd">    :param drawstyle: Set the drawstyle to a matplotlib compatible</span>
+<span class="sd">        drawing style.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            Only &quot;steps-post&quot; is supported as a valid value for</span>
+<span class="sd">            the drawstyle. This creates a step plot.</span>
+
+<span class="sd">    :type drawstyle: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">templates</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c"># Default keys, each can be overridden in kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runs</span> <span class="o">=</span> <span class="n">runs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="n">templates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_data</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s">&quot;column&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;Value Column not specified&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;drawstyle&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;drawstyle&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;steps&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;step_plot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="n">zip_constraints</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;permute&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_mgr</span> <span class="o">=</span> <span class="n">ConstraintManager</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;column&quot;</span><span class="p">],</span> <span class="n">templates</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;pivot&quot;</span><span class="p">],</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;filters&quot;</span><span class="p">],</span> <span class="n">zip_constraints</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ILinePlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ILinePlot.savefig"><a class="viewcode-back" href="../../../trappy.plotter.ILinePlot.html#trappy.plotter.ILinePlot.ILinePlot.savefig">[docs]</a>    <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Not Available for ILinePlot&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ILinePlot.view"><a class="viewcode-back" href="../../../trappy.plotter.ILinePlot.html#trappy.plotter.ILinePlot.ILinePlot.view">[docs]</a>    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Displays the graph&quot;&quot;&quot;</span>
+
+        <span class="c"># Defer installation of IPython components</span>
+        <span class="c"># to the .view call to avoid any errors at</span>
+        <span class="c"># when importing the module. This facilitates</span>
+        <span class="c"># the importing of the module from outside</span>
+        <span class="c"># an IPython notebook</span>
+        <span class="n">IPythonConf</span><span class="o">.</span><span class="n">iplot_install</span><span class="p">(</span><span class="s">&quot;ILinePlot&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;concat&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_concat</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;permute&quot;</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="ILinePlot.set_defaults"><a class="viewcode-back" href="../../../trappy.plotter.ILinePlot.html#trappy.plotter.ILinePlot.ILinePlot.set_defaults">[docs]</a>    <span class="k">def</span> <span class="nf">set_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the default attrs&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;per_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">PER_LINE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;concat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">CONCAT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;filters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;pivot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">PIVOT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;permute&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;drawstyle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;step_plot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;fill&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">FILL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;draw_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;scatter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">PLOT_SCATTER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;point_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">POINT_SIZE</span>
+</div>
+    <span class="k">def</span> <span class="nf">_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permute</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Internal Method called to draw the plot&quot;&quot;&quot;</span>
+        <span class="n">pivot_vals</span><span class="p">,</span> <span class="n">len_pivots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_mgr</span><span class="o">.</span><span class="n">generate_pivots</span><span class="p">(</span><span class="n">permute</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="o">=</span> <span class="n">ILinePlotGen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;per_line&quot;</span><span class="p">],</span>
+                                    <span class="n">len_pivots</span><span class="p">,</span>
+                                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">)</span>
+        <span class="n">plot_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">p_val</span> <span class="ow">in</span> <span class="n">pivot_vals</span><span class="p">:</span>
+            <span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_mgr</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">permute</span><span class="p">:</span>
+                    <span class="n">run_idx</span><span class="p">,</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">p_val</span>
+                    <span class="k">if</span> <span class="n">constraint</span><span class="o">.</span><span class="n">run_index</span> <span class="o">!=</span> <span class="n">run_idx</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">get_data_name</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span>
+                    <span class="n">legend</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">_column</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">pivot</span> <span class="o">=</span> <span class="n">p_val</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+                    <span class="n">legend</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+
+                <span class="n">result</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">result</span>
+                <span class="k">if</span> <span class="n">pivot</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="n">data_frame</span><span class="p">[</span><span class="n">legend</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">pivot</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">pivot</span> <span class="o">==</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">PIVOT_VAL</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">+=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;column&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">+=</span> <span class="s">&quot;{0}: {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;pivot&quot;</span><span class="p">],</span> <span class="n">pivot</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span><span class="o">.</span><span class="n">add_plot</span><span class="p">(</span><span class="n">plot_index</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+            <span class="n">plot_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_plot_concat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot all lines on a single figure&quot;&quot;&quot;</span>
+
+        <span class="n">pivot_vals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_mgr</span><span class="o">.</span><span class="n">generate_pivots</span><span class="p">()</span>
+        <span class="n">plot_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span> <span class="o">=</span> <span class="n">ILinePlotGen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;per_line&quot;</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c_mgr</span><span class="p">),</span>
+                                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_mgr</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">result</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+            <span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">pivot</span> <span class="ow">in</span> <span class="n">pivot_vals</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pivot</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pivot</span> <span class="o">==</span> <span class="n">AttrConf</span><span class="o">.</span><span class="n">PIVOT_VAL</span><span class="p">:</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;column&quot;</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;{0}: {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attr</span><span class="p">[</span><span class="s">&quot;pivot&quot;</span><span class="p">],</span> <span class="n">pivot</span><span class="p">)</span>
+
+                    <span class="n">data_frame</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">pivot</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span><span class="o">.</span><span class="n">add_plot</span><span class="p">(</span><span class="n">plot_index</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+            <span class="n">plot_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layout</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../plotter.html" >trappy.plotter</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

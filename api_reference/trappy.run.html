@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.run module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy package" href="trappy.html" />
+    <link rel="next" title="trappy.sched module" href="trappy.sched.html" />
+    <link rel="prev" title="trappy.plot_utils module" href="trappy.plot_utils.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.sched.html" title="trappy.sched module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.plot_utils.html" title="trappy.plot_utils module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" accesskey="U">trappy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.run">
+<span id="trappy-run-module"></span><h1>trappy.run module<a class="headerlink" href="#module-trappy.run" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="trappy.run.Run">
+<em class="property">class </em><code class="descclassname">trappy.run.</code><code class="descname">Run</code><span class="sig-paren">(</span><em>path='.'</em>, <em>name=''</em>, <em>normalize_time=True</em>, <em>scope='all'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A wrapper class that initializes all the classes of a given run</p>
+<ul class="simple">
+<li>The run class can receive the following optional parameters.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> (<em>str</em>) &#8211; Path contains the path to the trace file.  If no path is given, it
+uses the current directory by default.  If path is a file, and ends in
+.dat, it&#8217;s run through &#8220;trace-cmd report&#8221;.  If it doesn&#8217;t end in
+&#8221;.dat&#8221;, then it must be the output of a trace-cmd report run.  If path
+is a directory that contains a trace.txt, that is assumed to be the
+output of &#8220;trace-cmd report&#8221;.  If path is a directory that doesn&#8217;t
+have a trace.txt but has a trace.dat, it runs trace-cmd report on the
+trace.dat, saves it in trace.txt and then uses that.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; is a string describing the trace.</li>
+<li><strong>normalize_time</strong> (<em>bool</em>) &#8211; is used to make all traces start from time 0 (the
+default).  If normalize_time is False, the trace times are the same as
+in the trace file.</li>
+<li><strong>scope</strong> (<em>str</em>) &#8211; can be used to limit the parsing done on the trace.  The default
+scope parses all the traces known to trappy.  If scope is thermal, only
+the thermal classes are parsed.  If scope is sched, only the sched
+classes are parsed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This is a simple example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">trappy</span>
+<span class="n">trappy</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="s">&quot;trace_dir&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="trappy.run.Run.dynamic_classes">
+<code class="descname">dynamic_classes</code><em class="property"> = {}</em><a class="headerlink" href="#trappy.run.Run.dynamic_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.get_all_freqs_data">
+<code class="descname">get_all_freqs_data</code><span class="sig-paren">(</span><em>map_label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.get_all_freqs_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.get_all_freqs_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>get an array of tuple of names and DataFrames suitable for the
+allfreqs plot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.get_basetime">
+<code class="descname">get_basetime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.get_basetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.get_basetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the smallest time value of all classes,
+returns 0 if the data frames of all classes are empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.get_duration">
+<code class="descname">get_duration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.get_duration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.get_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the largest time value of all classes,
+returns 0 if the data frames of all classes are empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.get_filters">
+<code class="descname">get_filters</code><span class="sig-paren">(</span><em>key=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.get_filters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.get_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an array with the available filters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> &#8211; If specified, returns a subset of the available filters
+that contain &#8216;key&#8217; in their name (e.g., <code class="code docutils literal"><span class="pre">key=&quot;sched&quot;</span></code> returns
+only the <code class="code docutils literal"><span class="pre">&quot;sched&quot;</span></code> related filters).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.normalize_time">
+<code class="descname">normalize_time</code><span class="sig-paren">(</span><em>basetime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.normalize_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.normalize_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the time of all the trace classes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>basetime</strong> (<em>float</em>) &#8211; The offset which needs to be subtracted from
+the time index</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.plot_allfreqs">
+<code class="descname">plot_allfreqs</code><span class="sig-paren">(</span><em>map_label</em>, <em>width=None</em>, <em>height=None</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.plot_allfreqs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.plot_allfreqs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do allfreqs plots similar to those of CompareRuns</p>
+<p>if ax is not none, it must be an array of the same size as
+map_label.  Each plot will be done in each of the axis in
+ax</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.plot_freq_hists">
+<code class="descname">plot_freq_hists</code><span class="sig-paren">(</span><em>map_label</em>, <em>ax</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.plot_freq_hists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.plot_freq_hists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot histograms for each actor input and output frequency</p>
+<p>ax is an array of axis, one for the input power and one for
+the output power</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.plot_load">
+<code class="descname">plot_load</code><span class="sig-paren">(</span><em>mapping_label</em>, <em>title=''</em>, <em>width=None</em>, <em>height=None</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.plot_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.plot_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot the load of all the clusters, similar to how compare runs did it</p>
+<p>the mapping_label has to be a dict whose keys are the cluster
+numbers as found in the trace and values are the names that
+will appear in the legend.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.run.Run.plot_normalized_load">
+<code class="descname">plot_normalized_load</code><span class="sig-paren">(</span><em>mapping_label</em>, <em>title=''</em>, <em>width=None</em>, <em>height=None</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.plot_normalized_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.plot_normalized_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot the normalized load of all the clusters, similar to how compare runs did it</p>
+<p>the mapping_label has to be a dict whose keys are the cluster
+numbers as found in the trace and values are the names that
+will appear in the legend.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="trappy.run.Run.register_class">
+<em class="property">classmethod </em><code class="descname">register_class</code><span class="sig-paren">(</span><em>cobject</em>, <em>scope='all'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/run.html#Run.register_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.run.Run.register_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the class as an Event. This function
+can be used to register a class which is associated
+with an FTrace unique word.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="trappy.dynamic.html#trappy.dynamic.register_dynamic" title="trappy.dynamic.register_dynamic"><code class="xref py py-mod docutils literal"><span class="pre">trappy.dynamic.register_dynamic</span></code></a> <a class="reference internal" href="trappy.dynamic.html#trappy.dynamic.register_class" title="trappy.dynamic.register_class"><code class="xref py py-mod docutils literal"><span class="pre">trappy.dynamic.register_class</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.run.Run.sched_classes">
+<code class="descname">sched_classes</code><em class="property"> = {'sched_load_avg_task': 'SchedLoadAvgTask', 'sched_contrib_scale_factor': 'SchedContribScaleFactor', 'sched_cpu_frequency': 'SchedCpuFrequency', 'sched_cpu_capacity': 'SchedCpuCapacity', 'sched_load_avg_cpu': 'SchedLoadAvgCpu', 'sched_load_avg_sched_group': 'SchedLoadAvgSchedGroup', 'sched_switch': 'SchedSwitch'}</em><a class="headerlink" href="#trappy.run.Run.sched_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trappy.run.Run.thermal_classes">
+<code class="descname">thermal_classes</code><em class="property"> = {'cpu_out_power': 'CpuOutPower', 'pid_controller': 'PIDController', 'thermal': 'Thermal', 'devfreq_out_power': 'DevfreqOutPower', 'thermal_governor': 'ThermalGovernor', 'cpu_in_power': 'CpuInPower', 'devfreq_in_power': 'DevfreqInPower'}</em><a class="headerlink" href="#trappy.run.Run.thermal_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.plot_utils.html"
+                        title="previous chapter">trappy.plot_utils module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.sched.html"
+                        title="next chapter">trappy.sched module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.run.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.sched.html" title="trappy.sched module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.plot_utils.html" title="trappy.plot_utils module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

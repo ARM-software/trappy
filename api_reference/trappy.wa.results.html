@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.wa.results module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy.wa package" href="trappy.wa.html" />
+    <link rel="next" title="trappy.wa.sysfs_extractor module" href="trappy.wa.sysfs_extractor.html" />
+    <link rel="prev" title="trappy.wa package" href="trappy.wa.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.sysfs_extractor.html" title="trappy.wa.sysfs_extractor module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.html" title="trappy.wa package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.wa.html" accesskey="U">trappy.wa package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.wa.results">
+<span id="trappy-wa-results-module"></span><h1>trappy.wa.results module<a class="headerlink" href="#module-trappy.wa.results" title="Permalink to this headline">¶</a></h1>
+<p>Parse the results from a Workload Automation run and show it in a
+&#8220;pretty&#8221; table</p>
+<dl class="class">
+<dt id="trappy.wa.results.Result">
+<em class="property">class </em><code class="descclassname">trappy.wa.results.</code><code class="descname">Result</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#Result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.Result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pandas.core.frame.DataFrame</span></code></p>
+<p>A DataFrame-like class for storing benchmark results</p>
+<dl class="method">
+<dt id="trappy.wa.results.Result.enlarge_axis">
+<code class="descname">enlarge_axis</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#Result.enlarge_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.Result.enlarge_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure that the axis don&#8217;t clobber some of the data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trappy.wa.results.Result.init_fig">
+<code class="descname">init_fig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#Result.init_fig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.Result.init_fig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="trappy.wa.results.Result.plot_results">
+<code class="descname">plot_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#Result.plot_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.Result.plot_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="trappy.wa.results.Result.plot_results_benchmark">
+<code class="descname">plot_results_benchmark</code><span class="sig-paren">(</span><em>benchmark</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#Result.plot_results_benchmark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.Result.plot_results_benchmark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the results of the execution of a given benchmark</p>
+<p>A title is added to the plot if title is not supplied</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.wa.results.combine_results">
+<code class="descclassname">trappy.wa.results.</code><code class="descname">combine_results</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#combine_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.combine_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine two DataFrame results into one</p>
+<p>The data should be an array of results like the ones returned by
+get_results() or have the same structure.  The returned DataFrame
+has two column indexes.  The first one is the benchmark and the
+second one is the key for the result.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.wa.results.get_results">
+<code class="descclassname">trappy.wa.results.</code><code class="descname">get_results</code><span class="sig-paren">(</span><em>path='.'</em>, <em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#get_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pd.DataFrame with the results</p>
+<p>The DataFrame&#8217;s rows are the scores.  The first column is the
+benchmark name and the second the id within it.  For benchmarks
+that have a score result, that&#8217;s what&#8217;s used.  For benchmarks with
+FPS_* result, that&#8217;s the score.  E.g. glbenchmarks &#8220;score&#8221; is it&#8217;s
+fps.</p>
+<p>An optional name argument can be passed.  If supplied, it overrides
+the name in the results file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.wa.results.get_run_number">
+<code class="descclassname">trappy.wa.results.</code><code class="descname">get_run_number</code><span class="sig-paren">(</span><em>metric</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/wa/results.html#get_run_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.wa.results.get_run_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.wa.html"
+                        title="previous chapter">trappy.wa package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.wa.sysfs_extractor.html"
+                        title="next chapter">trappy.wa.sysfs_extractor module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.wa.results.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.sysfs_extractor.html" title="trappy.wa.sysfs_extractor module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.wa.html" title="trappy.wa package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.wa.html" >trappy.wa package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

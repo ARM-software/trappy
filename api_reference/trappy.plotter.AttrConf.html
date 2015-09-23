@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.plotter.AttrConf module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy.plotter package" href="trappy.plotter.html" />
+    <link rel="next" title="trappy.plotter.ColorMap module" href="trappy.plotter.ColorMap.html" />
+    <link rel="prev" title="trappy.plotter.AbstractDataPlotter module" href="trappy.plotter.AbstractDataPlotter.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.plotter.ColorMap.html" title="trappy.plotter.ColorMap module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.plotter.AbstractDataPlotter.html" title="trappy.plotter.AbstractDataPlotter module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.plotter.html" accesskey="U">trappy.plotter package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.plotter.AttrConf">
+<span id="trappy-plotter-attrconf-module"></span><h1>trappy.plotter.AttrConf module<a class="headerlink" href="#module-trappy.plotter.AttrConf" title="Permalink to this headline">¶</a></h1>
+<p>These are the default plotting Attributes</p>
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.ALPHA">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">ALPHA</code><em class="property"> = 0.75</em><a class="headerlink" href="#trappy.plotter.AttrConf.ALPHA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for the alpha channel</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.ARGS_TO_FORWARD">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">ARGS_TO_FORWARD</code><em class="property"> = ['marker', 'markersize', 'markevery', 'linestyle', 'linewidth', 'drawstyle']</em><a class="headerlink" href="#trappy.plotter.AttrConf.ARGS_TO_FORWARD" title="Permalink to this definition">¶</a></dt>
+<dd><p>kwargs that will be forwarded to matplotlib API calls</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.CONCAT">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">CONCAT</code><em class="property"> = False</em><a class="headerlink" href="#trappy.plotter.AttrConf.CONCAT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for concat in <a class="reference internal" href="trappy.plotter.LinePlot.html#module-trappy.plotter.LinePlot" title="trappy.plotter.LinePlot"><code class="xref py py-mod docutils literal"><span class="pre">trappy.plotter.LinePlot</span></code></a>
+and <a class="reference internal" href="trappy.plotter.ILinePlot.html#module-trappy.plotter.ILinePlot" title="trappy.plotter.ILinePlot"><code class="xref py py-mod docutils literal"><span class="pre">trappy.plotter.ILinePlot</span></code></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.DEFAULT_SYNC_ZOOM">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">DEFAULT_SYNC_ZOOM</code><em class="property"> = False</em><a class="headerlink" href="#trappy.plotter.AttrConf.DEFAULT_SYNC_ZOOM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sync Graph zoom by default in
+<a class="reference internal" href="trappy.plotter.ILinePlot.html#module-trappy.plotter.ILinePlot" title="trappy.plotter.ILinePlot"><code class="xref py py-mod docutils literal"><span class="pre">trappy.plotter.ILinePlot</span></code></a> graph groups</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.DUPLICATE_VALUE_MAX_DELTA">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">DUPLICATE_VALUE_MAX_DELTA</code><em class="property"> = 1e-06</em><a class="headerlink" href="#trappy.plotter.AttrConf.DUPLICATE_VALUE_MAX_DELTA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum interval for duplicate value adjustment</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.EVENT_PLOT_STRIDE">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">EVENT_PLOT_STRIDE</code><em class="property"> = False</em><a class="headerlink" href="#trappy.plotter.AttrConf.EVENT_PLOT_STRIDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for stride which enables sampled
+EventPlots for <a class="reference internal" href="trappy.plotter.EventPlot.html#module-trappy.plotter.EventPlot" title="trappy.plotter.EventPlot"><code class="xref py py-mod docutils literal"><span class="pre">trappy.plotter.EventPlot</span></code></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.FILL">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">FILL</code><em class="property"> = False</em><a class="headerlink" href="#trappy.plotter.AttrConf.FILL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for &#8220;fill&#8221; in <a class="reference internal" href="trappy.plotter.LinePlot.html#module-trappy.plotter.LinePlot" title="trappy.plotter.LinePlot"><code class="xref py py-mod docutils literal"><span class="pre">trappy.plotter.LinePlot</span></code></a>
+and <a class="reference internal" href="trappy.plotter.ILinePlot.html#module-trappy.plotter.ILinePlot" title="trappy.plotter.ILinePlot"><code class="xref py py-mod docutils literal"><span class="pre">trappy.plotter.ILinePlot</span></code></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.HTML_HEIGHT">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">HTML_HEIGHT</code><em class="property"> = 400</em><a class="headerlink" href="#trappy.plotter.AttrConf.HTML_HEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default height for HTML based plots</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.HTML_WIDTH">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">HTML_WIDTH</code><em class="property"> = 900</em><a class="headerlink" href="#trappy.plotter.AttrConf.HTML_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default width for HTML based plots</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.LENGTH">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">LENGTH</code><em class="property"> = 7</em><a class="headerlink" href="#trappy.plotter.AttrConf.LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Length of a MatPlotlib Plot</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.LINE_WIDTH">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">LINE_WIDTH</code><em class="property"> = 1.0</em><a class="headerlink" href="#trappy.plotter.AttrConf.LINE_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Line Width for plotter</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.PER_LINE">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">PER_LINE</code><em class="property"> = 2</em><a class="headerlink" href="#trappy.plotter.AttrConf.PER_LINE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Graphs per line</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.PIVOT">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">PIVOT</code><em class="property"> = '__TRAPPY_PIVOT_DEFAULT'</em><a class="headerlink" href="#trappy.plotter.AttrConf.PIVOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default pivot when None specified</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.PIVOT_VAL">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">PIVOT_VAL</code><em class="property"> = '__TRAPPY_DEFAULT_PIVOT_VAL'</em><a class="headerlink" href="#trappy.plotter.AttrConf.PIVOT_VAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default PivotValue for the default pivot</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.PLOT_SCATTER">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">PLOT_SCATTER</code><em class="property"> = False</em><a class="headerlink" href="#trappy.plotter.AttrConf.PLOT_SCATTER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for creating Scatter Plots</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.POINT_SIZE">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">POINT_SIZE</code><em class="property"> = 2</em><a class="headerlink" href="#trappy.plotter.AttrConf.POINT_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Point Size for plots (in pts)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.WIDTH">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">WIDTH</code><em class="property"> = 7</em><a class="headerlink" href="#trappy.plotter.AttrConf.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Width of a MatPlotlib Plot</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.XLIM">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">XLIM</code><em class="property"> = None</em><a class="headerlink" href="#trappy.plotter.AttrConf.XLIM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for xlimit</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="trappy.plotter.AttrConf.YLIM">
+<code class="descclassname">trappy.plotter.AttrConf.</code><code class="descname">YLIM</code><em class="property"> = None</em><a class="headerlink" href="#trappy.plotter.AttrConf.YLIM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for ylim</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.plotter.AbstractDataPlotter.html"
+                        title="previous chapter">trappy.plotter.AbstractDataPlotter module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.plotter.ColorMap.html"
+                        title="next chapter">trappy.plotter.ColorMap module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.plotter.AttrConf.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.plotter.ColorMap.html" title="trappy.plotter.ColorMap module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.plotter.AbstractDataPlotter.html" title="trappy.plotter.AbstractDataPlotter module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.plotter.html" >trappy.plotter package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

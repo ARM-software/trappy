@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.stats.Aggregator module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy.stats package" href="trappy.stats.html" />
+    <link rel="next" title="trappy.stats.Correlator module" href="trappy.stats.Correlator.html" />
+    <link rel="prev" title="trappy.stats package" href="trappy.stats.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.Correlator.html" title="trappy.stats.Correlator module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.html" title="trappy.stats package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.stats.html" accesskey="U">trappy.stats package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.stats.Aggregator">
+<span id="trappy-stats-aggregator-module"></span><h1>trappy.stats.Aggregator module<a class="headerlink" href="#module-trappy.stats.Aggregator" title="Permalink to this headline">¶</a></h1>
+<p>Aggregators are responsible for aggregating information
+for further analysis. These aggregations can produce
+both scalars and vectors and each aggregator implementation
+is expected to handle its &#8220;aggregation&#8221; mechanism.</p>
+<dl class="class">
+<dt id="trappy.stats.Aggregator.AbstractAggregator">
+<em class="property">class </em><code class="descclassname">trappy.stats.Aggregator.</code><code class="descname">AbstractAggregator</code><span class="sig-paren">(</span><em>indexer</em>, <em>aggfunc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Aggregator.html#AbstractAggregator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Aggregator.AbstractAggregator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract class for all aggregators</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>indexer</strong> (<a class="reference internal" href="trappy.stats.Indexer.html#trappy.stats.Indexer.Indexer" title="trappy.stats.Indexer.Indexer"><code class="xref py py-mod docutils literal"><span class="pre">trappy.stats.Indexer.Indexer</span></code></a>) &#8211; Indexer is passed on by the Child class
+for handling indices during correlation</li>
+<li><strong>aggfunc</strong> (<em>function</em>) &#8211; Function that accepts a pandas.Series and
+process it for aggregation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="trappy.stats.Aggregator.AbstractAggregator.aggregate">
+<code class="descname">aggregate</code><span class="sig-paren">(</span><em>run_idx</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Aggregator.html#AbstractAggregator.aggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Aggregator.AbstractAggregator.aggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract Method for aggregating data for various
+pivots.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>run_idx</strong> (<em>int</em>) &#8211; Index of the run to be aggregated</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The aggregated result</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="trappy.stats.Aggregator.MultiTriggerAggregator">
+<em class="property">class </em><code class="descclassname">trappy.stats.Aggregator.</code><code class="descname">MultiTriggerAggregator</code><span class="sig-paren">(</span><em>triggers</em>, <em>topology</em>, <em>aggfunc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Aggregator.html#MultiTriggerAggregator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Aggregator.MultiTriggerAggregator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trappy.stats.Aggregator.AbstractAggregator" title="trappy.stats.Aggregator.AbstractAggregator"><code class="xref py py-class docutils literal"><span class="pre">trappy.stats.Aggregator.AbstractAggregator</span></code></a></p>
+<p>This aggregator accepts a list of triggers and each trigger has
+a value associated with it.</p>
+<dl class="method">
+<dt id="trappy.stats.Aggregator.MultiTriggerAggregator.aggregate">
+<code class="descname">aggregate</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/stats/Aggregator.html#MultiTriggerAggregator.aggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.stats.Aggregator.MultiTriggerAggregator.aggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate implementation that aggregates
+triggers for a given topological level. All the arguments passed to
+it are forwarded to the aggregator function except level (if present)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A scalar or a vector aggregated result. Each group in the
+level produces an element in the result list with a one to one
+index correspondence<div class="highlight-python"><div class="highlight"><pre><span class="n">groups</span><span class="p">[</span><span class="s">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">result_1</span><span class="p">,</span> <span class="n">result_2</span><span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.stats.html"
+                        title="previous chapter">trappy.stats package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.stats.Correlator.html"
+                        title="next chapter">trappy.stats.Correlator module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.stats.Aggregator.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.Correlator.html" title="trappy.stats.Correlator module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.stats.html" title="trappy.stats package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="trappy.stats.html" >trappy.stats package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

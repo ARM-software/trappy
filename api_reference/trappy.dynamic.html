@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>trappy.dynamic module &mdash; TRAPpy 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TRAPpy 1.0.0 documentation" href="index.html" />
+    <link rel="up" title="trappy package" href="trappy.html" />
+    <link rel="next" title="trappy.pid_controller module" href="trappy.pid_controller.html" />
+    <link rel="prev" title="trappy.devfreq_power module" href="trappy.devfreq_power.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.pid_controller.html" title="trappy.pid_controller module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trappy.devfreq_power.html" title="trappy.devfreq_power module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" accesskey="U">trappy package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-trappy.dynamic">
+<span id="trappy-dynamic-module"></span><h1>trappy.dynamic module<a class="headerlink" href="#module-trappy.dynamic" title="Permalink to this headline">¶</a></h1>
+<p>The idea is to create a wrapper class that
+returns a Type of a Class dynamically created based
+on the input parameters. Similar to a factory design
+pattern</p>
+<dl class="class">
+<dt id="trappy.dynamic.DynamicTypeFactory">
+<em class="property">class </em><code class="descclassname">trappy.dynamic.</code><code class="descname">DynamicTypeFactory</code><span class="sig-paren">(</span><em>name</em>, <em>bases</em>, <em>dct</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/dynamic.html#DynamicTypeFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.dynamic.DynamicTypeFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">type</span></code></p>
+<p>Override the type class to create
+a dynamic type on the fly. This Factory
+class is used internally by
+<a class="reference internal" href="#trappy.dynamic.register_dynamic" title="trappy.dynamic.register_dynamic"><code class="xref py py-mod docutils literal"><span class="pre">trappy.dynamic.register_dynamic</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.dynamic.default_init">
+<code class="descclassname">trappy.dynamic.</code><code class="descname">default_init</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/dynamic.html#default_init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.dynamic.default_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Constructor for the
+Dynamic MetaClass. This is used for
+the dynamic object creation in
+<a class="reference internal" href="#trappy.dynamic.DynamicTypeFactory" title="trappy.dynamic.DynamicTypeFactory"><code class="xref py py-mod docutils literal"><span class="pre">trappy.dynamic.DynamicTypeFactory</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.dynamic.register_class">
+<code class="descclassname">trappy.dynamic.</code><code class="descname">register_class</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/dynamic.html#register_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.dynamic.register_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new class implementation
+Should be used when the class has
+complex helper methods and does not
+expect to use the default constructor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cls</strong> (<a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-mod docutils literal"><span class="pre">trappy.base.Base</span></code></a>) &#8211; The class to be registered for
+enabling the parsing of an event in trace</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="trappy.dynamic.register_dynamic">
+<code class="descclassname">trappy.dynamic.</code><code class="descname">register_dynamic</code><span class="sig-paren">(</span><em>class_name</em>, <em>unique_word</em>, <em>scope='all'</em>, <em>parse_raw=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trappy/dynamic.html#register_dynamic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trappy.dynamic.register_dynamic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Dynamic Type and register
+it with the TRAPpy Framework</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>class_name</strong> (<em>str</em>) &#8211; The name of the class to be registered
+(Should be in CamelCase)</li>
+<li><strong>unique_word</strong> (<em>str</em>) &#8211; The unique_word to be matched in the
+trace</li>
+<li><strong>scope</strong> (<em>str</em>) &#8211; Registry Scope (Can be used to constrain
+the parsing of events and group them together)</li>
+<li><strong>parse_raw</strong> (<em>bool</em>) &#8211; If, true, raw trace output (-R flag)
+will be used</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>For example if a new unique word <code class="code docutils literal"><span class="pre">my_unique_word</span></code> has
+to be registered with TRAPpy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">trappy</span>
+<span class="n">custom_class</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">register_dynamic</span><span class="p">(</span><span class="s">&quot;MyEvent&quot;</span><span class="p">,</span> <span class="s">&quot;my_unique_word&quot;</span><span class="p">)</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">trappy</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="s">&quot;/path/to/trace_file&quot;</span><span class="p">)</span>
+
+<span class="c"># New data member created in the run object</span>
+<span class="n">run</span><span class="o">.</span><span class="n">my_event</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The name of the member is <code class="code docutils literal"><span class="pre">my_event</span></code> from <strong>MyEvent</strong></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A class object of type <a class="reference internal" href="trappy.base.html#trappy.base.Base" title="trappy.base.Base"><code class="xref py py-mod docutils literal"><span class="pre">trappy.base.Base</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trappy.devfreq_power.html"
+                        title="previous chapter">trappy.devfreq_power module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trappy.pid_controller.html"
+                        title="next chapter">trappy.pid_controller module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/trappy.dynamic.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trappy.pid_controller.html" title="trappy.pid_controller module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trappy.devfreq_power.html" title="trappy.devfreq_power module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TRAPpy 1.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="trappy.html" >trappy package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, ARM Ltd..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
