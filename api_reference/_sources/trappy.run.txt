@@ -1,7 +1,0 @@
-trappy.run module
-=================
-
-.. automodule:: trappy.run
-    :members:
-    :undoc-members:
-    :show-inheritance:
