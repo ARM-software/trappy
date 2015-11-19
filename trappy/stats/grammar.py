@@ -367,12 +367,14 @@ class Parser(object):
             pivot = cls.pivot
             pivot_vals = list(np.unique(data_frame[pivot].values))
             data = {}
+            new_index = self._agg_df.index.union(data_frame.index)
+
 
             for val in pivot_vals:
                 data[val] = data_frame[data_frame[pivot] == val][[column]]
                 if len(self._agg_df):
                     data[val] = data[val].reindex(
-                        index=self._agg_df.index,
+                        index=new_index,
                         method=self._method,
                         limit=self._limit)
 
@@ -380,7 +382,7 @@ class Parser(object):
 
         if len(self._agg_df):
             data_frame = data_frame.reindex(
-                index=self._agg_df.index,
+                index=new_index,
                 method=self._method,
                 limit=self._limit)
 
