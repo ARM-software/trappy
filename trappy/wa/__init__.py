@@ -24,3 +24,4 @@ please visit https://github.com/ARM-software/workload-automation
 
 from trappy.wa.results import Result, get_results, combine_results
 from trappy.wa.sysfs_extractor import SysfsExtractor
+from trappy.wa.PowerPerfPlot import PowerPerfPlot

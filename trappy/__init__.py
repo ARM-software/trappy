@@ -23,7 +23,6 @@ try:
     from trappy.plotter.EventPlot import EventPlot
     from trappy.plotter.XYPlot import XYPlot
     from trappy.plotter.DualPlotNorm import DualPlotNorm
-    from trappy.plotter.PowerPerfPlot import PowerPerfPlot
 except ImportError:
     pass
 from trappy.dynamic import register_dynamic, register_class
