@@ -470,3 +470,29 @@ class TestTraceDat(utils_tests.SetupDirectory):
         trappy.Run()
 
         self.assert_thermal_in_trace("trace.txt")
+
+class TestRunSystrace(utils_tests.SetupDirectory):
+
+    def __init__(self, *args, **kwargs):
+        super(TestRunSystrace, self).__init__(
+             [("trace_systrace.html", "trace.html")],
+             *args,
+             **kwargs)
+
+    def test_systrace_html(self):
+        """Tests parsing of a systrace embedded textual trace """
+
+        run = trappy.Run('trace.html',
+                events=["sched_switch", "sched_wakeup", "trace_event_clock_sync"])
+
+        self.assertTrue(hasattr(run, "sched_switch"))
+        self.assertTrue(len(run.sched_switch.data_frame) == 4)
+        self.assertTrue("prev_comm" in run.sched_switch.data_frame.columns)
+
+        self.assertTrue(hasattr(run, "sched_wakeup"))
+        self.assertTrue(len(run.sched_wakeup.data_frame) == 4)
+        self.assertTrue("target_cpu" in run.sched_wakeup.data_frame.columns)
+
+        self.assertTrue(hasattr(run, "trace_event_clock_sync"))
+        self.assertTrue(len(run.trace_event_clock_sync.data_frame) == 1)
+        self.assertTrue("realtime_ts" in run.trace_event_clock_sync.data_frame.columns)
