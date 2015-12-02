@@ -453,6 +453,12 @@ class Run(object):
             trace_class.create_dataframe()
             trace_class.finalize_object()
 
+        if not hasattr(self, "_cpus"):
+            # Estimante number of CPUs from available datasets
+            if "sched_switch" in self.class_definitions:
+                cpus_count = 1 + self.sched_switch.data_frame['__cpu'].max()
+                setattr(self, "_cpus", cpus_count)
+
     # TODO: Move thermal specific functionality
 
     def get_all_freqs_data(self, map_label):

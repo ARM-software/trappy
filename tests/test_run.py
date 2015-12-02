@@ -496,3 +496,12 @@ class TestRunSystrace(utils_tests.SetupDirectory):
         self.assertTrue(hasattr(run, "trace_event_clock_sync"))
         self.assertTrue(len(run.trace_event_clock_sync.data_frame) == 1)
         self.assertTrue("realtime_ts" in run.trace_event_clock_sync.data_frame.columns)
+
+    def test_cpus_identification(self):
+        """Tests number of CPUs identified from sched_switch events"""
+
+        run = trappy.Run('trace.html')
+
+        self.assertTrue(hasattr(run, "_cpus"))
+        self.assertTrue(run._cpus == 3)
+
