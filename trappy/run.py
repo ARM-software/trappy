@@ -107,6 +107,7 @@ class Run(object):
     def __init__(self, path=".", name="", normalize_time=True, scope="all",
                  events=[], window=(0, None), abs_window=(0, None)):
         self.name = name
+        self.trace_type = 'ftrace'
         self.trace_path, self.trace_path_raw = self.__process_path(path)
         self.class_definitions = self.dynamic_classes.copy()
         self.basetime = 0
@@ -138,6 +139,10 @@ class Run(object):
         """Process the path and return the path to the trace text file"""
 
         if os.path.isfile(basepath):
+            if os.path.splitext(basepath)[1] == '.html':
+                # Assuming trace is embedded into a systrace HTML report
+                self.trace_type = 'systrace'
+                return basepath, basepath
             trace_name = os.path.splitext(basepath)[0]
         else:
             trace_name = os.path.join(basepath, "trace")
@@ -371,6 +376,10 @@ class Run(object):
         except AttributeError:
             return False
 
+        # Remove knowen format strings
+        if self.trace_type == 'systrace':
+            line = re.sub(r"(.* sched_switch: .*) ==> (.*)", r"\1 \2", line)
+
         data_str = line[data_start_idx:]
 
         # Remove empty arrays from the trace
@@ -406,14 +415,38 @@ class Run(object):
             trace_file = self.trace_path
 
         with open(trace_file) as fin:
-            self.__populate_metadata(fin, unique_words)
 
-            for line in fin:
+            if self.trace_type == 'systrace':
+                # Skip systrace non-trace data
+                line = fin.readline()
+                while line:
+                    # Trace medatada begin marker
+                    if re.match(r'<!-- BEGIN TRACE -->', line):
+                        # Skip the following " </script>" token
+                        line = fin.readline()
+                        break
+                    line = fin.readline()
+                # Skip all the following trace header comments
+                line = fin.readline()
+                while line[0] == '#':
+                    line = fin.readline()
+
+            else:
+                # Parse metadata at the beginning of the trace
+                self.__populate_metadata(fin, unique_words)
+                line = fin.readline()
+
+            while line:
+                if self.trace_type == 'systrace':
+                    # Check for systrace end
+                    if line == ' </script>':
+                        break
                 try:
                     self.__populate_data_from_line(line, unique_words, window,
                                                    abs_window)
                 except StopIteration:
                     pass
+                line = fin.readline()
 
     def __finalize_objects(self):
         for trace_class in self.trace_classes:
