@@ -16,6 +16,10 @@
 import unittest
 from trappy.stats.Topology import Topology
 
+import trappy
+from trappy.base import Base
+import pandas as pd
+
 
 class TestTopology(unittest.TestCase):
 
@@ -87,3 +91,40 @@ class TestTopology(unittest.TestCase):
 
         self.assertEqual(topology.get_index(level, [1, 2]), 0)
         self.assertEqual(topology.get_index(level, [0, 3, 4, 5]), 1)
+
+
+class BaseTestStats(unittest.TestCase):
+
+    def __init__(self, *args, **kwargs):
+        super(BaseTestStats, self).__init__(
+            *args,
+            **kwargs)
+
+    @classmethod
+    def setUp(cls):
+
+        run = trappy.Run()
+        data = {
+
+            "identifier": [
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+            ],
+            "result": [
+                "fire",
+                "blank",
+                "fire",
+                "blank",
+                "fire",
+                "blank",
+            ],
+        }
+
+        index = pd.Series([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], name="Time")
+        data_frame = pd.DataFrame(data, index=index)
+        run.add_parsed_event("aim_and_fire", data_frame)
+        cls._run = run
