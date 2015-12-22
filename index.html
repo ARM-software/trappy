@@ -8,8 +8,10 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <style>
 
@@ -160,16 +162,16 @@ Here is the general structure the plotter:</p>
 
 <h2>
 <a id="ilineplot" class="anchor" href="#ilineplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interactive LinePlots</h2>
-
-<table style="width: 1000px; border-style: hidden;">
+<div class="output_subarea container" style="overflow: visible">
+<table style="border-style: hidden; overflow: visible">
 <tr>
-<td style="border-style: hidden;"><div class="ilineplot" id="fig_b30e3f8d121e44c6bc0a7d7ae3abccf8" style="width: 950px; height: 400px;">
+<td style="border-style: hidden;"><div class="ilineplot" id="fig_6a5afcadae6a44448bfb699718f3d188" style="overflow: visible">
             <script>
             var ilp_req = require.config( {
 
                 paths: {
                     "dygraph": 'https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined',
-                    "ILinePlot": 'https://cdn.rawgit.com/sinkap/648927dfd6985d4540a9/raw/69d6f1f9031ae3624c15707315ce04be1a9d1ac3/ILinePlot',
+                    "ILinePlot": 'https://cdn.rawgit.com/sinkap/648927dfd6985d4540a9/raw/8bddb5a8c89de84c68298c8352e6f27e54db8204/ILinePlot',
                 },
 
                 shim: {
@@ -181,18 +183,18 @@ Here is the general structure the plotter:</p>
                 }
             });
                 ilp_req(["require", "ILinePlot"], function() {
-                ILinePlot.generate('fig_b30e3f8d121e44c6bc0a7d7ae3abccf8', 'https://cdn.rawgit.com/anonymous/50ba1e05ed30e0ef76af/raw/4084e60f4bf2a1d153b112b697776c0af99515ad/fig_b30e3f8d121e44c6bc0a7d7ae3abccf8.json');
+                ILinePlot.generate('fig_6a5afcadae6a44448bfb699718f3d188', 'https://cdn.rawgit.com/sinkap/9ebdc2f6a0c5d150a76c/raw/bf1d4d1f4cf43b87fa8e93c423ec5d9217f0ffb0/fig_6a5afcadae6a44448bfb699718f3d188.json');
             });
             </script>
         </div></td>
 </tr>
 <tr>
-<td style="border-style: hidden;"><div style="text-align:right; width: 900px; height: auto;"; id="fig_b30e3f8d121e44c6bc0a7d7ae3abccf8_legend"></div></td>
+<td style="border-style: hidden; text-align: right;"><div id="fig_6a5afcadae6a44448bfb699718f3d188_legend"></div></td>
 </tr>
 </table>
 <p>The interactive line plots use <a href="http://dygraphs.com">dygraphs</a>. </p>
 <p>Click and Drag to Zoom. Double Click to reset </p>
-
+</div>
 <h2>
 <a id="eventplot" class="anchor" href="#eventplot" aria-hidden="true"><span class="octicon octicon-link"></span></a>EventPlot</h2>
 
@@ -206,7 +208,7 @@ Here is the general structure the plotter:</p>
 
                 paths: {
 
-                    "EventPlot": 'https://cdn.rawgit.com/sinkap/7f89de3e558856b81f10/raw/31226f5d0a23133caea48e49bd2dfe72bd255752/EventPlot',
+                    "EventPlot": 'https://cdn.rawgit.com/sinkap/7f89de3e558856b81f10/raw/34ee1291911a81e1d1f25491785df6708e5403be/EventPlot',
                     "d3-tip": 'https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.6.3/d3-tip.min',
                     "d3-plotter": 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3'
                 },
