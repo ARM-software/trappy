@@ -200,9 +200,14 @@ def plot_allfreqs(runs, map_label, width=None, height=None):
     axis = pre_plot_setup(width=width, height=height, nrows=nrows,
                           ncols=num_runs)
 
+    # Convert axis to one dimensional array type
+    #  - For the case with one run instance, need convert axis object
+    #    to array type.
+    #  - For the case with mulitple run instances, need convert 2D array
+    #    to 1D array type.
     if num_runs == 1:
         axis = [axis]
-    else:
+    elif axis.ndim == 2:
         axis = zip(*axis)
 
     for ax, run in zip(axis, runs):
