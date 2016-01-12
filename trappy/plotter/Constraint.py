@@ -315,11 +315,11 @@ class ConstraintManager(object):
         """
 
         for trace_idx, trace in enumerate(self._ip_vec[0]):
-            for col in self._ip_vec[1]:
-                template = self._ip_vec[2][trace_idx]
-                constraint = Constraint(trace, self._pivot, col, template,
-                                        trace_idx, self._filters)
-                self._constraints.append(constraint)
+            column = self._ip_vec[1][trace_idx]
+            template = self._ip_vec[2][trace_idx]
+            constraint = Constraint(trace, self._pivot, column, template,
+                                    trace_idx, self._filters)
+            self._constraints.append(constraint)
 
     def get_column_index(self, constraint):
         return self._ip_vec[1].index(constraint._column)
