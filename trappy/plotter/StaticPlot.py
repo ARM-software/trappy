@@ -215,7 +215,6 @@ class StaticPlot(AbstractDataPlotter):
 
         self._fig = self._layout.get_fig()
 
-        #Set up the legend and colormap
         #Determine what constraint to plot and the corresponding pivot value
         if permute:
             legend_len = self.c_mgr._max_len
