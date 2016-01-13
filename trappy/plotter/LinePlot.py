@@ -48,6 +48,7 @@ class LinePlot(StaticPlot):
                 self._attr["args_to_forward"]["markersize"] = \
                     self._attr["point_size"]
 
+    #Left temporarily until _resolve_concat is refactored to use plot_axis
     def plot(self, series_index, axis, data_index, data_values, **kwargs):
         """Internal Method called to draw a series on an axis"""
         line_2d_list = axis.plot(
@@ -57,3 +58,18 @@ class LinePlot(StaticPlot):
             **kwargs["args_to_forward"])
 
         return line_2d_list
+
+    def plot_axis(self, axis, pivot, series_list, permute, **kwargs):
+        """Internal Method called to draw a list of series on a given axis"""
+        for i, constraint in enumerate(series_list):
+            result = constraint.result
+            line_2d_list = axis.plot(
+                result[pivot].index,
+                result[pivot].values,
+                color=self._cmap.cmap(i),
+                **kwargs["args_to_forward"]
+            )
+
+            axis.set_title(self.make_title(constraint, pivot, permute))
+
+            self.add_to_legend(i, line_2d_list[0], str(constraint))
