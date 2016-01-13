@@ -18,6 +18,8 @@ customizing Line Plots with a pandas dataframe input
 """
 
 import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 from trappy.plotter import AttrConf
 from trappy.plotter.Constraint import ConstraintManager
 from trappy.plotter.PlotLayout import PlotLayout
@@ -185,6 +187,7 @@ class LinePlot(AbstractDataPlotter):
         self._attr["args_to_forward"] = {}
         self._attr["scatter"] = AttrConf.PLOT_SCATTER
         self._attr["map_label"] = {}
+        self._attr["legend_outside"] = False
 
     def _check_add_scatter(self):
         """Check if a scatter plot is needed
@@ -285,7 +288,7 @@ class LinePlot(AbstractDataPlotter):
             if not legend_line:
                 del legend[l_idx]
                 del legend_str[l_idx]
-        self._fig.legend(legend, legend_str)
+        self._attr["_legend"] = self._fig.legend(legend, legend_str)
         self._layout.finish(len_pivots)
 
     def _plot_concat(self):
@@ -353,9 +356,23 @@ class LinePlot(AbstractDataPlotter):
                 pivot_index += 1
             plot_index += 1
 
-        self._fig.legend(legend, legend_str)
+        self._attr["_legend"] = self._fig.legend(legend, legend_str)
         plot_index = 0
         for constraint in self.c_mgr:
             self._layout.get_axis(plot_index).set_title(str(constraint))
             plot_index += 1
         self._layout.finish(len(self.c_mgr))
+
+    def _repr_html_(self):
+        """Make an HTML element for display in a notebook"""
+        self.view()
+        figfile = BytesIO()
+        if self._attr["legend_outside"] is True:
+            self._attr["_legend"].set_bbox_to_anchor((1.0, 0.5))
+            self.savefig(figfile, format='png', bbox_inches='tight', bbox_extra_artists=(self._attr["_legend"],))
+        else:
+            self.savefig(figfile, format='png')
+        figfile.seek(0)
+        figdata_png = figfile.getvalue()
+        plt.close(self._fig)
+        return '<img src="data:image/png;base64,{}">'.format(base64.b64encode(figdata_png))
