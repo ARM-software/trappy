@@ -63,20 +63,9 @@ class LinePlot(StaticPlot):
             facecolor=self._cmap.cmap(cmap_index),
             alpha=AttrConf.ALPHA)
 
-    #Left temporarily until _resolve_concat is refactored to use plot_axis
-    def plot(self, series_index, axis, data_index, data_values, **kwargs):
-        """Internal Method called to draw a series on an axis"""
-        line_2d_list = axis.plot(
-            data_index,
-            data_values,
-            color=self._cmap.cmap(series_index),
-            **kwargs["args_to_forward"])
-
-        return line_2d_list
-
-    def plot_axis(self, axis, pivot, series_list, permute, **kwargs):
+    def plot_axis(self, axis, series_list, permute, concat, **kwargs):
         """Internal Method called to draw a list of series on a given axis"""
-        for i, constraint in enumerate(series_list):
+        for i, (constraint, pivot) in enumerate(series_list):
             result = constraint.result
             line_2d_list = axis.plot(
                 result[pivot].index,
@@ -88,6 +77,6 @@ class LinePlot(StaticPlot):
             if self._attr["fill"]:
                 self.fill_line(axis, line_2d_list[0], i)
 
-            axis.set_title(self.make_title(constraint, pivot, permute))
+            axis.set_title(self.make_title(constraint, pivot, permute, concat))
 
-            self.add_to_legend(i, line_2d_list[0], str(constraint))
+            self.add_to_legend(i, line_2d_list[0], constraint, pivot, concat)
