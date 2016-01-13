@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""This module contains the class for plotting and
-customizing Line Plots with a pandas dataframe input
+"""
+This class sublclasses :mod:`trappy.plotter.StaticPlot.StaticPlot` to
+implement a line plot.
+
+:param fill: Fill the area under the plots
+:type fill: bool
+
 """
 
 from trappy.plotter import AttrConf
@@ -50,6 +55,7 @@ class LinePlot(StaticPlot):
                     self._attr["point_size"]
 
     def fill_line(self, axis, line_2d, cmap_index):
+        """Fill the area under a line"""
         drawstyle = line_2d.get_drawstyle()
         if drawstyle.startswith("steps"):
             # This has been fixed in upstream matplotlib
@@ -64,7 +70,7 @@ class LinePlot(StaticPlot):
             alpha=AttrConf.ALPHA)
 
     def plot_axis(self, axis, series_list, permute, concat, **kwargs):
-        """Internal Method called to draw a list of series on a given axis"""
+        """Internal Method called to plot data (series_list) on a given axis"""
         for i, (constraint, pivot) in enumerate(series_list):
             result = constraint.result
             line_2d_list = axis.plot(
