@@ -220,6 +220,9 @@ class LinePlot(AbstractDataPlotter):
             legend = [None] * len(self.c_mgr)
             cmap = ColorMap(len(self.c_mgr))
 
+        if "colors" in self._attr:
+            cmap.rgb_cmap(self._attr["colors"])
+
         for p_val in pivot_vals:
             l_index = 0
             for constraint in self.c_mgr:
@@ -293,6 +296,8 @@ class LinePlot(AbstractDataPlotter):
 
         pivot_vals, len_pivots = self.c_mgr.generate_pivots()
         cmap = ColorMap(len_pivots)
+        if "colors" in self._attr:
+            cmap.rgb_cmap(self._attr["colors"])
 
         self._layout = PlotLayout(self._attr["per_line"], len(self.c_mgr),
                                   width=self._attr["width"],
