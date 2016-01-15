@@ -135,7 +135,7 @@ class LinePlot(AbstractDataPlotter):
 
         zip_constraints = not self._attr["permute"]
         self.c_mgr = ConstraintManager(traces, self._attr["column"],
-                                       self.templates, self._attr["pivot"],
+                                       templates, self._attr["pivot"],
                                        self._attr["filters"], zip_constraints)
         self._check_add_scatter()
 
