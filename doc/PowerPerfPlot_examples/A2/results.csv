@@ -1,0 +1,523 @@
+id,workload,iteration,metric,core,freq,value,units
+a15_8_1,dhrystone,1,thread 0 score,A15,800000,1436782,
+a15_8_1,dhrystone,1,thread 0 DMIPS,A15,800000,818,
+a15_8_1,dhrystone,1,time,A15,800000,10.58348,seconds
+a15_8_1,dhrystone,1,total DMIPS,A15,800000,818,
+a15_8_1,dhrystone,1,total score,A15,800000,1436782,
+a15_8_1,dhrystone,1,execution_time,A15,800000,10.6738960743,seconds
+a15_8_1,dhrystone,1,A7_power,A15,800000,0.015,Watts
+a15_8_1,dhrystone,1,A7_voltage,A15,800000,0.766,Volts
+a15_8_1,dhrystone,1,A7_energy,A15,800000,17.411,Joules
+a15_8_1,dhrystone,1,A15c_power,A15,800000,0.072,Watts
+a15_8_1,dhrystone,1,A15c_voltage,A15,800000,0.7,Volts
+a15_8_1,dhrystone,1,A15c_energy,A15,800000,82.804,Joules
+a15_8_1,dhrystone,1,A15b_power,A15,800000,0.047,Watts
+a15_8_1,dhrystone,1,A15b_voltage,A15,800000,0.7,Volts
+a15_8_1,dhrystone,1,A15b_energy,A15,800000,53.847,Joules
+a15_8_1,dhrystone,1,A15a_power,A15,800000,0.045,Watts
+a15_8_1,dhrystone,1,A15a_voltage,A15,800000,0.7,Volts
+a15_8_1,dhrystone,1,A15a_energy,A15,800000,51.699,Joules
+a15_9_1,dhrystone,1,thread 0 score,A15,900000,1594049,
+a15_9_1,dhrystone,1,thread 0 DMIPS,A15,900000,907,
+a15_9_1,dhrystone,1,time,A15,900000,9.515083,seconds
+a15_9_1,dhrystone,1,total DMIPS,A15,900000,907,
+a15_9_1,dhrystone,1,total score,A15,900000,1594049,
+a15_9_1,dhrystone,1,execution_time,A15,900000,9.57692599297,seconds
+a15_9_1,dhrystone,1,A7_power,A15,900000,0.019,Watts
+a15_9_1,dhrystone,1,A7_voltage,A15,900000,0.766,Volts
+a15_9_1,dhrystone,1,A7_energy,A15,900000,20.058,Joules
+a15_9_1,dhrystone,1,A15c_power,A15,900000,0.081,Watts
+a15_9_1,dhrystone,1,A15c_voltage,A15,900000,0.712,Volts
+a15_9_1,dhrystone,1,A15c_energy,A15,900000,84.876,Joules
+a15_9_1,dhrystone,1,A15b_power,A15,900000,0.053,Watts
+a15_9_1,dhrystone,1,A15b_voltage,A15,900000,0.712,Volts
+a15_9_1,dhrystone,1,A15b_energy,A15,900000,55.774,Joules
+a15_9_1,dhrystone,1,A15a_power,A15,900000,0.051,Watts
+a15_9_1,dhrystone,1,A15a_voltage,A15,900000,0.712,Volts
+a15_9_1,dhrystone,1,A15a_energy,A15,900000,53.536,Joules
+a15_10_1,dhrystone,1,thread 0 score,A15,1000000,1811594,
+a15_10_1,dhrystone,1,thread 0 DMIPS,A15,1000000,1031,
+a15_10_1,dhrystone,1,time,A15,1000000,8.400054,seconds
+a15_10_1,dhrystone,1,total DMIPS,A15,1000000,1031,
+a15_10_1,dhrystone,1,total score,A15,1000000,1811594,
+a15_10_1,dhrystone,1,execution_time,A15,1000000,8.49046301842,seconds
+a15_10_1,dhrystone,1,A7_power,A15,1000000,0.017,Watts
+a15_10_1,dhrystone,1,A7_voltage,A15,1000000,0.767,Volts
+a15_10_1,dhrystone,1,A7_energy,A15,1000000,16.251,Joules
+a15_10_1,dhrystone,1,A15c_power,A15,1000000,0.093,Watts
+a15_10_1,dhrystone,1,A15c_voltage,A15,1000000,0.724,Volts
+a15_10_1,dhrystone,1,A15c_energy,A15,1000000,88.509,Joules
+a15_10_1,dhrystone,1,A15b_power,A15,1000000,0.06,Watts
+a15_10_1,dhrystone,1,A15b_voltage,A15,1000000,0.725,Volts
+a15_10_1,dhrystone,1,A15b_energy,A15,1000000,57.107,Joules
+a15_10_1,dhrystone,1,A15a_power,A15,1000000,0.061,Watts
+a15_10_1,dhrystone,1,A15a_voltage,A15,1000000,0.724,Volts
+a15_10_1,dhrystone,1,A15a_energy,A15,1000000,57.578,Joules
+a15_11_1,dhrystone,1,thread 0 score,A15,1100000,1971091,
+a15_11_1,dhrystone,1,thread 0 DMIPS,A15,1100000,1122,
+a15_11_1,dhrystone,1,time,A15,1100000,7.730322,seconds
+a15_11_1,dhrystone,1,total DMIPS,A15,1100000,1122,
+a15_11_1,dhrystone,1,total score,A15,1100000,1971091,
+a15_11_1,dhrystone,1,execution_time,A15,1100000,7.78648400307,seconds
+a15_11_1,dhrystone,1,A7_power,A15,1100000,0.022,Watts
+a15_11_1,dhrystone,1,A7_voltage,A15,1100000,0.767,Volts
+a15_11_1,dhrystone,1,A7_energy,A15,1100000,18.888,Joules
+a15_11_1,dhrystone,1,A15c_power,A15,1100000,0.097,Watts
+a15_11_1,dhrystone,1,A15c_voltage,A15,1100000,0.757,Volts
+a15_11_1,dhrystone,1,A15c_energy,A15,1100000,82.443,Joules
+a15_11_1,dhrystone,1,A15b_power,A15,1100000,0.063,Watts
+a15_11_1,dhrystone,1,A15b_voltage,A15,1100000,0.757,Volts
+a15_11_1,dhrystone,1,A15b_energy,A15,1100000,53.7,Joules
+a15_11_1,dhrystone,1,A15a_power,A15,1100000,0.1,Watts
+a15_11_1,dhrystone,1,A15a_voltage,A15,1100000,0.757,Volts
+a15_11_1,dhrystone,1,A15a_energy,A15,1100000,84.922,Joules
+A15_12_1,dhrystone,1,thread 0 score,A15,1200000,2139800,
+A15_12_1,dhrystone,1,thread 0 DMIPS,A15,1200000,1218,
+A15_12_1,dhrystone,1,time,A15,1200000,7.155533,seconds
+A15_12_1,dhrystone,1,total DMIPS,A15,1200000,1218,
+A15_12_1,dhrystone,1,total score,A15,1200000,2139800,
+A15_12_1,dhrystone,1,execution_time,A15,1200000,7.2208070755,seconds
+A15_12_1,dhrystone,1,A7_power,A15,1200000,0.017,Watts
+A15_12_1,dhrystone,1,A7_voltage,A15,1200000,0.768,Volts
+A15_12_1,dhrystone,1,A7_energy,A15,1200000,13.797,Joules
+A15_12_1,dhrystone,1,A15c_power,A15,1200000,0.104,Watts
+A15_12_1,dhrystone,1,A15c_voltage,A15,1200000,0.776,Volts
+A15_12_1,dhrystone,1,A15c_energy,A15,1200000,82.91,Joules
+A15_12_1,dhrystone,1,A15b_power,A15,1200000,0.067,Watts
+A15_12_1,dhrystone,1,A15b_voltage,A15,1200000,0.776,Volts
+A15_12_1,dhrystone,1,A15b_energy,A15,1200000,53.997,Joules
+A15_12_1,dhrystone,1,A15a_power,A15,1200000,0.123,Watts
+A15_12_1,dhrystone,1,A15a_voltage,A15,1200000,0.776,Volts
+A15_12_1,dhrystone,1,A15a_energy,A15,1200000,98.473,Joules
+a15_13_1,dhrystone,1,thread 0 score,A15,1300000,2340094,
+a15_13_1,dhrystone,1,thread 0 DMIPS,A15,1300000,1332,
+a15_13_1,dhrystone,1,time,A15,1300000,6.545744,seconds
+a15_13_1,dhrystone,1,total DMIPS,A15,1300000,1332,
+a15_13_1,dhrystone,1,total score,A15,1300000,2340094,
+a15_13_1,dhrystone,1,execution_time,A15,1300000,6.6035349369,seconds
+a15_13_1,dhrystone,1,A7_power,A15,1300000,0.023,Watts
+a15_13_1,dhrystone,1,A7_voltage,A15,1300000,0.768,Volts
+a15_13_1,dhrystone,1,A7_energy,A15,1300000,17.395,Joules
+a15_13_1,dhrystone,1,A15c_power,A15,1300000,0.119,Watts
+a15_13_1,dhrystone,1,A15c_voltage,A15,1300000,0.807,Volts
+a15_13_1,dhrystone,1,A15c_energy,A15,1300000,89.401,Joules
+a15_13_1,dhrystone,1,A15b_power,A15,1300000,0.079,Watts
+a15_13_1,dhrystone,1,A15b_voltage,A15,1300000,0.807,Volts
+a15_13_1,dhrystone,1,A15b_energy,A15,1300000,58.951,Joules
+a15_13_1,dhrystone,1,A15a_power,A15,1300000,0.141,Watts
+a15_13_1,dhrystone,1,A15a_voltage,A15,1300000,0.807,Volts
+a15_13_1,dhrystone,1,A15a_energy,A15,1300000,106.02,Joules
+a15_14_1,dhrystone,1,thread 0 score,A15,1400000,2463054,
+a15_14_1,dhrystone,1,thread 0 DMIPS,A15,1400000,1402,
+a15_14_1,dhrystone,1,time,A15,1400000,6.204609,seconds
+a15_14_1,dhrystone,1,total DMIPS,A15,1400000,1402,
+a15_14_1,dhrystone,1,total score,A15,1400000,2463054,
+a15_14_1,dhrystone,1,execution_time,A15,1400000,6.27770209312,seconds
+a15_14_1,dhrystone,1,A7_power,A15,1400000,0.014,Watts
+a15_14_1,dhrystone,1,A7_voltage,A15,1400000,0.769,Volts
+a15_14_1,dhrystone,1,A7_energy,A15,1400000,9.867,Joules
+a15_14_1,dhrystone,1,A15c_power,A15,1400000,0.128,Watts
+a15_14_1,dhrystone,1,A15c_voltage,A15,1400000,0.819,Volts
+a15_14_1,dhrystone,1,A15c_energy,A15,1400000,89.553,Joules
+a15_14_1,dhrystone,1,A15b_power,A15,1400000,0.095,Watts
+a15_14_1,dhrystone,1,A15b_voltage,A15,1400000,0.819,Volts
+a15_14_1,dhrystone,1,A15b_energy,A15,1400000,66.252,Joules
+a15_14_1,dhrystone,1,A15a_power,A15,1400000,0.157,Watts
+a15_14_1,dhrystone,1,A15a_voltage,A15,1400000,0.819,Volts
+a15_14_1,dhrystone,1,A15a_energy,A15,1400000,109.651,Joules
+a15_16_1,dhrystone,1,thread 0 score,A15,1600000,2862595,
+a15_16_1,dhrystone,1,thread 0 DMIPS,A15,1600000,1629,
+a15_16_1,dhrystone,1,time,A15,1600000,5.358248,seconds
+a15_16_1,dhrystone,1,total DMIPS,A15,1600000,1629,
+a15_16_1,dhrystone,1,total score,A15,1600000,2862595,
+a15_16_1,dhrystone,1,execution_time,A15,1600000,5.41824507713,seconds
+a15_16_1,dhrystone,1,A7_power,A15,1600000,0.016,Watts
+a15_16_1,dhrystone,1,A7_voltage,A15,1600000,0.77,Volts
+a15_16_1,dhrystone,1,A7_energy,A15,1600000,10.66,Joules
+a15_16_1,dhrystone,1,A15c_power,A15,1600000,0.155,Watts
+a15_16_1,dhrystone,1,A15c_voltage,A15,1600000,0.877,Volts
+a15_16_1,dhrystone,1,A15c_energy,A15,1600000,101.007,Joules
+a15_16_1,dhrystone,1,A15b_power,A15,1600000,0.163,Watts
+a15_16_1,dhrystone,1,A15b_voltage,A15,1600000,0.877,Volts
+a15_16_1,dhrystone,1,A15b_energy,A15,1600000,106.131,Joules
+a15_16_1,dhrystone,1,A15a_power,A15,1600000,0.168,Watts
+a15_16_1,dhrystone,1,A15a_voltage,A15,1600000,0.877,Volts
+a15_16_1,dhrystone,1,A15a_energy,A15,1600000,109.257,Joules
+a15_17_1,dhrystone,1,thread 0 score,A15,1704000,3030303,
+a15_17_1,dhrystone,1,thread 0 DMIPS,A15,1704000,1725,
+a15_17_1,dhrystone,1,time,A15,1704000,5.052039,seconds
+a15_17_1,dhrystone,1,total DMIPS,A15,1704000,1725,
+a15_17_1,dhrystone,1,total score,A15,1704000,3030303,
+a15_17_1,dhrystone,1,execution_time,A15,1704000,5.10623693466,seconds
+a15_17_1,dhrystone,1,A7_power,A15,1704000,0.02,Watts
+a15_17_1,dhrystone,1,A7_voltage,A15,1704000,0.771,Volts
+a15_17_1,dhrystone,1,A7_energy,A15,1704000,12.017,Joules
+a15_17_1,dhrystone,1,A15c_power,A15,1704000,0.215,Watts
+a15_17_1,dhrystone,1,A15c_voltage,A15,1704000,0.922,Volts
+a15_17_1,dhrystone,1,A15c_energy,A15,1704000,128.726,Joules
+a15_17_1,dhrystone,1,A15b_power,A15,1704000,0.152,Watts
+a15_17_1,dhrystone,1,A15b_voltage,A15,1704000,0.922,Volts
+a15_17_1,dhrystone,1,A15b_energy,A15,1704000,91.056,Joules
+a15_17_1,dhrystone,1,A15a_power,A15,1704000,0.199,Watts
+a15_17_1,dhrystone,1,A15a_voltage,A15,1704000,0.922,Volts
+a15_17_1,dhrystone,1,A15a_energy,A15,1704000,119.66,Joules
+a15_18_1,dhrystone,1,thread 0 score,A15,1800000,3184713,
+a15_18_1,dhrystone,1,thread 0 DMIPS,A15,1800000,1813,
+a15_18_1,dhrystone,1,time,A15,1800000,4.817304,seconds
+a15_18_1,dhrystone,1,total DMIPS,A15,1800000,1813,
+a15_18_1,dhrystone,1,total score,A15,1800000,3184713,
+a15_18_1,dhrystone,1,execution_time,A15,1800000,4.87775206566,seconds
+a15_18_1,dhrystone,1,A7_power,A15,1800000,0.017,Watts
+a15_18_1,dhrystone,1,A7_voltage,A15,1800000,0.771,Volts
+a15_18_1,dhrystone,1,A7_energy,A15,1800000,9.356,Joules
+a15_18_1,dhrystone,1,A15c_power,A15,1800000,0.233,Watts
+a15_18_1,dhrystone,1,A15c_voltage,A15,1800000,0.942,Volts
+a15_18_1,dhrystone,1,A15c_energy,A15,1800000,128.247,Joules
+a15_18_1,dhrystone,1,A15b_power,A15,1800000,0.173,Watts
+a15_18_1,dhrystone,1,A15b_voltage,A15,1800000,0.942,Volts
+a15_18_1,dhrystone,1,A15b_energy,A15,1800000,94.919,Joules
+a15_18_1,dhrystone,1,A15a_power,A15,1800000,0.233,Watts
+a15_18_1,dhrystone,1,A15a_voltage,A15,1800000,0.942,Volts
+a15_18_1,dhrystone,1,A15a_energy,A15,1800000,128.016,Joules
+a15_19_1,dhrystone,1,thread 0 score,A15,1896000,3370787,
+a15_19_1,dhrystone,1,thread 0 DMIPS,A15,1896000,1918,
+a15_19_1,dhrystone,1,time,A15,1896000,4.551066,seconds
+a15_19_1,dhrystone,1,total DMIPS,A15,1896000,1918,
+a15_19_1,dhrystone,1,total score,A15,1896000,3370787,
+a15_19_1,dhrystone,1,execution_time,A15,1896000,4.60495686531,seconds
+a15_19_1,dhrystone,1,A7_power,A15,1896000,0.022,Watts
+a15_19_1,dhrystone,1,A7_voltage,A15,1896000,0.772,Volts
+a15_19_1,dhrystone,1,A7_energy,A15,1896000,12,Joules
+a15_19_1,dhrystone,1,A15c_power,A15,1896000,0.254,Watts
+a15_19_1,dhrystone,1,A15c_voltage,A15,1896000,0.992,Volts
+a15_19_1,dhrystone,1,A15c_energy,A15,1896000,139.711,Joules
+a15_19_1,dhrystone,1,A15b_power,A15,1896000,0.236,Watts
+a15_19_1,dhrystone,1,A15b_voltage,A15,1896000,0.992,Volts
+a15_19_1,dhrystone,1,A15b_energy,A15,1896000,129.625,Joules
+a15_19_1,dhrystone,1,A15a_power,A15,1896000,0.249,Watts
+a15_19_1,dhrystone,1,A15a_voltage,A15,1896000,0.992,Volts
+a15_19_1,dhrystone,1,A15a_energy,A15,1896000,137.029,Joules
+a15_20_1,dhrystone,1,thread 0 score,A15,2000000,3546099,
+a15_20_1,dhrystone,1,thread 0 DMIPS,A15,2000000,2018,
+a15_20_1,dhrystone,1,time,A15,2000000,4.344175,seconds
+a15_20_1,dhrystone,1,total DMIPS,A15,2000000,2018,
+a15_20_1,dhrystone,1,total score,A15,2000000,3546099,
+a15_20_1,dhrystone,1,execution_time,A15,2000000,4.40795207024,seconds
+a15_20_1,dhrystone,1,A7_power,A15,2000000,0.016,Watts
+a15_20_1,dhrystone,1,A7_voltage,A15,2000000,0.772,Volts
+a15_20_1,dhrystone,1,A7_energy,A15,2000000,8.216,Joules
+a15_20_1,dhrystone,1,A15c_power,A15,2000000,0.321,Watts
+a15_20_1,dhrystone,1,A15c_voltage,A15,2000000,1.029,Volts
+a15_20_1,dhrystone,1,A15c_energy,A15,2000000,160.629,Joules
+a15_20_1,dhrystone,1,A15b_power,A15,2000000,0.235,Watts
+a15_20_1,dhrystone,1,A15b_voltage,A15,2000000,1.029,Volts
+a15_20_1,dhrystone,1,A15b_energy,A15,2000000,117.251,Joules
+a15_20_1,dhrystone,1,A15a_power,A15,2000000,0.306,Watts
+a15_20_1,dhrystone,1,A15a_voltage,A15,2000000,1.029,Volts
+a15_20_1,dhrystone,1,A15a_energy,A15,2000000,152.788,Joules
+a15_21_1,dhrystone,1,thread 0 score,A15,2100000,3750000,
+a15_21_1,dhrystone,1,thread 0 DMIPS,A15,2100000,2134,
+a15_21_1,dhrystone,1,time,A15,2100000,4.117819,seconds
+a15_21_1,dhrystone,1,total DMIPS,A15,2100000,2134,
+a15_21_1,dhrystone,1,total score,A15,2100000,3750000,
+a15_21_1,dhrystone,1,execution_time,A15,2100000,4.17188596725,seconds
+a15_21_1,dhrystone,1,A7_power,A15,2100000,0.02,Watts
+a15_21_1,dhrystone,1,A7_voltage,A15,2100000,0.772,Volts
+a15_21_1,dhrystone,1,A7_energy,A15,2100000,9.805,Joules
+a15_21_1,dhrystone,1,A15c_power,A15,2100000,0.335,Watts
+a15_21_1,dhrystone,1,A15c_voltage,A15,2100000,1.06,Volts
+a15_21_1,dhrystone,1,A15c_energy,A15,2100000,167.566,Joules
+a15_21_1,dhrystone,1,A15b_power,A15,2100000,0.298,Watts
+a15_21_1,dhrystone,1,A15b_voltage,A15,2100000,1.06,Volts
+a15_21_1,dhrystone,1,A15b_energy,A15,2100000,149.023,Joules
+a15_21_1,dhrystone,1,A15a_power,A15,2100000,0.316,Watts
+a15_21_1,dhrystone,1,A15a_voltage,A15,2100000,1.06,Volts
+a15_21_1,dhrystone,1,A15a_energy,A15,2100000,158.24,Joules
+a7_4_1,dhrystone,1,thread 0 score,A7,400000,447628,
+a7_4_1,dhrystone,1,thread 0 DMIPS,A7,400000,255,
+a7_4_1,dhrystone,1,time,A7,400000,33.727522,seconds
+a7_4_1,dhrystone,1,total DMIPS,A7,400000,255,
+a7_4_1,dhrystone,1,total score,A7,400000,447628,
+a7_4_1,dhrystone,1,execution_time,A7,400000,34.1497161388,seconds
+a7_4_1,dhrystone,1,A7_power,A7,400000,0.029,Watts
+a7_4_1,dhrystone,1,A7_voltage,A7,400000,0.66,Volts
+a7_4_1,dhrystone,1,A7_energy,A7,400000,103.177,Joules
+a7_4_1,dhrystone,1,A15c_power,A7,400000,0.006,Watts
+a7_4_1,dhrystone,1,A15c_voltage,A7,400000,1.056,Volts
+a7_4_1,dhrystone,1,A15c_energy,A7,400000,19.742,Joules
+a7_4_1,dhrystone,1,A15b_power,A7,400000,0.005,Watts
+a7_4_1,dhrystone,1,A15b_voltage,A7,400000,1.056,Volts
+a7_4_1,dhrystone,1,A15b_energy,A7,400000,17.553,Joules
+a7_4_1,dhrystone,1,A15a_power,A7,400000,0.005,Watts
+a7_4_1,dhrystone,1,A15a_voltage,A7,400000,1.056,Volts
+a7_4_1,dhrystone,1,A15a_energy,A7,400000,18.217,Joules
+a7_5_1,dhrystone,1,thread 0 score,A7,500000,561587,
+a7_5_1,dhrystone,1,thread 0 DMIPS,A7,500000,320,
+a7_5_1,dhrystone,1,time,A7,500000,26.902891,seconds
+a7_5_1,dhrystone,1,total DMIPS,A7,500000,320,
+a7_5_1,dhrystone,1,total score,A7,500000,561587,
+a7_5_1,dhrystone,1,execution_time,A7,500000,36.7694141865,seconds
+a7_5_1,dhrystone,1,A7_power,A7,500000,0.028,Watts
+a7_5_1,dhrystone,1,A7_voltage,A7,500000,0.679,Volts
+a7_5_1,dhrystone,1,A7_energy,A7,500000,109.361,Joules
+a7_5_1,dhrystone,1,A15c_power,A7,500000,0.005,Watts
+a7_5_1,dhrystone,1,A15c_voltage,A7,500000,1.056,Volts
+a7_5_1,dhrystone,1,A15c_energy,A7,500000,20.034,Joules
+a7_5_1,dhrystone,1,A15b_power,A7,500000,0.004,Watts
+a7_5_1,dhrystone,1,A15b_voltage,A7,500000,1.056,Volts
+a7_5_1,dhrystone,1,A15b_energy,A7,500000,17.007,Joules
+a7_5_1,dhrystone,1,A15a_power,A7,500000,0.006,Watts
+a7_5_1,dhrystone,1,A15a_voltage,A7,500000,1.056,Volts
+a7_5_1,dhrystone,1,A15a_energy,A7,500000,21.183,Joules
+a7_6_1,dhrystone,1,thread 0 score,A7,600000,645995,
+a7_6_1,dhrystone,1,thread 0 DMIPS,A7,600000,368,
+a7_6_1,dhrystone,1,time,A7,600000,23.373182,seconds
+a7_6_1,dhrystone,1,total DMIPS,A7,600000,368,
+a7_6_1,dhrystone,1,total score,A7,600000,645995,
+a7_6_1,dhrystone,1,execution_time,A7,600000,23.8333981037,seconds
+a7_6_1,dhrystone,1,A7_power,A7,600000,0.07,Watts
+a7_6_1,dhrystone,1,A7_voltage,A7,600000,0.691,Volts
+a7_6_1,dhrystone,1,A7_energy,A7,600000,175.066,Joules
+a7_6_1,dhrystone,1,A15c_power,A7,600000,0.005,Watts
+a7_6_1,dhrystone,1,A15c_voltage,A7,600000,1.057,Volts
+a7_6_1,dhrystone,1,A15c_energy,A7,600000,13.723,Joules
+a7_6_1,dhrystone,1,A15b_power,A7,600000,0.004,Watts
+a7_6_1,dhrystone,1,A15b_voltage,A7,600000,1.057,Volts
+a7_6_1,dhrystone,1,A15b_energy,A7,600000,11.146,Joules
+a7_6_1,dhrystone,1,A15a_power,A7,600000,0.005,Watts
+a7_6_1,dhrystone,1,A15a_voltage,A7,600000,1.057,Volts
+a7_6_1,dhrystone,1,A15a_energy,A7,600000,13.09,Joules
+a7_7_1,dhrystone,1,thread 0 score,A7,700000,786988,
+a7_7_1,dhrystone,1,thread 0 DMIPS,A7,700000,448,
+a7_7_1,dhrystone,1,time,A7,700000,19.196335,seconds
+a7_7_1,dhrystone,1,total DMIPS,A7,700000,448,
+a7_7_1,dhrystone,1,total score,A7,700000,786988,
+a7_7_1,dhrystone,1,execution_time,A7,700000,35.0981068611,seconds
+a7_7_1,dhrystone,1,A7_power,A7,700000,0.044,Watts
+a7_7_1,dhrystone,1,A7_voltage,A7,700000,0.722,Volts
+a7_7_1,dhrystone,1,A7_energy,A7,700000,160.241,Joules
+a7_7_1,dhrystone,1,A15c_power,A7,700000,0.005,Watts
+a7_7_1,dhrystone,1,A15c_voltage,A7,700000,1.057,Volts
+a7_7_1,dhrystone,1,A15c_energy,A7,700000,19.806,Joules
+a7_7_1,dhrystone,1,A15b_power,A7,700000,0.005,Watts
+a7_7_1,dhrystone,1,A15b_voltage,A7,700000,1.057,Volts
+a7_7_1,dhrystone,1,A15b_energy,A7,700000,17.084,Joules
+a7_7_1,dhrystone,1,A15a_power,A7,700000,0.005,Watts
+a7_7_1,dhrystone,1,A15a_voltage,A7,700000,1.057,Volts
+a7_7_1,dhrystone,1,A15a_energy,A7,700000,19.034,Joules
+a7_8_1,dhrystone,1,thread 0 score,A7,800000,899281,
+a7_8_1,dhrystone,1,thread 0 DMIPS,A7,800000,512,
+a7_8_1,dhrystone,1,time,A7,800000,16.794216,seconds
+a7_8_1,dhrystone,1,total DMIPS,A7,800000,512,
+a7_8_1,dhrystone,1,total score,A7,800000,899281,
+a7_8_1,dhrystone,1,execution_time,A7,800000,23.8394219875,seconds
+a7_8_1,dhrystone,1,A7_power,A7,800000,0.053,Watts
+a7_8_1,dhrystone,1,A7_voltage,A7,800000,0.76,Volts
+a7_8_1,dhrystone,1,A7_energy,A7,800000,132.044,Joules
+a7_8_1,dhrystone,1,A15c_power,A7,800000,0.006,Watts
+a7_8_1,dhrystone,1,A15c_voltage,A7,800000,1.057,Volts
+a7_8_1,dhrystone,1,A15c_energy,A7,800000,14.082,Joules
+a7_8_1,dhrystone,1,A15b_power,A7,800000,0.005,Watts
+a7_8_1,dhrystone,1,A15b_voltage,A7,800000,1.057,Volts
+a7_8_1,dhrystone,1,A15b_energy,A7,800000,11.387,Joules
+a7_8_1,dhrystone,1,A15a_power,A7,800000,0.006,Watts
+a7_8_1,dhrystone,1,A15a_voltage,A7,800000,1.057,Volts
+a7_8_1,dhrystone,1,A15a_energy,A7,800000,14.634,Joules
+a7_9_1,dhrystone,1,thread 0 score,A7,900000,1011463,
+a7_9_1,dhrystone,1,thread 0 DMIPS,A7,900000,576,
+a7_9_1,dhrystone,1,time,A7,900000,14.926451,seconds
+a7_9_1,dhrystone,1,total DMIPS,A7,900000,576,
+a7_9_1,dhrystone,1,total score,A7,900000,1011463,
+a7_9_1,dhrystone,1,execution_time,A7,900000,20.9957339764,seconds
+a7_9_1,dhrystone,1,A7_power,A7,900000,0.067,Watts
+a7_9_1,dhrystone,1,A7_voltage,A7,900000,0.797,Volts
+a7_9_1,dhrystone,1,A7_energy,A7,900000,146.358,Joules
+a7_9_1,dhrystone,1,A15c_power,A7,900000,0.006,Watts
+a7_9_1,dhrystone,1,A15c_voltage,A7,900000,1.057,Volts
+a7_9_1,dhrystone,1,A15c_energy,A7,900000,12.905,Joules
+a7_9_1,dhrystone,1,A15b_power,A7,900000,0.005,Watts
+a7_9_1,dhrystone,1,A15b_voltage,A7,900000,1.057,Volts
+a7_9_1,dhrystone,1,A15b_energy,A7,900000,9.97,Joules
+a7_9_1,dhrystone,1,A15a_power,A7,900000,0.006,Watts
+a7_9_1,dhrystone,1,A15a_voltage,A7,900000,1.057,Volts
+a7_9_1,dhrystone,1,A15a_energy,A7,900000,12.142,Joules
+a7_10_1,dhrystone,1,thread 0 score,A7,1000000,1126972,
+a7_10_1,dhrystone,1,thread 0 DMIPS,A7,1000000,641,
+a7_10_1,dhrystone,1,time,A7,1000000,13.412516,seconds
+a7_10_1,dhrystone,1,total DMIPS,A7,1000000,641,
+a7_10_1,dhrystone,1,total score,A7,1000000,1126972,
+a7_10_1,dhrystone,1,execution_time,A7,1000000,18.7249391079,seconds
+a7_10_1,dhrystone,1,A7_power,A7,1000000,0.078,Watts
+a7_10_1,dhrystone,1,A7_voltage,A7,1000000,0.828,Volts
+a7_10_1,dhrystone,1,A7_energy,A7,1000000,156.348,Joules
+a7_10_1,dhrystone,1,A15c_power,A7,1000000,0.006,Watts
+a7_10_1,dhrystone,1,A15c_voltage,A7,1000000,1.057,Volts
+a7_10_1,dhrystone,1,A15c_energy,A7,1000000,11.999,Joules
+a7_10_1,dhrystone,1,A15b_power,A7,1000000,0.005,Watts
+a7_10_1,dhrystone,1,A15b_voltage,A7,1000000,1.057,Volts
+a7_10_1,dhrystone,1,A15b_energy,A7,1000000,9.178,Joules
+a7_10_1,dhrystone,1,A15a_power,A7,1000000,0.005,Watts
+a7_10_1,dhrystone,1,A15a_voltage,A7,1000000,1.057,Volts
+a7_10_1,dhrystone,1,A15a_energy,A7,1000000,9.317,Joules
+a7_11_1,dhrystone,1,thread 0 score,A7,1104000,1242751,
+a7_11_1,dhrystone,1,thread 0 DMIPS,A7,1104000,707,
+a7_11_1,dhrystone,1,time,A7,1104000,12.148084,seconds
+a7_11_1,dhrystone,1,total DMIPS,A7,1104000,707,
+a7_11_1,dhrystone,1,total score,A7,1104000,1242751,
+a7_11_1,dhrystone,1,execution_time,A7,1104000,15.951294899,seconds
+a7_11_1,dhrystone,1,A7_power,A7,1104000,0.095,Watts
+a7_11_1,dhrystone,1,A7_voltage,A7,1104000,0.872,Volts
+a7_11_1,dhrystone,1,A7_energy,A7,1104000,162.022,Joules
+a7_11_1,dhrystone,1,A15c_power,A7,1104000,0.006,Watts
+a7_11_1,dhrystone,1,A15c_voltage,A7,1104000,1.057,Volts
+a7_11_1,dhrystone,1,A15c_energy,A7,1104000,9.693,Joules
+a7_11_1,dhrystone,1,A15b_power,A7,1104000,0.005,Watts
+a7_11_1,dhrystone,1,A15b_voltage,A7,1104000,1.057,Volts
+a7_11_1,dhrystone,1,A15b_energy,A7,1104000,8.709,Joules
+a7_11_1,dhrystone,1,A15a_power,A7,1104000,0.005,Watts
+a7_11_1,dhrystone,1,A15a_voltage,A7,1104000,1.057,Volts
+a7_11_1,dhrystone,1,A15a_energy,A7,1104000,8.646,Joules
+a7_12_1,dhrystone,1,thread 0 score,A7,1200000,1351351,
+a7_12_1,dhrystone,1,thread 0 DMIPS,A7,1200000,769,
+a7_12_1,dhrystone,1,time,A7,1200000,11.182531,seconds
+a7_12_1,dhrystone,1,total DMIPS,A7,1200000,769,
+a7_12_1,dhrystone,1,total score,A7,1200000,1351351,
+a7_12_1,dhrystone,1,execution_time,A7,1200000,14.7962729931,seconds
+a7_12_1,dhrystone,1,A7_power,A7,1200000,0.114,Watts
+a7_12_1,dhrystone,1,A7_voltage,A7,1200000,0.915,Volts
+a7_12_1,dhrystone,1,A7_energy,A7,1200000,183.135,Joules
+a7_12_1,dhrystone,1,A15c_power,A7,1200000,0.006,Watts
+a7_12_1,dhrystone,1,A15c_voltage,A7,1200000,1.057,Volts
+a7_12_1,dhrystone,1,A15c_energy,A7,1200000,8.986,Joules
+a7_12_1,dhrystone,1,A15b_power,A7,1200000,0.005,Watts
+a7_12_1,dhrystone,1,A15b_voltage,A7,1200000,1.057,Volts
+a7_12_1,dhrystone,1,A15b_energy,A7,1200000,8.058,Joules
+a7_12_1,dhrystone,1,A15a_power,A7,1200000,0.004,Watts
+a7_12_1,dhrystone,1,A15a_voltage,A7,1200000,1.057,Volts
+a7_12_1,dhrystone,1,A15a_energy,A7,1200000,6.501,Joules
+a7_13_1,dhrystone,1,thread 0 score,A7,1296000,1460565,
+a7_13_1,dhrystone,1,thread 0 DMIPS,A7,1296000,831,
+a7_13_1,dhrystone,1,time,A7,1296000,10.352797,seconds
+a7_13_1,dhrystone,1,total DMIPS,A7,1296000,831,
+a7_13_1,dhrystone,1,total score,A7,1296000,1460565,
+a7_13_1,dhrystone,1,execution_time,A7,1296000,13.527381897,seconds
+a7_13_1,dhrystone,1,A7_power,A7,1296000,0.135,Watts
+a7_13_1,dhrystone,1,A7_voltage,A7,1296000,0.952,Volts
+a7_13_1,dhrystone,1,A7_energy,A7,1296000,195.111,Joules
+a7_13_1,dhrystone,1,A15c_power,A7,1296000,0.006,Watts
+a7_13_1,dhrystone,1,A15c_voltage,A7,1296000,1.057,Volts
+a7_13_1,dhrystone,1,A15c_energy,A7,1296000,8.479,Joules
+a7_13_1,dhrystone,1,A15b_power,A7,1296000,0.005,Watts
+a7_13_1,dhrystone,1,A15b_voltage,A7,1296000,1.057,Volts
+a7_13_1,dhrystone,1,A15b_energy,A7,1296000,7.056,Joules
+a7_13_1,dhrystone,1,A15a_power,A7,1296000,0.006,Watts
+a7_13_1,dhrystone,1,A15a_voltage,A7,1296000,1.057,Volts
+a7_13_1,dhrystone,1,A15a_energy,A7,1296000,8.771,Joules
+a7_14_1,dhrystone,1,thread 0 score,A7,1400000,1573977,
+a7_14_1,dhrystone,1,thread 0 DMIPS,A7,1400000,896,
+a7_14_1,dhrystone,1,time,A7,1400000,9.593833,seconds
+a7_14_1,dhrystone,1,total DMIPS,A7,1400000,896,
+a7_14_1,dhrystone,1,total score,A7,1400000,1573977,
+a7_14_1,dhrystone,1,execution_time,A7,1400000,13.3733820915,seconds
+a7_14_1,dhrystone,1,A7_power,A7,1400000,0.161,Watts
+a7_14_1,dhrystone,1,A7_voltage,A7,1400000,0.996,Volts
+a7_14_1,dhrystone,1,A7_energy,A7,1400000,233.515,Joules
+a7_14_1,dhrystone,1,A15c_power,A7,1400000,0.006,Watts
+a7_14_1,dhrystone,1,A15c_voltage,A7,1400000,1.058,Volts
+a7_14_1,dhrystone,1,A15c_energy,A7,1400000,8.182,Joules
+a7_14_1,dhrystone,1,A15b_power,A7,1400000,0.004,Watts
+a7_14_1,dhrystone,1,A15b_voltage,A7,1400000,1.058,Volts
+a7_14_1,dhrystone,1,A15b_energy,A7,1400000,5.278,Joules
+a7_14_1,dhrystone,1,A15a_power,A7,1400000,0.006,Watts
+a7_14_1,dhrystone,1,A15a_voltage,A7,1400000,1.058,Volts
+a7_14_1,dhrystone,1,A15a_energy,A7,1400000,8.194,Joules
+a7_15_1,dhrystone,1,thread 0 score,A7,1500000,3750000,
+a7_15_1,dhrystone,1,thread 0 DMIPS,A7,1500000,2134,
+a7_15_1,dhrystone,1,time,A7,1500000,4.059247,seconds
+a7_15_1,dhrystone,1,total DMIPS,A7,1500000,2134,
+a7_15_1,dhrystone,1,total score,A7,1500000,3750000,
+a7_15_1,dhrystone,1,execution_time,A7,1500000,4.11524701118,seconds
+a7_15_1,dhrystone,1,A7_power,A7,1500000,0.057,Watts
+a7_15_1,dhrystone,1,A7_voltage,A7,1500000,1.047,Volts
+a7_15_1,dhrystone,1,A7_energy,A7,1500000,28.303,Joules
+a7_15_1,dhrystone,1,A15c_power,A7,1500000,0.433,Watts
+a7_15_1,dhrystone,1,A15c_voltage,A7,1500000,1.056,Volts
+a7_15_1,dhrystone,1,A15c_energy,A7,1500000,216.537,Joules
+a7_15_1,dhrystone,1,A15b_power,A7,1500000,0.281,Watts
+a7_15_1,dhrystone,1,A15b_voltage,A7,1500000,1.056,Volts
+a7_15_1,dhrystone,1,A15b_energy,A7,1500000,140.483,Joules
+a7_15_1,dhrystone,1,A15a_power,A7,1500000,0.204,Watts
+a7_15_1,dhrystone,1,A15a_voltage,A7,1500000,1.056,Volts
+a7_15_1,dhrystone,1,A15a_energy,A7,1500000,102.004,Joules
+a7_15_1,dhrystone,2,thread 0 score,A7,1500000,1691094,
+a7_15_1,dhrystone,2,thread 0 DMIPS,A7,1500000,962,
+a7_15_1,dhrystone,2,time,A7,1500000,8.936112,seconds
+a7_15_1,dhrystone,2,total DMIPS,A7,1500000,962,
+a7_15_1,dhrystone,2,total score,A7,1500000,1691094,
+a7_15_1,dhrystone,2,execution_time,A7,1500000,10.7199409008,seconds
+a7_15_1,dhrystone,2,A7_power,A7,1500000,0.189,Watts
+a7_15_1,dhrystone,2,A7_voltage,A7,1500000,1.04,Volts
+a7_15_1,dhrystone,2,A7_energy,A7,1500000,226.998,Joules
+a7_15_1,dhrystone,2,A15c_power,A7,1500000,0.006,Watts
+a7_15_1,dhrystone,2,A15c_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,2,A15c_energy,A7,1500000,7.612,Joules
+a7_15_1,dhrystone,2,A15b_power,A7,1500000,0.005,Watts
+a7_15_1,dhrystone,2,A15b_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,2,A15b_energy,A7,1500000,5.721,Joules
+a7_15_1,dhrystone,2,A15a_power,A7,1500000,0.006,Watts
+a7_15_1,dhrystone,2,A15a_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,2,A15a_energy,A7,1500000,7.307,Joules
+a7_15_1,dhrystone,3,thread 0 score,A7,1500000,1689189,
+a7_15_1,dhrystone,3,thread 0 DMIPS,A7,1500000,961,
+a7_15_1,dhrystone,3,time,A7,1500000,8.93634,seconds
+a7_15_1,dhrystone,3,total DMIPS,A7,1500000,961,
+a7_15_1,dhrystone,3,total score,A7,1500000,1689189,
+a7_15_1,dhrystone,3,execution_time,A7,1500000,10.5973958969,seconds
+a7_15_1,dhrystone,3,A7_power,A7,1500000,0.193,Watts
+a7_15_1,dhrystone,3,A7_voltage,A7,1500000,1.04,Volts
+a7_15_1,dhrystone,3,A7_energy,A7,1500000,231.046,Joules
+a7_15_1,dhrystone,3,A15c_power,A7,1500000,0.006,Watts
+a7_15_1,dhrystone,3,A15c_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,3,A15c_energy,A7,1500000,7.52,Joules
+a7_15_1,dhrystone,3,A15b_power,A7,1500000,0.006,Watts
+a7_15_1,dhrystone,3,A15b_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,3,A15b_energy,A7,1500000,6.718,Joules
+a7_15_1,dhrystone,3,A15a_power,A7,1500000,0.005,Watts
+a7_15_1,dhrystone,3,A15a_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,3,A15a_energy,A7,1500000,5.878,Joules
+a7_15_1,dhrystone,4,thread 0 score,A7,1500000,1689189,
+a7_15_1,dhrystone,4,thread 0 DMIPS,A7,1500000,961,
+a7_15_1,dhrystone,4,time,A7,1500000,8.939118,seconds
+a7_15_1,dhrystone,4,total DMIPS,A7,1500000,961,
+a7_15_1,dhrystone,4,total score,A7,1500000,1689189,
+a7_15_1,dhrystone,4,execution_time,A7,1500000,11.9012360573,seconds
+a7_15_1,dhrystone,4,A7_power,A7,1500000,0.188,Watts
+a7_15_1,dhrystone,4,A7_voltage,A7,1500000,1.04,Volts
+a7_15_1,dhrystone,4,A7_energy,A7,1500000,244.394,Joules
+a7_15_1,dhrystone,4,A15c_power,A7,1500000,0.006,Watts
+a7_15_1,dhrystone,4,A15c_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,4,A15c_energy,A7,1500000,8.062,Joules
+a7_15_1,dhrystone,4,A15b_power,A7,1500000,0.003,Watts
+a7_15_1,dhrystone,4,A15b_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,4,A15b_energy,A7,1500000,4.163,Joules
+a7_15_1,dhrystone,4,A15a_power,A7,1500000,0.004,Watts
+a7_15_1,dhrystone,4,A15a_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,4,A15a_energy,A7,1500000,4.794,Joules
+a7_15_1,dhrystone,5,thread 0 score,A7,1500000,1687289,
+a7_15_1,dhrystone,5,thread 0 DMIPS,A7,1500000,960,
+a7_15_1,dhrystone,5,time,A7,1500000,8.952649,seconds
+a7_15_1,dhrystone,5,total DMIPS,A7,1500000,960,
+a7_15_1,dhrystone,5,total score,A7,1500000,1687289,
+a7_15_1,dhrystone,5,execution_time,A7,1500000,11.7797460556,seconds
+a7_15_1,dhrystone,5,A7_power,A7,1500000,0.189,Watts
+a7_15_1,dhrystone,5,A7_voltage,A7,1500000,1.04,Volts
+a7_15_1,dhrystone,5,A7_energy,A7,1500000,245.27,Joules
+a7_15_1,dhrystone,5,A15c_power,A7,1500000,0.006,Watts
+a7_15_1,dhrystone,5,A15c_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,5,A15c_energy,A7,1500000,7.576,Joules
+a7_15_1,dhrystone,5,A15b_power,A7,1500000,0.007,Watts
+a7_15_1,dhrystone,5,A15b_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,5,A15b_energy,A7,1500000,8.843,Joules
+a7_15_1,dhrystone,5,A15a_power,A7,1500000,0.007,Watts
+a7_15_1,dhrystone,5,A15a_voltage,A7,1500000,1.058,Volts
+a7_15_1,dhrystone,5,A15a_energy,A7,1500000,9.191,Joules
