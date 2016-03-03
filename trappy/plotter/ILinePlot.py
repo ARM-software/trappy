@@ -193,6 +193,8 @@ class ILinePlot(AbstractDataPlotter):
             else:
                 title = ""
 
+            # Fix data frame indexes if necessary
+            data_frame = self._fix_indexes(data_frame)
             self._layout.add_plot(plot_index, data_frame, title)
             plot_index += 1
 
@@ -200,12 +202,10 @@ class ILinePlot(AbstractDataPlotter):
 
     def _plot_concat(self):
         """Plot all lines on a single figure"""
-
         pivot_vals, _ = self.c_mgr.generate_pivots()
-        plot_index = 0
 
         self._layout = ILinePlotGen(len(self.c_mgr), **self._attr)
-
+        plot_index = 0
         for constraint in self.c_mgr:
             result = constraint.result
             title = str(constraint)
@@ -220,7 +220,35 @@ class ILinePlot(AbstractDataPlotter):
 
                     data_frame[key] = result[pivot]
 
+            # Fix data frame indexes if necessary
+            data_frame = self._fix_indexes(data_frame)
             self._layout.add_plot(plot_index, data_frame, title)
             plot_index += 1
 
         self._layout.finish()
+
+    def _fix_indexes(self, data_frame):
+        """
+        In case of multiple traces with different indexes (i.e. x-axis values),
+        create new ones with same indexes
+        """
+        # 1) Check if we are processing multiple traces
+        if len(data_frame) > 1:
+            # 2) Merge the data frames to obtain common indexes
+            df_columns = [key for key in data_frame.keys()]
+            merged_df = pd.concat(data_frame.get_values(), axis=1)
+            merged_df.columns = df_columns
+            # 3) Fill NaN values depending on drawstyle
+            if self._attr["drawstyle"] == "steps-post":
+                merged_df = merged_df.ffill()
+            elif self._attr["drawstyle"] == "steps-pre":
+                merged_df = merged_df.bfill()
+            elif self._attr["drawstyle"] == "steps-mid":
+                merged_df = merged_df.ffill()
+            else:
+                # default
+                merged_df = merged_df.interpolate()
+
+            return merged_df
+        else:
+            return data_frame
