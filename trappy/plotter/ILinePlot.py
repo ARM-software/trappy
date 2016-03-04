@@ -202,12 +202,10 @@ class ILinePlot(AbstractDataPlotter):
 
     def _plot_concat(self):
         """Plot all lines on a single figure"""
-
         pivot_vals, _ = self.c_mgr.generate_pivots()
-        plot_index = 0
 
         self._layout = ILinePlotGen(len(self.c_mgr), **self._attr)
-
+        plot_index = 0
         for constraint in self.c_mgr:
             result = constraint.result
             title = str(constraint)
