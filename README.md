@@ -5,7 +5,7 @@ TRAPpy (Trace Analysis and Plotting in Python) is a visualization tool to help
 analyze data generated on a device. It parses ftrace-like logs and creates
 in-memory data structures to be used for plotting and data analysis.
 
-# Installaion
+# Installation
 
 ## Required dependencies
 
@@ -61,3 +61,7 @@ TRAPpy's home directory:
 	$ nosetests
 
 If the installation is correct all tests will succeed.
+
+# API reference
+
+The API reference can be found in https://pythonhosted.org/TRAPpy
