@@ -119,14 +119,14 @@
 <p>TRAPpy is a framework written in python for analysing and plotting <a href="http://elinux.org/Ftrace">FTrace</a> data by converting it into standardised <a href="http://pandas.pydata.org">PANDAS</a> DataFrames (tabular times series data representation). The goal is to allow developers easy and systematic access to FTrace data and leverage the flexibility of PANDAS for the analysis.</p>
 
 <h1>
-<a id="trace-events-and-run-objects" class="anchor" href="#trace-events-and-run-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Events and Run Objects</h1>
+<a id="trace-events-and-ftrace-objects" class="anchor" href="#trace-events-and-ftrace-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trace Events and FTrace Objects</h1>
 
-<p>An event maps an FTrace event to a single DataFrame in the Run object. One can also create events based on custom trace_printks from within the kernel.  </p>
+<p>An event maps an FTrace event to a single DataFrame in the FTrace object. One can also create events based on custom trace_printks from within the kernel.  </p>
 
 <h2>
-<a id="creating-a-run-object" class="anchor" href="#creating-a-run-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Run object</h2>
+<a id="creating-an-ftrace-object" class="anchor" href="#creating-an-ftrace-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating an FTrace object</h2>
 
-<pre><code>run = trappy.Run("path/to/trace/file")
+<pre><code>ftrace = trappy.FTrace("path/to/trace/file")
 </code></pre>
 
 <h2>
@@ -147,9 +147,9 @@
 <pre><code>trappy.register_dynamic("event_name", "my_custom_event")
 </code></pre>
 
-<p>And will be available in the run object as follows:</p>
+<p>And will be available in the ftrace object as follows:</p>
 
-<pre><code>run.event_name.data_frame
+<pre><code>ftrace.event_name.data_frame
 </code></pre>
 
 <h1>
