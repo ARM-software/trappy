@@ -114,14 +114,9 @@ class EventPlot(AbstractDataPlotter):
         graph["keys"] = sorted(keys, key=lambda x: avg[x], reverse=True)
         graph["showSummary"] = summary
         graph["stride"] = AttrConf.EVENT_PLOT_STRIDE
+        self._data = json.dumps(graph)
 
-        json_file = os.path.join(
-            IPythonConf.get_data_path(),
-            self._fig_name +
-            ".json")
 
-        with open(json_file, "w") as json_fh:
-            json.dump(graph, json_fh)
 
         # Initialize the HTML, CSS and JS Components
         self._add_css()
@@ -212,13 +207,28 @@ class EventPlot(AbstractDataPlotter):
                         "exports":  "EventPlot"
                     }
                 }
-            });
-            req(["require", "EventPlot"], function() {
-               EventPlot.generate('""" + self._fig_name + """', '""" + IPythonConf.add_web_base("") + """');
-            });
+            });"""
+
+        generate_call = """
+        req(["require", "EventPlot"], function() {
+            EventPlot.generate('""" + self._fig_name + """', '""" + IPythonConf.add_web_base("") + """', data);
+        });
         </script>
         """
 
+        if AttrConf.EMBED_DATA:
+            div_js += "var data = {};".format(self._data)
+        else:
+            div_js += "var data = false;"
+            json_file = os.path.join(
+                IPythonConf.get_data_path(),
+                self._fig_name +
+                ".json")
+
+            with open(json_file, "w") as json_fh:
+                json_fh.write(self._data)
+
+        div_js += generate_call
         self._html.append(
             '<div id="{}" class="eventplot">{}</div>'.format(self._fig_name,
                                                              div_js))
