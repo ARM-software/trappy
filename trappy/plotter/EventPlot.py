@@ -188,6 +188,7 @@ class EventPlot(AbstractDataPlotter):
         """Initialize HTML for the plot"""
         div_js = """
         <script>
+            /* TRAPPY_PUBLISH_REMOVE_START */
             var req = require.config( {
 
                 paths: {
@@ -207,13 +208,15 @@ class EventPlot(AbstractDataPlotter):
                         "exports":  "EventPlot"
                     }
                 }
-            });"""
+            });
+            /* TRAPPY_PUBLISH_REMOVE_STOP */
+            """
 
         div_js += "var data = {};\n".format(self._data)
         div_js += """
-        req(["require", "EventPlot"], function() {
+        req(["require", "EventPlot"], function() { /* TRAPPY_PUBLISH_REMOVE_LINE */
             EventPlot.generate('""" + self._fig_name + """', '""" + IPythonConf.add_web_base("") + """', data);
-        });
+        }); /* TRAPPY_PUBLISH_REMOVE_LINE */
         </script>
         """
 
