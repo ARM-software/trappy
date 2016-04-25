@@ -127,3 +127,5 @@ POINT_SIZE = 2
 """Default Point Size for plots (in pts)"""
 LINE_WIDTH = 1.0
 """Default Line Width for plotter"""
+EMBED_DATA = True
+"""If True, the data will be embedded in the notebook"""

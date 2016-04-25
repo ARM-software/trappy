@@ -83,16 +83,13 @@ var EventPlot = (function () {
         }
     }
 
-    var generate = function (div_name, base) {
+    var generate = function (div_name, base, chart_data) {
 
         var margin, brush, x, ext, yMain, chart, main,
             mainAxis,
             itemRects, items, colourAxis, tip, lanes;
 
-        var json_file = base + "plotter_data/" + div_name +
-            ".json"
-
-        $.getJSON(json_file, function (d) {
+        var process_chart_data = function (d) {
 
             items = d.data;
             lanes = d.lanes;
@@ -442,7 +439,18 @@ var EventPlot = (function () {
 
             return ePlot;
 
-        });
+        }
+
+        /*
+         * If chart_data is passed, process data directly
+         */
+        if (chart_data)
+          process_chart_data(chart_data);
+        else {
+          var json_file = base + "plotter_data/" + div_name +
+            ".json"
+          $.getJSON(json_file, process_chart_data);
+        }
     };
 
 
