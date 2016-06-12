@@ -30,10 +30,10 @@ the trace
 
     def __call__(self, line):
         if self.before_begin_trace:
-            if line.startswith("<!-- BEGIN TRACE -->"):
+            if line.startswith("<title>Android System Trace</title>"):
                 self.before_begin_trace = False
         elif self.before_script_trace_data:
-            if line.startswith('  <script class="trace-data"'):
+            if line.startswith("  var linuxPerfData"):
                 self.before_script_trace_data = False
         elif not line.startswith("#"):
             self.before_actual_trace = False
@@ -61,6 +61,7 @@ class SysTrace(GenericFTrace):
             pass
 
     def trace_hasnt_started(self):
+
         return drop_before_trace()
 
     def trace_hasnt_finished(self):
