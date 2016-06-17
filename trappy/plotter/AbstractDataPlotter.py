@@ -16,6 +16,7 @@
 """This is the template class that all Plotters inherit"""
 from abc import abstractmethod, ABCMeta
 from pandas import DataFrame
+import re
 from trappy.utils import listify
 from functools import reduce
 # pylint: disable=R0921
@@ -73,16 +74,22 @@ class AbstractDataPlotter(object):
         :type signal_def: str
         """
 
-        event, column = signal_def.split(":")
+        match = re.match("(?P<event>[^:]+):(?P<column>[^:]+)(:.+)?", signal_def)
+        event = match.group("event")
+        column = match.group("column")
+        if match.group(3):
+            color = [int(n) for n in match.group(3)[1:].split(",")]
+        else:
+            color = None
 
         try:
-            return self._event_map[event], column
+            return self._event_map[event], column, color
         except KeyError:
             for trace in listify(self.traces):
 
                 if event in trace.class_definitions:
                     self._event_map[event] = trace.class_definitions[event]
-                    return self._event_map[event], column
+                    return self._event_map[event], column, color
 
             raise ValueError(
                 "Event: " +
@@ -99,8 +106,13 @@ class AbstractDataPlotter(object):
 
         self._attr["column"] = []
         self.templates = []
+        colors = []
 
         for value in listify(self._attr["signals"]):
-            template, column = self._parse_value(value)
+            template, column, color = self._parse_value(value)
             self.templates.append(template)
             self._attr["column"].append(column)
+            colors.append(color)
+
+        if any(colors):
+            self._attr["colors"] = colors
