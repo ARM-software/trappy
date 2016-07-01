@@ -34,6 +34,18 @@ if not IPythonConf.check_ipython():
 from IPython.display import display, HTML
 
 
+def to_dygraph_colors(color_map):
+    """Convert a color_map specified as a list of rgb tuples to the
+    syntax that dygraphs expect: ["rgb(1, 2, 3)", "rgb(4, 5, 6)",...]
+
+    :param color_map: a list of rgb tuples
+    :type color_map: list of tuples
+    """
+
+    rgb_list = ["rgb(" + ", ".join(str(i) for i in e) + ")" for e in color_map]
+
+    return '["' + '", "'.join(rgb_list) + '"]'
+
 class ILinePlotGen(object):
     """
     :param num_plots: The total number of plots
@@ -48,8 +60,10 @@ class ILinePlotGen(object):
         N_{rows} = \\frac{N_{cols}}{N_{plots}}
     """
 
-    def _add_graph_cell(self, fig_name):
+    def _add_graph_cell(self, fig_name, color_map):
         """Add a HTML table cell to hold the plot"""
+
+        colors_opt_arg = ", " + to_dygraph_colors(color_map) if color_map else ""
 
         graph_js = ''
         lib_urls =  [IPythonConf.DYGRAPH_COMBINED_URL, IPythonConf.DYGRAPH_SYNC_URL,
@@ -81,7 +95,7 @@ class ILinePlotGen(object):
             });
                 /* TRAPPY_PUBLISH_REMOVE_STOP */
                 ilp_req(["require", "ILinePlot"], function() { /* TRAPPY_PUBLISH_REMOVE_LINE */
-                ILinePlot.generate(""" + fig_name + """_data);
+                ILinePlot.generate(""" + fig_name + "_data" + colors_opt_arg + """);
             }); /* TRAPPY_PUBLISH_REMOVE_LINE */
             </script>
         """
@@ -122,7 +136,7 @@ class ILinePlotGen(object):
         self._fig_index += 1
         return fig_name
 
-    def _init_html(self):
+    def _init_html(self, color_map):
         """Initialize HTML code for the plots"""
 
         table = '<table style="border-style: hidden;">'
@@ -137,7 +151,7 @@ class ILinePlotGen(object):
             for _ in range(self._attr["per_line"]):
                 fig_name = self._generate_fig_name()
                 legend_figs.append(fig_name)
-                self._add_graph_cell(fig_name)
+                self._add_graph_cell(fig_name, color_map)
 
             self._end_row()
             self._begin_row()
@@ -171,7 +185,7 @@ class ILinePlotGen(object):
             self._rows += 1
 
         self._attr["height"] = AttrConf.HTML_HEIGHT
-        self._init_html()
+        self._init_html(kwargs.pop("colors", None))
 
     def _check_add_scatter(self, fig_params):
         """Check if a scatter plot is needed
