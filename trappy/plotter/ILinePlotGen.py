@@ -34,6 +34,18 @@ if not IPythonConf.check_ipython():
 
 from IPython.display import display, HTML
 
+def df_to_dygraph(data_frame):
+    result = {}
+
+    values = data_frame.values.tolist()
+    data = [[x] for x in data_frame.index.tolist()]
+
+    for d, val in zip(data, values):
+            d += val
+
+    result["data"] = data
+    result["labels"] = ["index"] + data_frame.columns.tolist()
+    return result
 
 class ILinePlotGen(object):
     """
@@ -210,7 +222,7 @@ class ILinePlotGen(object):
 
         fig_name = self._fig_map[plot_num]
         fig_params = {}
-        fig_params["data"] = OrderedDict((k, v.T.to_dict()) for k, v in data_dict.iteritems())
+        fig_params["data"] = df_to_dygraph(data_dict)
         fig_params["name"] = fig_name
         fig_params["rangesel"] = False
         fig_params["logscale"] = False
