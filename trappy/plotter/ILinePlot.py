@@ -299,6 +299,6 @@ class ILinePlot(AbstractDataPlotter):
                 # default
                 merged_df = merged_df.interpolate()
 
-            return merged_df
+            return OrderedDict(merged_df.to_dict())
         else:
             return data_dict

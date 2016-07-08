@@ -308,7 +308,7 @@ class TestILinePlotter(unittest.TestCase):
         dfr = pd.DataFrame([0, 1, 2, 3], columns=["a"])
         iplot = trappy.ILinePlot(dfr, column=["a"])
         s = {"s1": s1, "s2": s2}
-        merged = iplot._fix_indexes(s)
+        merged = pd.DataFrame(iplot._fix_indexes(s))
 
         expected_index = index1 + index2
         expected_index.sort()
