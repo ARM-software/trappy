@@ -55,8 +55,7 @@ class AbstractDataPlotter(object):
         data = listify(self.traces)
 
         if len(data):
-            mask = map(lambda x: isinstance(x, DataFrame), data)
-            data_frame = reduce(lambda x, y: x and y, mask)
+            data_frame = all(isinstance(x, DataFrame) for x in data)
             sig_or_template = self.templates or "signals" in self._attr
 
             if not data_frame and not sig_or_template:
