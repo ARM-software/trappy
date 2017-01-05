@@ -212,8 +212,8 @@ class ConstraintManager(object):
 
 
     :param traces: Input Trace data
-    :type traces: :mod:`trappy.trace.BareTrace`, list(:mod:`trappy.trace.BareTrace`)
-        (or a class derived from :mod:`trappy.trace.BareTrace`)
+    :type traces: a list of :mod:`trappy.trace.BareTrace` (or derived class),
+        or :mod:`pandas.DataFrame` or a single instance of them.
     :param columns: The column values from the corresponding
         :mod:`pandas.DataFrame`
     :type columns: str, list(str)
