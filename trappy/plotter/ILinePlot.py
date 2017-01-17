@@ -51,8 +51,11 @@ class ILinePlot(AbstractDataPlotter):
         :mod:`trappy.trace.SysTrace`, :mod:`trappy.trace.BareTrace`
         or :mod:`pandas.DataFrame` or a single instance of them.
 
-    :param column: specifies the name of the column to
-           be plotted.
+    :param column: When plotting DataFrames, specifies the name of the column to
+           be plotted. If plotting a single DataFrame, may be a list of columns
+           to use. If plotting multiple DataFrames, must be a single column name
+           or a list of respective column names such that ``columns[i]`` is
+           plotted from ``traces[i]`` for each ``i``.
     :type column: (str, list(str))
 
     :param templates: TRAPpy events
@@ -119,12 +122,13 @@ class ILinePlot(AbstractDataPlotter):
         same time.
     :type group: string
 
-    :param signals: A string of the type event_name:column to indicate
-        the value that needs to be plotted.  You can add an additional
-        parameter to specify the color of the lin in rgb:
-        "event_name:column:color".  The color is specified as a comma
-        separated list of rgb values, from 0 to 255 or from 0x0 to
-        0xff.  E.g. 0xff,0x0,0x0 is red and 100,40,32 is brown.
+    :param signals: When plotting traces (i.e. using ``Ftrace``, ``SysTrace`` et
+        al. for ``traces``), a string of the type event_name:column to indicate
+        the value that needs to be plotted.  You can add an additional parameter
+        to specify the color of the line in rgb: "event_name:column:color".  The
+        color is specified as a comma separated list of rgb values, from 0 to
+        255 or from 0x0 to 0xff.  E.g. 0xff,0x0,0x0 is red and 100,40,32 is
+        brown.
 
         .. note::
 
