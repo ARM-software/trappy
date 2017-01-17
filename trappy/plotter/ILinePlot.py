@@ -58,6 +58,23 @@ class ILinePlot(AbstractDataPlotter):
            plotted from ``traces[i]`` for each ``i``.
     :type column: (str, list(str))
 
+    :param signals: When plotting traces (i.e. using ``Ftrace``, ``SysTrace`` et
+        al. for ``traces``), a string of the type event_name:column to indicate
+        the value that needs to be plotted.  You can add an additional parameter
+        to specify the color of the line in rgb: "event_name:column:color".  The
+        color is specified as a comma separated list of rgb values, from 0 to
+        255 or from 0x0 to 0xff.  E.g. 0xff,0x0,0x0 is red and 100,40,32 is
+        brown.
+
+        .. note::
+
+            - Only one of `signals` or both `templates` and
+              `columns` should be specified
+            - Signals format won't work for :mod:`pandas.DataFrame`
+              input
+
+    :type signals: str
+
     :param templates: TRAPpy events
 
         .. note::
@@ -121,23 +138,6 @@ class ILinePlot(AbstractDataPlotter):
         you zoom on any plot in a group all plots will zoom at the
         same time.
     :type group: string
-
-    :param signals: When plotting traces (i.e. using ``Ftrace``, ``SysTrace`` et
-        al. for ``traces``), a string of the type event_name:column to indicate
-        the value that needs to be plotted.  You can add an additional parameter
-        to specify the color of the line in rgb: "event_name:column:color".  The
-        color is specified as a comma separated list of rgb values, from 0 to
-        255 or from 0x0 to 0xff.  E.g. 0xff,0x0,0x0 is red and 100,40,32 is
-        brown.
-
-        .. note::
-
-            - Only one of `signals` or both `templates` and
-              `columns` should be specified
-            - Signals format won't work for :mod:`pandas.DataFrame`
-              input
-
-    :type signals: str
     """
 
     def __init__(self, traces, templates=None, **kwargs):
