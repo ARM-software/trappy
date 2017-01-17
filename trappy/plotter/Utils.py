@@ -21,13 +21,17 @@ import warnings
 from trappy.utils import listify
 
 
-def normalize_list(val, lst):
-    """Normalize a unitary list"""
+def normalize_list(count, lst):
+    """Normalize a unitary list
 
+    :param lst: list with single item
+    :param count: Length of returned list
+    :returns: List containing ``count`` instances of the item in ``list``
+    """
     if len(lst) != 1:
         raise RuntimeError("Cannot Normalize a non-unitary list")
 
-    return lst * val
+    return lst * count
 
 
 def decolonize(val):
