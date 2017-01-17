@@ -279,9 +279,7 @@ class ConstraintManager(object):
         """
         min_len = min(self._lens)
         max_pos_comp = [
-            i for i,
-            j in enumerate(
-                self._lens) if j != self._max_len]
+            i for i, j in enumerate(self._lens) if j != self._max_len]
 
         if self._max_len == 1 and min_len != 1:
             raise RuntimeError("Essential Arg Missing")
