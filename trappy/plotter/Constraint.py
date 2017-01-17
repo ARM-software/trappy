@@ -276,6 +276,13 @@ class ConstraintManager(object):
                    Len[columns] != 1
                    Len[templates] != 1
             )
+
+            TODO  is the following correct?
+            Permute(
+                   Len[traces] != 1
+                   Len[columns] = 1
+                   Len[templates] != 1
+            )
         """
         min_len = min(self._lens)
         max_pos_comp = [
