@@ -23,5 +23,8 @@ notifications:
       - javi.merino@arm.com
     on_success: never
     on_failure: always
+# For travis-telegram-lambda-bot
+  webhooks:
+    - https://xcdfvwjvr8.execute-api.eu-west-1.amazonaws.com/pro/travis/notification
 cache:
   - pip

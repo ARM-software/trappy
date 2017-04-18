@@ -165,7 +165,7 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                     return True
             return False
 
-        special_fields_regexp = r"^\s*(?P<comm>.*)-(?P<pid>\d+)(?:\s+\(.*\))"\
+        special_fields_regexp = r"^\s*(?P<comm>[^\[]+)-(?P<pid>\d+)(?:\s+\(.*\))"\
                                 r"?\s+\[(?P<cpu>\d+)\](?:\s+....)?\s+"\
                                 r"(?P<timestamp>[0-9]+\.[0-9]+):"
         special_fields_regexp = re.compile(special_fields_regexp)
