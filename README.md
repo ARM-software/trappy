@@ -17,15 +17,15 @@ wheezy will probably be too old.
 
 ##### Install additional tools required for some tests and functionalities
 
-	$ sudo apt install trace-cmd kernelshark
+	$ sudo apt-get install trace-cmd kernelshark
 
 ##### Install the Python package manager
 
-	$ sudo apt install python-pip python-dev
+	$ sudo apt-get install python-pip python-dev
 
 ##### Install required python packages
 
-	$ sudo apt install libfreetype6-dev libpng12-dev python-nose
+	$ sudo apt-get install libfreetype6-dev libpng12-dev python-nose
 	$ sudo pip install numpy matplotlib pandas ipython[all]
 
 ##### Install TRAPpy
