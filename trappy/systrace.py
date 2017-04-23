@@ -51,13 +51,15 @@ class SysTrace(GenericFTrace):
 
     def __init__(self, path=".", name="", normalize_time=True, scope="all",
                  events=[], event_callbacks={}, window=(0, None),
-                 abs_window=(0, None)):
+                 abs_window=(0, None), build_df=True):
 
         self.trace_path = path
 
         super(SysTrace, self).__init__(name, normalize_time, scope, events,
-                                       event_callbacks, window, abs_window)
-
+                                       event_callbacks, window, abs_window,
+                                       build_df)
+        if not build_df:
+            return
         try:
             self._cpus = 1 + self.sched_switch.data_frame["__cpu"].max()
         except AttributeError:
