@@ -105,6 +105,7 @@ class Base(object):
         self.comm_array = []
         self.pid_array = []
         self.cpu_array = []
+        self.callback = None
         self.parse_raw = parse_raw
 
     def finalize_object(self):
@@ -170,6 +171,11 @@ class Base(object):
         self.pid_array.append(pid)
         self.cpu_array.append(cpu)
         self.data_array.append(data)
+
+	if not self.callback:
+            return
+        data_dict = self.generate_data_dict(comm, pid, cpu, data)
+        self.callback(time, data_dict)
 
     def generate_data_dict(self, comm, pid, cpu, data_str):
         data_dict = {"__comm": comm, "__pid": pid, "__cpu": cpu}
