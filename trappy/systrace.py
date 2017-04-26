@@ -90,6 +90,10 @@ class SysTrace(GenericFTrace):
         if unique_word != 'tracing_mark_write:':
             return data_str
 
+        # Disacrd not useful clock synchronization events
+        if 'trace_event_clock_sync' in data_str:
+            return ''
+
         match = SYSTRACE_EVENT.match(data_str)
         if match:
             data_str = "event={} pid={} func={} data={}".format(
