@@ -156,6 +156,11 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                 trace_class = DynamicTypeFactory(event_name, (Base,), kwords)
                 self.class_definitions[event_name] = trace_class
 
+    def format_data(self, unique_word, data_str):
+        """Reformat data before parsing
+        """
+        return data_str
+
     def __populate_data(self, fin, cls_for_unique_word, window, abs_window):
         """Append to trace data from a txt trace"""
 
@@ -202,12 +207,16 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                (abs_window[1] and timestamp > abs_window[1]):
                 return
 
+            # Allow the trace class to reformat data
+            data_str = line[line.find(unique_word) + len(unique_word):]
+            data_str = self.format_data(unique_word, data_str)
+
             try:
-                data_start_idx =  start_match.search(line).start()
+                data_start_idx =  start_match.search(data_str).start()
             except AttributeError:
                 continue
 
-            data_str = line[data_start_idx:]
+            data_str = data_str[data_start_idx:]
 
             # Remove empty arrays from the trace
             data_str = re.sub(r"[A-Za-z0-9_]+=\{\} ", r"", data_str)
