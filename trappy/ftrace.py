@@ -54,8 +54,9 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
     dynamic_classes = {}
 
     def __init__(self, name="", normalize_time=True, scope="all",
-                 events=[], window=(0, None), abs_window=(0, None)):
-        super(GenericFTrace, self).__init__(name)
+                 events=[], event_callbacks={}, window=(0, None),
+                 abs_window=(0, None), build_df=True):
+        super(GenericFTrace, self).__init__(name, build_df)
 
         if not hasattr(self, "needs_raw_parsing"):
             self.needs_raw_parsing = False
@@ -73,6 +74,8 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
 
         for attr, class_def in self.class_definitions.iteritems():
             trace_class = class_def()
+            if event_callbacks.has_key(attr):
+                trace_class.callback = event_callbacks[attr]
             setattr(self, attr, trace_class)
             self.trace_classes.append(trace_class)
 
@@ -81,9 +84,6 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
             self.__parse_trace_file(self.trace_path_raw, window, abs_window,
                                     raw=True)
         self.finalize_objects()
-
-        if normalize_time:
-            self.normalize_time()
 
     @classmethod
     def register_parser(cls, cobject, scope):
@@ -206,6 +206,9 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                 data_start_idx =  start_match.search(line).start()
             except AttributeError:
                 continue
+
+            if self.normalize_time:
+                timestamp = timestamp - self.basetime
 
             data_str = line[data_start_idx:]
 
@@ -480,14 +483,16 @@ class FTrace(GenericFTrace):
     """
 
     def __init__(self, path=".", name="", normalize_time=True, scope="all",
-                 events=[], window=(0, None), abs_window=(0, None)):
+                 events=[], event_callbacks={}, window=(0, None),
+                 abs_window=(0, None), build_df=True):
         self.trace_path, self.trace_path_raw = self.__process_path(path)
         self.needs_raw_parsing = True
 
         self.__populate_metadata()
 
         super(FTrace, self).__init__(name, normalize_time, scope, events,
-                                     window, abs_window)
+                                     event_callbacks, window, abs_window,
+                                     build_df)
 
     def __process_path(self, basepath):
         """Process the path and return the path to the trace text file"""

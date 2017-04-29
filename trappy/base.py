@@ -105,6 +105,7 @@ class Base(object):
         self.comm_array = []
         self.pid_array = []
         self.cpu_array = []
+        self.callback = None
         self.parse_raw = parse_raw
 
     def finalize_object(self):
@@ -171,42 +172,60 @@ class Base(object):
         self.cpu_array.append(cpu)
         self.data_array.append(data)
 
+	if not self.callback:
+            return
+        data_dict = self.generate_data_dict(comm, pid, cpu, data)
+        self.callback(time, data_dict)
+
+    def generate_data_dict(self, comm, pid, cpu, data_str):
+        data_dict = {"__comm": comm, "__pid": pid, "__cpu": cpu}
+        prev_key = None
+        for field in data_str.split():
+            if "=" not in field:
+                # Concatenation is supported only for "string" values
+                if type(data_dict[prev_key]) is not str:
+                    continue
+                data_dict[prev_key] += ' ' + field
+                continue
+            (key, value) = field.split('=', 1)
+            try:
+                value = int(value)
+            except ValueError:
+                pass
+            data_dict[key] = value
+            prev_key = key
+        return data_dict
+
     def generate_parsed_data(self):
 
         # Get a rough idea of how much memory we have to play with
+        CHECK_MEM_COUNT = 10000
         kb_free = _get_free_memory_kb()
         starting_maxrss = getrusage(RUSAGE_SELF).ru_maxrss
         check_memory_usage = True
+        check_memory_count = 1
 
         for (comm, pid, cpu, data_str) in zip(self.comm_array, self.pid_array,
                                               self.cpu_array, self.data_array):
-            data_dict = {"__comm": comm, "__pid": pid, "__cpu": cpu}
-            prev_key = None
-            for field in data_str.split():
-                if "=" not in field:
-                    # Concatenation is supported only for "string" values
-                    if type(data_dict[prev_key]) is not str:
-                        continue
-                    data_dict[prev_key] += ' ' + field
-                    continue
-                (key, value) = field.split('=', 1)
-                try:
-                    value = int(value)
-                except ValueError:
-                    pass
-                data_dict[key] = value
-                prev_key = key
+            data_dict = self.generate_data_dict(comm, pid, cpu, data_str)
 
             # When running out of memory, Pandas has been observed to segfault
             # rather than throwing a proper Python error.
             # Look at how much memory our process is using and warn if we seem
-            # to be getting close to the system's limit.
+            # to be getting close to the system's limit, check it only once
+            # in the beginning and then every CHECK_MEM_COUNT events
+            check_memory_count -= 1
+            if check_memory_count != 0:
+                yield data_dict
+                continue
+
             kb_used = (getrusage(RUSAGE_SELF).ru_maxrss - starting_maxrss)
             if check_memory_usage and kb_free and kb_used > kb_free * 0.9:
                 warnings.warn("TRAPpy: Appear to be low on memory. "
                               "If errors arise, try providing more RAM")
                 check_memory_usage = False
 
+            check_memory_count = CHECK_MEM_COUNT
             yield data_dict
 
     def create_dataframe(self):
@@ -237,15 +256,3 @@ class Base(object):
         :type fname: str
         """
         self.data_frame.to_csv(fname)
-
-    def normalize_time(self, basetime):
-        """Substract basetime from the Time of the data frame
-
-        :param basetime: The offset which needs to be subtracted from
-            the time index
-        :type basetime: float
-        """
-        if basetime and not self.data_frame.empty:
-            self.data_frame.reset_index(inplace=True)
-            self.data_frame["Time"] = self.data_frame["Time"] - basetime
-            self.data_frame.set_index("Time", inplace=True)

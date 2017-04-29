@@ -27,12 +27,13 @@ class BareTrace(object):
 
     """
 
-    def __init__(self, name=""):
+    def __init__(self, name="", build_df=True):
         self.name = name
         self.normalized_time = False
         self.class_definitions = {}
         self.trace_classes = []
         self.basetime = 0
+        self.build_df = build_df
 
     def get_duration(self):
         """Returns the largest time value of all classes,
@@ -133,6 +134,8 @@ class BareTrace(object):
         setattr(self, name, event)
 
     def finalize_objects(self):
+        if not self.build_df:
+            return
         for trace_class in self.trace_classes:
             trace_class.create_dataframe()
             trace_class.finalize_object()
