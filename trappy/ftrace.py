@@ -85,9 +85,6 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                                     raw=True)
         self.finalize_objects()
 
-        if normalize_time:
-            self.normalize_time()
-
     @classmethod
     def register_parser(cls, cobject, scope):
         """Register the class as an Event. This function
@@ -209,6 +206,9 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                 data_start_idx =  start_match.search(line).start()
             except AttributeError:
                 continue
+
+            if self.normalize_time:
+                timestamp = timestamp - self.basetime
 
             data_str = line[data_start_idx:]
 

@@ -256,15 +256,3 @@ class Base(object):
         :type fname: str
         """
         self.data_frame.to_csv(fname)
-
-    def normalize_time(self, basetime):
-        """Substract basetime from the Time of the data frame
-
-        :param basetime: The offset which needs to be subtracted from
-            the time index
-        :type basetime: float
-        """
-        if basetime and not self.data_frame.empty:
-            self.data_frame.reset_index(inplace=True)
-            self.data_frame["Time"] = self.data_frame["Time"] - basetime
-            self.data_frame.set_index("Time", inplace=True)
