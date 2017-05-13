@@ -13,7 +13,10 @@
 # limitations under the License.
 #
 
+import re
+
 from trappy.ftrace import GenericFTrace
+from trappy.utils import listify
 
 class drop_before_trace(object):
     """Object that, when called, returns True if the line is not part of
@@ -54,6 +57,13 @@ class SysTrace(GenericFTrace):
 
         self.trace_path = path
 
+        # Android injects useful events from userspace, unfortunately not using
+        # a specific attention word. Thus, let's capture tracing_mark events
+        # and reformat them in a local format_data callback.
+        events = listify(events)
+        if 'tracing_mark_write' not in events:
+            events.append('tracing_mark_write')
+
         super(SysTrace, self).__init__(name, normalize_time, scope, events,
                                        window, abs_window)
 
@@ -75,3 +85,24 @@ class SysTrace(GenericFTrace):
 
         """
         return lambda x: not x.endswith("</script>\n")
+
+    def format_data(self, unique_word, data_str):
+        if unique_word != 'tracing_mark_write:':
+            return data_str
+
+        # Disacrd not useful clock synchronization events
+        if 'trace_event_clock_sync' in data_str:
+            return ''
+
+        match = SYSTRACE_EVENT.match(data_str)
+        if match:
+            data_str = "event={} pid={} func={} data={}".format(
+                match.group('event'), match.group('pid'),
+                match.group('func'), match.group('data'))
+            return data_str
+
+        raise ValueError('Unexpected systrace marker: {}'.format(data_str))
+        return data_str
+
+SYSTRACE_EVENT = re.compile(
+    r'^ (?P<event>[A-Z])(\|(?P<pid>\d+)\|(?P<func>.*)(\|(?P<data>\d+))?)?')

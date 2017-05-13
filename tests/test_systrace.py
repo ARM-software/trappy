@@ -39,10 +39,6 @@ class TestSystrace(utils_tests.SetupDirectory):
         self.assertEquals(len(trace.sched_wakeup.data_frame), 4)
         self.assertTrue("target_cpu" in trace.sched_wakeup.data_frame.columns)
 
-        self.assertTrue(hasattr(trace, "trace_event_clock_sync"))
-        self.assertEquals(len(trace.trace_event_clock_sync.data_frame), 1)
-        self.assertTrue("realtime_ts" in trace.trace_event_clock_sync.data_frame.columns)
-
     def test_cpu_counting(self):
         """SysTrace traces know the number of cpus"""
 
