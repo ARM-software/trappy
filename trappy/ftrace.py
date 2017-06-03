@@ -168,9 +168,8 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                     return True
             return False
 
-        special_fields_regexp = r"^\s*(?P<comm>.*)-(?P<pid>\d+)(?:\s+\(.*\))"\
-                                r"?\s+\[(?P<cpu>\d+)\](?:\s+....)?\s+"\
-                                r"(?P<timestamp>[0-9]+\.[0-9]+):"
+        special_fields_regexp = r"^\s*(?P<comm>.*)-(?P<pid>\d+)\s+\(?(?P<tgid>.*?)?\)"\
+                                r"?\s*\[(?P<cpu>\d+)\](?:\s+....)?\s+(?P<timestamp>[0-9]+\.[0-9]+):"
         special_fields_regexp = re.compile(special_fields_regexp)
         start_match = re.compile(r"[A-Za-z0-9_]+=")
 
@@ -194,6 +193,12 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
             comm = special_fields_match.group('comm')
             pid = int(special_fields_match.group('pid'))
             cpu = int(special_fields_match.group('cpu'))
+            tgid = special_fields_match.group('tgid')
+            if not tgid or tgid[0] == '-':
+                tgid = -1
+            else:
+                tgid = int(tgid)
+
             timestamp = float(special_fields_match.group('timestamp'))
 
             if not self.basetime:
@@ -217,7 +222,7 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
             # Remove empty arrays from the trace
             data_str = re.sub(r"[A-Za-z0-9_]+=\{\} ", r"", data_str)
 
-            trace_class.append_data(timestamp, comm, pid, cpu, data_str)
+            trace_class.append_data(timestamp, comm, pid, tgid, cpu, data_str)
 
     def trace_hasnt_started(self):
         """Return a function that accepts a line and returns true if this line
