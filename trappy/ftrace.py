@@ -51,8 +51,8 @@ def _plot_freq_hists(allfreqs, what, axis, title):
                              "Frequency", xlim, "default")
 
 SPECIAL_FIELDS_RE = re.compile(
-                        r"^\s*(?P<comm>.*)-(?P<pid>\d+)(?:\s+\(.*\))"\
-                        r"?\s+\[(?P<cpu>\d+)\](?:\s+....)?\s+"\
+                        r"^\s*(?P<comm>.*)-(?P<pid>\d+)\s+\(?(?P<tgid>.*?)?\)"\
+                        r"?\s*\[(?P<cpu>\d+)\](?:\s+....)?\s+"\
                         r"(?P<timestamp>[0-9]+(?P<us>\.[0-9]+)?): (\w+:\s+)+(?P<data>.+)"
 )
 
@@ -279,6 +279,8 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
             comm = fields_match.group('comm')
             pid = int(fields_match.group('pid'))
             cpu = int(fields_match.group('cpu'))
+            tgid = fields_match.group('tgid')
+            tgid = -1 if (not tgid or '-' in tgid) else int(tgid)
 
             # The timestamp, depending on the trace_clock configuration, can be
             # reported either in [s].[us] or [ns] format. Let's ensure that we
@@ -305,7 +307,7 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
             if "={}" in data_str:
                 data_str = re.sub(r"[A-Za-z0-9_]+=\{\} ", r"", data_str)
 
-            trace_class.append_data(timestamp, comm, pid, cpu, self.lines, data_str)
+            trace_class.append_data(timestamp, comm, pid, tgid, cpu, self.lines, data_str)
             self.lines += 1
 
     def trace_hasnt_started(self):
