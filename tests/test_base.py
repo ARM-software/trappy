@@ -19,6 +19,8 @@ import sys
 import unittest
 import utils_tests
 import trappy
+import tempfile
+import numpy as np
 from trappy.base import trace_parser_explode_array
 
 sys.path.append(os.path.join(utils_tests.TESTS_DIRECTORY, "..", "trappy"))
@@ -238,3 +240,27 @@ class TestBase(utils_tests.SetupDirectory):
         self.assertListEqual(df["my_field"].tolist(),
                              ["foo", "foo=bar", "foo=bar=baz", 1,
                               "1=2", "1=foo", "1foo=2"])
+
+    def test_merge_dfs(self):
+        trace_file = tempfile.mktemp(dir="/tmp", suffix=".txt")
+        lines = [
+        "            adbd-5709  [007]  2943.184105: sched_contrib_scale_f: cpu=7 cpu_scale_factor=1\n"
+        "            adbd-5709  [007]  2943.184105: sched_load_avg_cpu:   cpu=7 util_avg=825\n"
+        "     ->transport-5713  [006]  2943.184106: sched_load_avg_cpu:   cpu=6 util_avg=292\n"
+        "     ->transport-5713  [006]  2943.184107: sched_contrib_scale_f: cpu=6 cpu_scale_factor=2\n"
+        "            adbd-5709  [007]  2943.184108: sched_load_avg_cpu:   cpu=7 util_avg=850\n"
+        "            adbd-5709  [007]  2943.184109: sched_contrib_scale_f: cpu=7 cpu_scale_factor=3\n"
+        "            adbd-5709  [007]  2943.184110: sched_load_avg_cpu:   cpu=6 util_avg=315\n"
+        ]
+        with open(trace_file, 'w') as fh:
+            for line in lines:
+                fh.write(line)
+
+        trace = trappy.ftrace.FTrace(trace_file, events=['sched_contrib_scale_f', 'sched_load_avg_cpu'],
+                              normalize_time=False)
+
+        df1 = trace.sched_load_avg_cpu.data_frame[['cpu', 'util_avg', '__line']]
+        df2 = trace.sched_contrib_scale_f.data_frame[['cpu', 'cpu_scale_factor', '__line']]
+        df3 = trappy.utils.merge_dfs(df1, df2, 'cpu')
+        cpu_scale_list = ["NaN" if np.isnan(x) else x for x in df3["cpu_scale_factor"].tolist()]
+        self.assertListEqual(cpu_scale_list, [1.0, "NaN", 1.0, 2.0])
