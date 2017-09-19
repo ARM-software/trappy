@@ -37,8 +37,8 @@ class Thermal(Base):
     """The Pivot along which the data is orthogonal"""
 
     def plot_temperature(self, control_temperature=None, title="", width=None,
-                         height=None, ylim="range", ax=None, legend_label="",
-                         tz_id=None):
+                         height=None, xlim="default", ylim="range", ax=None,
+                         legend_label="", drawstyle="default", tz_id=None):
         """Plot the temperature.
 
         :param ax: Axis instance
@@ -62,6 +62,17 @@ class Thermal(Base):
 
         :param height: The height of the plot
         :type height: int
+
+        :param xlim: The xlim setting of the plot.
+            See :func:`~trappy.plot_utils.set_lim`
+        :type xlim: str or tuple of int
+
+        :param ylim: The ylim setting of the plot
+            See :func:`~trappy.plot_utils.set_lim`
+        :type ylim: str or tuple of int
+
+        :param drawstyle: The drawstyle setting of the plot
+        :type drawstyle: str
 
         :param tz_id: thermal zone id as it appears in the id field of
             the thermal_temperature trace event
@@ -88,14 +99,14 @@ class Thermal(Base):
             setup_plot = True
 
         temp_label = normalize_title("Temperature", legend_label)
-        (thermal_dfr["temp"] / 1000).plot(ax=ax, label=temp_label)
+        (thermal_dfr["temp"] / 1000).plot(ax=ax, label=temp_label, drawstyle=drawstyle)
         if control_temperature is not None:
             ct_label = normalize_title("Control", legend_label)
             control_temperature.plot(ax=ax, color="y", linestyle="--",
                            label=ct_label)
 
         if setup_plot:
-            post_plot_setup(ax, title=title, ylim=ylim)
+            post_plot_setup(ax, title=title, xlim=xlim, ylim=ylim)
             plt.legend()
 
     def plot_temperature_hist(self, ax, title):
@@ -130,8 +141,9 @@ class ThermalGovernor(Base):
     pivot = "thermal_zone_id"
     """The Pivot along which the data is orthogonal"""
 
-    def plot_temperature(self, title="", width=None, height=None, ylim="range",
-                         ax=None, legend_label=""):
+    def plot_temperature(self, title="", width=None, height=None, xlim="default",
+                         ylim="range", ax=None, legend_label="",
+                         drawstyle="default"):
         """Plot the temperature"""
         from matplotlib import pyplot as plt
         from trappy.plot_utils import normalize_title, pre_plot_setup, post_plot_setup
@@ -147,16 +159,17 @@ class ThermalGovernor(Base):
             setup_plot = True
 
         temp_label = normalize_title("Temperature", legend_label)
-        (curr_temp / 1000).plot(ax=ax, label=temp_label)
+        (curr_temp / 1000).plot(ax=ax, label=temp_label, drawstyle=drawstyle)
         control_temp_series.plot(ax=ax, color="y", linestyle="--",
                                  label="control temperature")
 
         if setup_plot:
-            post_plot_setup(ax, title=title, ylim=ylim)
+            post_plot_setup(ax, title=title, xlim=xlim, ylim=ylim)
             plt.legend()
 
     def plot_input_power(self, actor_order, title="", width=None, height=None,
-                         ax=None):
+                         ax=None, xlim="default", ylim="range",
+                         drawstyle="default"):
         """Plot input power
 
         :param ax: Axis instance
@@ -170,6 +183,17 @@ class ThermalGovernor(Base):
 
         :param height: The height of the plot
         :type int: int
+
+        :param xlim: The xlim setting of the plot.
+            See :func:`~trappy.plot_utils.set_lim`
+        :type xlim: str or tuple of int
+
+        :param ylim: The ylim setting of the plot
+            See :func:`~trappy.plot_utils.set_lim`
+        :type ylim: str or tuple of int
+
+        :param drawstyle: The drawstyle setting of the plot
+        :type drawstyle: str
 
         :param actor_order: An array showing the order in which the actors
            were registered.  The array values are the labels that
@@ -199,11 +223,12 @@ class ThermalGovernor(Base):
         if not ax:
             ax = pre_plot_setup(width, height)
 
-        plot_dfr.plot(ax=ax)
-        post_plot_setup(ax, title=title)
+        plot_dfr.plot(ax=ax, drawstyle=drawstyle)
+        post_plot_setup(ax, title=title, xlim=xlim, ylim=ylim)
 
     def plot_weighted_input_power(self, actor_weights, title="", width=None,
-                                  height=None, ax=None):
+                                  height=None, ax=None, xlim="default",
+                                  ylim="range", drawstyle="default"):
         """Plot weighted input power
 
         :param actor_weights: An array of tuples.  First element of the
@@ -220,6 +245,17 @@ class ThermalGovernor(Base):
 
         :param width: The width of the plot
         :type width: int
+
+        :param xlim: The xlim setting of the plot.
+            See :func:`~trappy.plot_utils.set_lim`
+        :type xlim: str or tuple of int
+
+        :param ylim: The ylim setting of the plot
+            See :func:`~trappy.plot_utils.set_lim`
+        :type ylim: str or tuple of int
+
+        :param drawstyle: The drawstyle setting of the plot
+        :type drawstyle: str
 
         :param height: The height of the plot
         :type int: int
@@ -240,11 +276,11 @@ class ThermalGovernor(Base):
         if not ax:
             ax = pre_plot_setup(width, height)
 
-        plot_dfr.plot(ax=ax)
-        post_plot_setup(ax, title=title)
+        plot_dfr.plot(ax=ax, drawstyle=drawstyle)
 
     def plot_output_power(self, actor_order, title="", width=None, height=None,
-                          ax=None):
+                          ax=None, xlim="default", ylim="range",
+                          drawstyle="default"):
         """Plot output power
 
         :param ax: Axis instance
@@ -258,6 +294,17 @@ class ThermalGovernor(Base):
 
         :param height: The height of the plot
         :type int: int
+
+        :param xlim: The xlim setting of the plot.
+            See :func:`~trappy.plot_utils.set_lim`
+        :type xlim: str or tuple of int
+
+        :param ylim: The ylim setting of the plot
+            See :func:`~trappy.plot_utils.set_lim`
+        :type ylim: str or tuple of int
+
+        :param drawstyle: The drawstyle setting of the plot
+        :type drawstyle: str
 
         :param actor_order: An array showing the order in which the actors
             were registered.  The array values are the labels that
@@ -284,8 +331,8 @@ class ThermalGovernor(Base):
         if not ax:
             ax = pre_plot_setup(width, height)
 
-        plot_dfr.plot(ax=ax)
-        post_plot_setup(ax, title=title)
+        plot_dfr.plot(ax=ax, drawstyle=drawstyle)
+        post_plot_setup(ax, title=title, xlim=xlim, ylim=ylim)
 
     def plot_inout_power(self, title=""):
         """Make multiple plots showing input and output power for each actor
