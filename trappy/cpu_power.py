@@ -93,6 +93,33 @@ def num_cpus_in_mask(mask):
 
     return bin(value).count("1")
 
+def sanitize_mask(mask):
+    """Return mask string to usable int value """
+    return int(mask.replace(",", ""), 16)
+
+def cpus_to_mask(cpus):
+    """Returns the integer value of the list -> mask translation"""
+    res = 0
+    for cpu in cpus:
+        res |= (1 << cpu)
+    return res
+
+def mask_to_cpus(mask):
+    """Returns the list of the cpus present in the mask"""
+    res = []
+    # Remove '0b' prefix
+    bits = list(bin(mask))[2::]
+    # Reverse to LSB first order
+    bits.reverse()
+    for idx, bit in enumerate(bits):
+        if bit == '1':
+            res.append(idx)
+    return res
+
+def stringify_mask(mask):
+    """Returns a user-friendly print of a cpumask"""
+    return "CPUs {}".format(mask_to_cpus(mask))
+
 class CpuOutPower(Base):
     """Process the cpufreq cooling power actor data in a ftrace dump"""
 
@@ -119,6 +146,64 @@ class CpuOutPower(Base):
         dfr = self.data_frame
 
         return pivot_with_labels(dfr, "freq", "cpus", mapping_label) / 1000
+
+    def plot_cdev_states(self, width=None, height=None, xlim="default",
+                         ylim="range", drawstyle="default", ax=None,
+                         title="", cpus=None):
+        """Plot the cooling device state evolution
+
+        :param width: The width of the plot
+        :type width: int
+
+        :param height: The height of the plot
+        :type height: int
+
+        :param xlim: The xlim setting of the plot.
+            See :func:`~trappy.plot_utils.set_lim`
+        :type xlim: str or tuple of int
+
+        :param ylim: The ylim setting of the plot
+            See :func:`~trappy.plot_utils.set_lim`
+        :type ylim: str or tuple of int
+
+        :param drawstyle: The drawstyle setting of the plot
+        :type drawstyle: str
+
+        :param cpus: List of cpus to plot
+            All are plotted by default
+        :type cpus: list of int
+        """
+
+        from trappy.plot_utils import plot_generic
+
+        thermal_dfr = self.data_frame.copy()
+
+        # CPUs are given as a list for convenience,
+        # but they're in string cpumask format in the trace.
+        # Thus, change format to middle-ground int value
+        thermal_dfr["cpus"] = thermal_dfr["cpus"].apply(sanitize_mask)
+
+        cpumasks = thermal_dfr["cpus"].unique().tolist()
+
+        # Sanitize cpus
+        if cpus is not None:
+            global_mask = cpus_to_mask(cpus)
+
+            # Find masks that match the requested CPUs
+            # This can include other CPUs
+            selected_masks = [m for m in cpumasks if m & global_mask]
+
+            thermal_dfr = thermal_dfr[
+                thermal_dfr["cpus"].isin(selected_masks)
+            ]
+
+            if len(selected_masks) == 0:
+                raise ValueError("No {} trace for CPUs {}".format(self.unique_word, cpus))
+
+        plot_generic(thermal_dfr, "cpus", fields=["cdev_state"],
+                     prettify_name=stringify_mask, width=width, height=height,
+                     xlim=xlim, ylim=ylim, drawstyle=drawstyle, ax=ax, title=title
+        )
 
 register_ftrace_parser(CpuOutPower, "thermal")
 
