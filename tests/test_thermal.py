@@ -139,6 +139,23 @@ class TestThermalGovernor(BaseTestThermal):
         trappy.FTrace().thermal_governor.plot_inout_power(title="Antutu")
         matplotlib.pyplot.close('all')
 
+class TestCpuOutPower(BaseTestThermal):
+    def test_get_dataframe(self):
+        dfr = trappy.FTrace().cpu_out_power.data_frame
+
+        self.assertTrue(len(dfr) > 0)
+        self.assertTrue("cdev_state" in dfr.columns)
+
+    def test_plot_cdev_states(self):
+        """Test CpuOutPower.plot_cdev_states()
+
+        Can't check that the graph is ok, so just see that the method doesn't blow up"""
+        out = trappy.FTrace().cpu_out_power
+
+        out.plot_cdev_states()
+        out.plot_cdev_states(xlim=(3, 6))
+        matplotlib.pyplot.close('all')
+
 class TestEmptyThermalGovernor(unittest.TestCase):
     def setUp(self):
         self.previous_dir = os.getcwd()
