@@ -127,13 +127,13 @@ class TestFTrace(BaseTestThermal):
 
     def test_ftrace_arbitrary_trace_txt(self):
         """FTrace() works if the trace is called something other than trace.txt"""
-        arbitrary_trace_name = "my_trace.txt"
+        arbitrary_trace_name = "my_trace.trappy.txt"
         shutil.move("trace.txt", arbitrary_trace_name)
 
         dfr = trappy.FTrace(arbitrary_trace_name).thermal.data_frame
 
         self.assertTrue(len(dfr) > 0)
-        self.assertFalse(os.path.exists("trace.txt"))
+        self.assertFalse(os.path.exists("trace.trappy.txt"))
         # As there is no raw trace requested. The mytrace.raw.txt
         # Should not have been generated
         self.assertFalse(os.path.exists("mytrace.raw.txt"))
@@ -392,11 +392,10 @@ class TestFTrace(BaseTestThermal):
                      "trace-cmd not installed")
 class TestFTraceRawDat(utils_tests.SetupDirectory):
 
+    to_copy = [("raw_trace.dat", "trace.dat")]
+
     def __init__(self, *args, **kwargs):
-        super(TestFTraceRawDat, self).__init__(
-             [("raw_trace.dat", "trace.dat")],
-             *args,
-             **kwargs)
+        super(TestFTraceRawDat, self).__init__(self.to_copy, *args, **kwargs)
 
     def test_raw_dat(self):
         """Tests an event that relies on raw parsing"""
@@ -415,6 +414,11 @@ class TestFTraceRawDat(utils_tests.SetupDirectory):
         trace = trappy.FTrace(arbitrary_name)
         self.assertTrue(hasattr(trace, "sched_switch"))
         self.assertTrue(len(trace.sched_switch.data_frame) > 0)
+
+class TestFTraceRawDatBadTxtPresent(TestFTraceRawDat):
+    """Test events that require raw parsing, with a non-raw trace.txt file present"""
+    to_copy = [("raw_trace.dat", "trace.dat"),
+               ("trace_not_raw.txt", "trace.txt")]
 
 class TestFTraceRawBothTxt(utils_tests.SetupDirectory):
 
@@ -435,7 +439,7 @@ class TestFTraceRawBothTxt(utils_tests.SetupDirectory):
     def test_both_txt_arb_name(self):
         """Test raw parsing for txt files arbitrary name"""
 
-        arbitrary_name = "my_trace.txt"
+        arbitrary_name = "my_trace.trappy.txt"
 
         shutil.move("trace.txt", arbitrary_name)
 
@@ -507,12 +511,12 @@ class TestTraceDat(utils_tests.SetupDirectory):
         self.assertTrue(found)
 
     def test_do_txt_if_not_there(self):
-        """Create trace.txt if it's not there"""
-        self.assertFalse(os.path.isfile("trace.txt"))
+        """Create trace.trappy.txt if it's not there"""
+        self.assertFalse(os.path.isfile("trace.trappy.txt"))
 
         trappy.FTrace()
 
-        self.assert_thermal_in_trace("trace.txt")
+        self.assert_thermal_in_trace("trace.trappy.txt")
 
     def test_ftrace_arbitrary_trace_dat(self):
         """FTrace() works if asked to parse a binary trace with a filename other than trace.dat"""
@@ -521,27 +525,27 @@ class TestTraceDat(utils_tests.SetupDirectory):
 
         dfr = trappy.FTrace(arbitrary_trace_name).thermal.data_frame
 
-        self.assertTrue(os.path.exists("my_trace.txt"))
+        self.assertTrue(os.path.exists("my_trace.trappy.txt"))
         self.assertTrue(len(dfr) > 0)
         self.assertFalse(os.path.exists("trace.dat"))
-        self.assertFalse(os.path.exists("trace.txt"))
+        self.assertFalse(os.path.exists("trace.trappy.txt"))
 
     def test_regenerate_txt_if_outdated(self):
-        """Regenerate the trace.txt if it's older than the trace.dat"""
+        """Regenerate the trace.trappy.txt if it's older than the trace.dat"""
 
         trappy.FTrace()
 
         # Empty the trace.txt
-        with open("trace.txt", "w") as fout:
+        with open("trace.trappy.txt", "w") as fout:
             fout.write("")
 
         # Set access and modified time of trace.txt to 10 seconds ago
         now = time.time()
-        os.utime("trace.txt", (now - 10, now - 10))
+        os.utime("trace.trappy.txt", (now - 10, now - 10))
 
         # touch trace.dat
         os.utime("trace.dat", None)
 
         trappy.FTrace()
 
-        self.assert_thermal_in_trace("trace.txt")
+        self.assert_thermal_in_trace("trace.trappy.txt")

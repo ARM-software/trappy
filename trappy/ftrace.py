@@ -651,19 +651,6 @@ class FTrace(GenericFTrace):
         self.__populate_metadata()
         self._do_parse()
 
-    def __warn_about_txt_trace_files(self, trace_dat, raw_txt, formatted_txt):
-        self.__get_raw_event_list()
-        warn_text = ( "You appear to be parsing both raw and formatted "
-                      "trace files. TRAPpy now uses a unified format. "
-                      "If you have the {} file, remove the .txt files "
-                      "and try again. If not, you can manually move "
-                      "lines with the following events from {} to {} :"
-                      ).format(trace_dat, raw_txt, formatted_txt)
-        for raw_event in self.raw_events:
-            warn_text = warn_text+" \"{}\"".format(raw_event)
-
-        raise RuntimeError(warn_text)
-
     def __process_path(self, basepath):
         """Process the path and return the path to the trace text file"""
 
@@ -672,22 +659,42 @@ class FTrace(GenericFTrace):
         else:
             trace_name = os.path.join(basepath, "trace")
 
+        trace_trappy_txt = trace_name + ".trappy.txt"
         trace_txt = trace_name + ".txt"
-        trace_raw_txt = trace_name + ".raw.txt"
         trace_dat = trace_name + ".dat"
 
         if os.path.isfile(trace_dat):
-            # Warn users if raw.txt files are present
-            if os.path.isfile(trace_raw_txt):
-                self.__warn_about_txt_trace_files(trace_dat, trace_raw_txt, trace_txt)
-            # TXT traces must always be generated
-            if not os.path.isfile(trace_txt):
+            # Create the text version of the trace (unless it's present and
+            # newer than the .dat file)
+            if not os.path.isfile(trace_trappy_txt) \
+               or os.path.getmtime(trace_trappy_txt) < os.path.getmtime(trace_dat):
                 self.__run_trace_cmd_report(trace_dat)
-            # TXT traces must match the most recent binary trace
-            elif os.path.getmtime(trace_txt) < os.path.getmtime(trace_dat):
-                self.__run_trace_cmd_report(trace_dat)
-
-        return trace_txt
+            return trace_trappy_txt
+        else:
+            if os.path.isfile(trace_trappy_txt):
+                # Looks like we parsed a trace.dat but it was since deleted. We
+                # can carry on, but warn the user as something fishy is probably
+                # going on.
+                warning = (
+                    'Found TRAPpy text file ({}) but the binary trace file ({}) '
+                    'seems to have been deleted continuing.'.format(
+                        trace_trappy_txt, trace_dat))
+                warnings.warn(warning)
+                return trace_trappy_txt
+            elif os.path.isfile(trace_txt):
+                # Last resort - try parsing the trace.txt. This will break in
+                # mysterious ways if it was generated with a trace-cmd command
+                # that doesn't match TRAPpy's expectations for raw events
+                warning = (
+                    "Attempting to parse textual trace file ({}). This will "
+                    "only work if the file was created with trace-cmd's raw "
+                    "output enabled. If something breaks, try using a binary "
+                    "trace file instead.".format(trace_txt))
+                warnings.warn(warning)
+                return trace_txt
+            else:
+                raise IOError("Couldn't find trace file in {}".format(
+                    os.path.abspath(basepath)))
 
     def __get_raw_event_list(self):
         self.raw_events = []
@@ -718,7 +725,7 @@ class FTrace(GenericFTrace):
         if not os.path.isfile(fname):
             raise IOError("No such file or directory: {}".format(fname))
 
-        trace_output = os.path.splitext(fname)[0] + ".txt"
+        trace_output = os.path.splitext(fname)[0] + ".trappy.txt"
         # Ask for the raw event list and request them unformatted
         self.__get_raw_event_list()
         for raw_event in self.raw_events:
