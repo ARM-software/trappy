@@ -253,3 +253,16 @@ class TestPlotUtilsNeedTrace(BaseTestThermal):
 
         plot_utils.plot_temperature_hist(traces)
         matplotlib.pyplot.close('all')
+
+    def test_plot_generic(self):
+        """Test that plot_generic doesn't bomb"""
+        trace = trappy.FTrace()
+
+        def stringify_device(dev):
+            return "device {}".format(dev)
+
+        df = trace.devfreq_out_power.data_frame
+        plot_utils.plot_generic(df, name_field="type", 
+                                fields=["freq", "cdev_state"],
+                                prettify_name=stringify_device
+        )

@@ -22,7 +22,6 @@ import pandas as pd
 from trappy.base import Base
 from trappy.dynamic import register_ftrace_parser
 
-
 class DevfreqInPower(Base):
     """Process de devfreq cooling device data regarding get_power in an
 FTrace dump"""
@@ -71,5 +70,52 @@ ftrace dump"""
         """
 
         return pd.DataFrame(self.data_frame["freq"] / 1000000)
+
+    def plot_cdev_states(self, width=None, height=None, xlim="default",
+                         ylim="range", drawstyle="default", ax=None,
+                         title="", devices=None):
+        """Plot the cooling device state evolution
+
+        :param width: The width of the plot
+        :type width: int
+
+        :param height: The height of the plot
+        :type height: int
+
+        :param xlim: The xlim setting of the plot.
+            See :func:`~trappy.plot_utils.set_lim`
+        :type xlim: str or tuple of int
+
+        :param ylim: The ylim setting of the plot
+            See :func:`~trappy.plot_utils.set_lim`
+        :type ylim: str or tuple of int
+
+        :param drawstyle: The drawstyle setting of the plot
+        :type drawstyle: str
+
+        :param devices: List of devfreq devices to plot
+            All are plotted by default
+        :type cpus: list of int
+        """
+
+        from trappy.plot_utils import plot_generic
+
+        prefix = "thermal-devfreq-"
+
+        def stringify_type(value):
+            return "{}{}".format(prefix, value)
+
+        thermal_dfr = self.data_frame.copy()
+
+        # Devfreq devices are listed as 'thermal-devfreq-{i}
+        # Strip the left string part
+        thermal_dfr["type"] = thermal_dfr["type"].apply(
+            lambda name: name.lstrip(prefix)
+        )
+
+        plot_generic(thermal_dfr, "type", fields=["cdev_state"],
+                     prettify_name=stringify_type, width=width, height=height,
+                     xlim=xlim, ylim=ylim, drawstyle=drawstyle, ax=ax, title=title
+        )
 
 register_ftrace_parser(DevfreqOutPower, "thermal")
