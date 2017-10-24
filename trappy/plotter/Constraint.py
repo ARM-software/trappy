@@ -212,8 +212,8 @@ class ConstraintManager(object):
 
 
     :param traces: Input Trace data
-    :type traces: :mod:`trappy.trace.BareTrace`, list(:mod:`trappy.trace.BareTrace`)
-        (or a class derived from :mod:`trappy.trace.BareTrace`)
+    :type traces: a list of :mod:`trappy.trace.BareTrace` (or derived class),
+        or :mod:`pandas.DataFrame` or a single instance of them.
     :param columns: The column values from the corresponding
         :mod:`pandas.DataFrame`
     :type columns: str, list(str)
@@ -276,12 +276,17 @@ class ConstraintManager(object):
                    Len[columns] != 1
                    Len[templates] != 1
             )
+
+            TODO  is the following correct?
+            Permute(
+                   Len[traces] != 1
+                   Len[columns] = 1
+                   Len[templates] != 1
+            )
         """
         min_len = min(self._lens)
         max_pos_comp = [
-            i for i,
-            j in enumerate(
-                self._lens) if j != self._max_len]
+            i for i, j in enumerate(self._lens) if j != self._max_len]
 
         if self._max_len == 1 and min_len != 1:
             raise RuntimeError("Essential Arg Missing")
