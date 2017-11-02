@@ -492,7 +492,7 @@ is part of the trace.
 
         return ret
 
-    def apply_callbacks(self, fn_map):
+    def apply_callbacks(self, fn_map, *kwarg):
         """
         Apply callback functions to trace events in chronological order.
 
@@ -508,6 +508,12 @@ is part of the trace.
             "sched_switch": callback_fn1,
             "sched_wakeup": callback_fn2
         })
+
+        :param fn_map: A dict of event to function mapping
+        :type fn_map: dict
+
+        :param kwarg: Optional argument to pass to callbacks
+        :type kwarg: dict
         """
         dfs = {event: getattr(self, event).data_frame for event in fn_map.keys()}
         events = [event for event in fn_map.keys() if not dfs[event].empty]
@@ -534,7 +540,12 @@ is part of the trace.
             event_dict = {
                 col: event_tuple[idx] for col, idx in col_idxs[event_name].iteritems()
             }
-            fn_map[event_name](event_dict)
+
+            if kwarg:
+                fn_map[event_name](event_dict, kwarg)
+            else:
+                fn_map[event_name](event_dict)
+
             event_row = next(iters[event_name], None)
             if event_row:
                 next_rows[event_name] = event_row
