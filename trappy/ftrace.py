@@ -59,6 +59,21 @@ SPECIAL_FIELDS_RE = re.compile(
                         r"(?P<timestamp>[0-9]+(?P<us>\.[0-9]+)?): (\w+:\s+)+(?P<data>.+)"
 )
 
+# This is just a helper to enable printing a helpful warning.
+# See GenericFTrace.__add_warnings
+class _UniqueNameWarner(object):
+    def __init__(self, owner, name, unique_word):
+        self.owner = owner
+        self.name = name
+        self.unique_word = unique_word
+
+    def __getattr__(self, attr):
+        raise AttributeError(
+            'You are trying to access "{}.{}.{}", instead you should '
+            'access "{}.{}.{}". A bug in TRAPpy used to make this work '
+            'non-deterministically, but that has now been fixed.'.format(
+                self.owner, self.unique_word, attr, self.owner, self.name, attr))
+
 class GenericFTrace(BareTrace):
     """Generic class to parse output of FTrace.  This class is meant to be
 subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
@@ -310,6 +325,8 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
 
         self._parsing_teardown()
 
+        self.__add_warnings()
+
     def _parsing_setup(self):
         # By default, the file pointed by trace_path is parsed. However, an
         # intermediate file could be required. Subclasses can override this
@@ -464,6 +481,29 @@ is part of the trace.
         except FTraceParseError as e:
             raise ValueError('Failed to parse ftrace file {}:\n{}'.format(
                 trace_file, str(e)))
+
+    def __add_warnings(self):
+        # We used to have a bug where when you had a known event whose 'name'
+        # attribute != its 'unique_word', and you specified it explicitly in the
+        # 'events' param, we had two attributes - one for the 'name' and one for
+        # the 'unique_word', and it was undefined which would be populated.
+        # Now we just have the attribute from the 'name'. If there is any code
+        # out there that was relying on this bug (i.e. accessing the
+        # 'unique_word' atribute), this will tell them what they need to do to
+        # fix their code.
+
+        for name, cls in self.class_definitions.iteritems():
+            unique_word = cls.unique_word.split(':')[0]
+            if name == unique_word:
+                continue
+
+            # Sanity check: if we still have both attributes, something went
+            # wrong.
+            if hasattr(self, unique_word):
+                raise RuntimeError(
+                    'I have both "{}" and "{}" attrs '.format(name, unique_word))
+
+            setattr(self, unique_word, _UniqueNameWarner(self, name, unique_word))
 
     # TODO: Move thermal specific functionality
 
