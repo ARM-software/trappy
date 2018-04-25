@@ -157,13 +157,15 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
     def _windowify_class(self, trace_class, window):
         if len(trace_class.data_frame) < 1:
             return
-
+        # Get events DF boundaries
+        min_t = trace_class.data_frame.index[0]
+        max_t = trace_class.data_frame.index[-1]
+        # Restrict events DF boundaries according to the specified window
+        if window[0]:
+            max_t = min(max_t, window[1])
         if window[1]:
-            trace_class.data_frame = trace_class.data_frame[
-                window[0]:window[1]]
-        elif window[0]:
-            trace_class.data_frame = trace_class.data_frame[
-                window[0]:]
+            min_t = max(min_t, window[0])
+        trace_class.data_frame = trace_class.data_frame[min_t:max_t]
 
     def _trace_cache_path(self):
         trace_file = self.trace_path
