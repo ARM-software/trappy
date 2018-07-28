@@ -84,10 +84,11 @@ class TestSystrace(utils_tests.SetupDirectory):
         self.assertEquals(edfr['event'].iloc[0], 'E')
         self.assertEquals(edfr['data'].iloc[0], None)
 
-    def test_systrace_line_num(self):
+    def test_systrace_line_num_tgid(self):
         """Test for line numbers in a systrace"""
         trace = trappy.SysTrace("trace_sf.html")
         dfr = trace.sched_switch.data_frame
+        self.assertEquals(dfr['__tgid'].iloc[0], 959)
         self.assertEquals(trace.lines, 2506)
         self.assertEquals(dfr['__line'].iloc[0], 0)
         self.assertEquals(dfr['__line'].iloc[1], 6)

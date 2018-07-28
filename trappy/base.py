@@ -113,6 +113,7 @@ class Base(object):
         self.time_array = []
         self.comm_array = []
         self.pid_array = []
+        self.tgid_array = []
         self.cpu_array = []
         self.parse_raw = parse_raw
         self.cached = False
@@ -154,7 +155,7 @@ class Base(object):
 
         return ret
 
-    def append_data(self, time, comm, pid, cpu, line, data):
+    def append_data(self, time, comm, pid, tgid, cpu, line, data):
         """Append data parsed from a line to the corresponding arrays
 
         The :mod:`DataFrame` will be created from this when the whole trace
@@ -178,6 +179,7 @@ class Base(object):
         self.time_array.append(time)
         self.comm_array.append(comm)
         self.pid_array.append(pid)
+        self.tgid_array.append(tgid)
         self.cpu_array.append(cpu)
         self.line_array.append(line)
         self.data_array.append(data)
@@ -240,10 +242,10 @@ class Base(object):
         check_memory_usage = True
         check_memory_count = 1
 
-        for (comm, pid, cpu, line, data_str) in zip(self.comm_array, self.pid_array,
-                                              self.cpu_array, self.line_array,
-                                              self.data_array):
-            data_dict = {"__comm": comm, "__pid": pid, "__cpu": cpu, "__line": line}
+        for (comm, pid, tgid, cpu, line, data_str) in zip(self.comm_array, self.pid_array,
+                                              self.tgid_array, self.cpu_array,
+                                              self.line_array, self.data_array):
+            data_dict = {"__comm": comm, "__pid": pid, "__tgid": tgid, "__cpu": cpu, "__line": line}
             data_dict.update(self.generate_data_dict(data_str))
 
             # When running out of memory, Pandas has been observed to segfault
