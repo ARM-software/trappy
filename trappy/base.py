@@ -298,7 +298,7 @@ class Base(object):
         :param fname: The name of the CSV file
         :type fname: str
         """
-        self.data_frame.to_csv(fname)
+        self.data_frame.to_csv(fname, encoding='utf-8')
 
     def read_csv(self, fname):
         """Read the csv data into a DataFrame
