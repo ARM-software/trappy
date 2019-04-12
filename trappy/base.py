@@ -199,12 +199,10 @@ class Base(object):
         """
 
         try:
-            return int(string)
+            # Let python figure out the base
+            return int(string, base=0)
         except ValueError:
-            try:
-                return int(string, base=16)
-            except ValueError:
-                return string
+            return string
 
     def generate_data_dict(self, data_str):
         data_dict = {}
