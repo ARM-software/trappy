@@ -22,7 +22,7 @@ import unittest
 import utils_tests
 import trappy
 import warnings
-from trappy.base import trace_parser_explode_array
+from trappy.base import trace_parser_explode_array, Base
 from trappy import TrappyParseError
 
 sys.path.append(os.path.join(utils_tests.TESTS_DIRECTORY, "..", "trappy"))
@@ -261,3 +261,8 @@ class TestBase(utils_tests.SetupDirectory):
             self.assertGreater(len(caught_warnings), 0)
             for caught_warning in caught_warnings:
                 self.assertIn('trace-cmd', caught_warning)
+
+    def test_string_cast_int(self):
+        self.assertEqual(Base.string_cast_int("42"), 42)
+        self.assertEqual(Base.string_cast_int("0xdeadbeef"), 3735928559)
+        self.assertEqual(Base.string_cast_int("deadbeef"), "deadbeef")
