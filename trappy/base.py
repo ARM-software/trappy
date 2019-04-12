@@ -190,7 +190,8 @@ class Base(object):
         self.line_array.append(line)
         self.data_array.append(data)
 
-    def string_cast_int(self, string):
+    @classmethod
+    def string_cast_int(cls, string):
         """
         Attempt to convert string to an int
 
