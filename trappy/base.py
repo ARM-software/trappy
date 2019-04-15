@@ -190,7 +190,8 @@ class Base(object):
         self.line_array.append(line)
         self.data_array.append(data)
 
-    def string_cast_int(self, string):
+    @classmethod
+    def string_cast_int(cls, string):
         """
         Attempt to convert string to an int
 
@@ -199,12 +200,10 @@ class Base(object):
         """
 
         try:
-            return int(string)
+            # Let python figure out the base
+            return int(string, base=0)
         except ValueError:
-            try:
-                return int(string, base=16)
-            except ValueError:
-                return string
+            return string
 
     def generate_data_dict(self, data_str):
         data_dict = {}
