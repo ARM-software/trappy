@@ -29,6 +29,7 @@ import warnings
 from resource import getrusage, RUSAGE_SELF
 
 from trappy.exception import TrappyParseError
+from trappy.utils import handle_duplicate_index
 
 def _get_free_memory_kb():
     try:
@@ -278,6 +279,7 @@ class Base(object):
 
         time_idx = pd.Index(self.time_array, name="Time")
         self.data_frame = pd.DataFrame(self.generate_parsed_data(), index=time_idx)
+        self.data_frame = handle_duplicate_index(self.data_frame)
 
         self.time_array = []
         self.line_array = []
