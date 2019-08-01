@@ -887,7 +887,7 @@ class FTrace(GenericFTrace):
         """
         from subprocess import check_output
 
-        cmd = ["trace-cmd", "report"]
+        cmd = ["trace-cmd", "report", '-t']
 
         if not os.path.isfile(trace_dat):
             raise IOError("No such file or directory: {}".format(trace_dat))
