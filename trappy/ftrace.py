@@ -83,16 +83,18 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
                  events=[], window=(0, None), abs_window=(0, None)):
         super(GenericFTrace, self).__init__(name)
 
-        self.class_definitions.update(self.dynamic_classes)
         self.__add_events(listify(events))
 
         if scope == "thermal":
             self.class_definitions.update(self.thermal_classes)
+            self.class_definitions.update(self.dynamic_classes)
         elif scope == "sched":
             self.class_definitions.update(self.sched_classes)
+            self.class_definitions.update(self.dynamic_classes)
         elif scope != "custom":
             self.class_definitions.update(self.thermal_classes)
             self.class_definitions.update(self.sched_classes)
+            self.class_definitions.update(self.dynamic_classes)
 
         # Sanity check on the unique words
         for cls1, cls2 in itertools.combinations(self.class_definitions.values(), 2):
