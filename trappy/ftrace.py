@@ -210,7 +210,7 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
         return metadata
 
     def _is_cache_valid(self, cache_metadata):
-        for key in ["md5sum", "basetime"]:
+        for key in ["md5sum", "basetime", "endtime"]:
             if key not in cache_metadata.keys():
                 warnstr = "Cache metadata is erroneous, invalidating cache"
                 warnings.warn(warnstr)
@@ -268,7 +268,7 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
             open(self.trace_path, 'rb').read()
         ).hexdigest()
         metadata["basetime"] = self.basetime
-
+        metadata["endtime"] = self.endtime
         return metadata
 
     def _load_cache(self):
@@ -301,6 +301,7 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
         # Additionnal metadata can be loaded by overriding this method,
         # providing it has been saved by overriding _get_extra_data_to_cache
         self.basetime = metadata["basetime"]
+        self.endtime = metadata["endtime"]
 
     def _apply_user_parameters(self):
         # Traces are read without any window consideration, so we apply
@@ -444,6 +445,8 @@ subclassed by FTrace (for parsing FTrace coming from trace-cmd) and SysTrace."""
 
             trace_class.append_data(timestamp, comm, pid, cpu, self.lines, data_str)
             self.lines += 1
+
+        self.endtime = timestamp
 
     def trace_hasnt_started(self):
         """Return a function that accepts a line and returns true if this line
