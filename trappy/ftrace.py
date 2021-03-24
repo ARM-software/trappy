@@ -884,7 +884,7 @@ class FTrace(GenericFTrace):
         trace-cmd then prints those events without formatting.
 
         """
-        from subprocess import check_call
+        from subprocess import run
 
         cmd = ["trace-cmd", "report", '-t']
 
@@ -898,14 +898,16 @@ class FTrace(GenericFTrace):
 
         cmd.append(trace_dat)
 
-        with open(os.devnull) as devnull, NamedTemporaryFile(delete=False) as fout:
+        with NamedTemporaryFile(delete=False) as fout:
             try:
-                check_call(cmd, stderr=devnull, stdout=fout)
+                output = run(cmd, capture_output=True, check=True)
             except OSError as exc:
                 if exc.errno == 2 and not exc.filename:
                     raise OSError(2, "trace-cmd not found in PATH, is it installed?")
                 else:
                     raise
+
+            fout.write(output.stdout)
 
         return fout.name
 
