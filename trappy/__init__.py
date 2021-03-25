@@ -23,7 +23,6 @@ from trappy.compare_runs import summary_plots, compare_runs
 from trappy.exception import TrappyParseError
 from trappy.ftrace import FTrace
 from trappy.systrace import SysTrace
-from trappy.version import __version__
 try:
     from trappy.plotter.LinePlot import LinePlot
 except ImportError as exc:
