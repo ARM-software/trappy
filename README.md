@@ -1,3 +1,5 @@
+THIS REPOSITORY HAS MOVED TO https://gitlab.arm.com/tooling/trappy
+
 TRAPpy [![Version](https://img.shields.io/pypi/v/trappy.svg)](https://pypi.python.org/pypi/trappy)
 ======
 
